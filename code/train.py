@@ -45,14 +45,18 @@ args = parser.parse_args()
 
 
 def main():
+    args.output = os.environ.get('AMLT_OUTPUT_DIR', '../output')
+    args.outdir = os.path.join(args.output, args.outdir)
+    args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
+
     if args.gpu:
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
     if not os.path.exists(args.outdir):
-        os.mkdir(args.outdir)
+        os.makedirs(args.outdir)
 
-    train_dataset = get_dataset(args.dataset, 'train')
-    test_dataset = get_dataset(args.dataset, 'test')
+    train_dataset = get_dataset(args.dataset, 'train', args.data)
+    test_dataset = get_dataset(args.dataset, 'test', args.data)
     pin_memory = (args.dataset == "imagenet")
     train_loader = DataLoader(train_dataset, shuffle=True, batch_size=args.batch,
                               num_workers=args.workers, pin_memory=pin_memory)
@@ -60,6 +64,7 @@ def main():
                              num_workers=args.workers, pin_memory=pin_memory)
 
     model = get_architecture(args.arch, args.dataset)
+    # model = torch.nn.DataParallel(model)
 
     logfilename = os.path.join(args.outdir, 'log.txt')
     init_logfile(logfilename, "epoch\ttime\tlr\ttrain loss\ttrain acc\ttestloss\ttest acc")

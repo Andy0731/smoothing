@@ -1,0 +1,8 @@
+torch
+torchvision
+scipy
+pandas
+statsmodels
+matplotlib
+seaborn
+setGPU

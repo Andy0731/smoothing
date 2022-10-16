@@ -1,0 +1,86 @@
+description: Locuslab Smoothing
+
+target:
+  # service: amlk8s
+  # name: itplabrr1cl1
+  # vc: resrchvc
+
+  # service: amlk8s
+  # name: ms-shared
+
+  service: sing
+  name: msrresrchvc
+
+environment:
+  # image: amlt-sing/pytorch-1.7.0-cuda11.0-cudnn8-devel
+  # image: wuzhiron/pytorch:pytorch1.7-cuda10.1-py37
+  image: wuzhiron/pytorch:pytorch1.10.0-cuda11.3-cudnn8-singularity
+  setup:
+  - pip install scipy
+  - pip install pandas
+  - pip install statsmodels
+  - pip install matplotlib
+  - pip install seaborn
+  - pip install setGPU
+
+# storage:
+  # input:
+  #   storage_account_name: input_storage_account
+  #   container_name: amlt
+  # output:
+  #   storage_account_name: output_storage_account
+  #   container_name: kaqiu
+  #   mount_dir: /mnt/output
+  # external:
+  #   storage_account_name: external_storage_account
+  #   container_name: dataset
+  #   mount_dir: /mnt/shared_data
+
+code:
+  local_dir: $CONFIG_DIR/code
+
+data:
+  local_dir: /D_data/kaqiu/cifar10/
+  remote_dir: cifar/
+
+jobs:
+# - name: fd_s4_l2_g1_sing
+#   sku: G2
+#   command:
+#   - python main.py --config robustness/configs/feature_denoise/s4_l2_g1.json
+# - name: n0
+#   sku: G1
+#   command:
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.00 --batch 128 --noise 0.00
+# - name: n012
+#   sku: G1
+#   command:
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.12 --batch 128 --noise 0.12
+# - name: n025
+#   sku: G1
+#   command:
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.25 --batch 128 --noise 0.25
+# - name: n05
+#   sku: G1
+#   command:
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.50 --batch 128 --noise 0.5
+# - name: n1
+#   sku: G1
+#   command:
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_1.00 --batch 128 --noise 1.00
+# - name: certify_n012
+#   sku: G1
+#   command:
+#   - python certify.py cifar10 models/cifar10/resnet110/noise_0.12/checkpoint.pth.tar 0.12 smoothing/data/predict/cifar10/resnet110/noise_0.12/test/sigma_0.12 --skip 20 --batch 128
+# - name: certify_n025
+#   sku: G1
+#   command:
+#   - python certify.py cifar10 models/cifar10/resnet110/noise_0.25/checkpoint.pth.tar 0.25 smoothing/data/predict/cifar10/resnet110/noise_0.25/test/sigma_0.25 --skip 20 --batch 128
+- name: certify_n05
+  sku: G1
+  command:
+  - python certify.py cifar10 models/cifar10/resnet110/noise_0.50/checkpoint.pth.tar 0.50 smoothing/data/predict/cifar10/resnet110/noise_0.50/test/sigma_0.50 --skip 20 --batch 128
+# - name: certify_n1
+#   sku: G1
+#   command:
+#   - python certify.py cifar10 models/cifar10/resnet110/noise_1.00/checkpoint.pth.tar 1.00 smoothing/data/predict/cifar10/resnet110/noise_1.00/test/sigma_1.00 --skip 20 --batch 128

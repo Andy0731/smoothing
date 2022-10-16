@@ -24,6 +24,14 @@ parser.add_argument("--alpha", type=float, default=0.001, help="failure probabil
 args = parser.parse_args()
 
 if __name__ == "__main__":
+    args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
+    # args.output = os.environ.get('AMLT_OUTPUT_DIR', '../output')
+    args.base_classifier = os.path.join(args.data, args.base_classifier)
+    args.outfile = os.path.join(args.data, args.outfile)
+    outfile_path = os.path.dirname(args.outfile)
+    print('outfile_path: ', outfile_path)
+    if not os.path.exists(outfile_path):
+        os.makedirs(outfile_path)
     # load the base classifier
     checkpoint = torch.load(args.base_classifier)
     base_classifier = get_architecture(checkpoint["arch"], args.dataset)
@@ -37,7 +45,7 @@ if __name__ == "__main__":
     print("idx\tlabel\tpredict\tradius\tcorrect\ttime", file=f, flush=True)
 
     # iterate through the dataset
-    dataset = get_dataset(args.dataset, args.split)
+    dataset = get_dataset(args.dataset, args.split, args.data)
     for i in range(len(dataset)):
 
         # only certify every args.skip examples, and stop after args.max examples
