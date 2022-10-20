@@ -41,13 +41,17 @@ parser.add_argument('--gpu', default=None, type=str,
                     help='id(s) for CUDA_VISIBLE_DEVICES')
 parser.add_argument('--print-freq', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
+parser.add_argument('--clean-image', default=0, type=int,
+                    help='whether to use clean images during training (default: 0)')   
+parser.add_argument('--natural-train', default=0, type=int,
+                    help='training with only clean images (default: 0)')                    
 args = parser.parse_args()
 
 
 def main():
     args.output = os.environ.get('AMLT_OUTPUT_DIR', '../output')
-    args.outdir = os.path.join(args.output, args.outdir)
     args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
+    args.outdir = os.path.join(args.data, args.outdir)
 
     if args.gpu:
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
@@ -110,8 +114,17 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
         inputs = inputs.cuda()
         targets = targets.cuda()
 
-        # augment inputs with noise
-        inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+        if not args.natural_train:
+            if args.clean_image:
+                inputs_cln = inputs.clone().detach()
+                targets_cln = targets.clone().detach()
+
+            # augment inputs with noise
+            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+
+            if args.clean_image:
+                inputs = torch.cat((inputs_cln, inputs), dim=0)
+                targets = torch.cat((targets_cln, targets), dim=0)
 
         # compute output
         outputs = model(inputs)
@@ -164,8 +177,9 @@ def test(loader: DataLoader, model: torch.nn.Module, criterion, noise_sd: float)
             inputs = inputs.cuda()
             targets = targets.cuda()
 
-            # augment inputs with noise
-            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+            if not args.natural_train:
+                # augment inputs with noise
+                inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
 
             # compute output
             outputs = model(inputs)

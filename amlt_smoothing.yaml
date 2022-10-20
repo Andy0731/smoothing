@@ -52,35 +52,39 @@ jobs:
 #   sku: G1
 #   command:
 #   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.00 --batch 128 --noise 0.00
-# - name: n012
+# - name: n012_c
 #   sku: G1
 #   command:
-#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.12 --batch 128 --noise 0.12
-# - name: n025
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.12_c --batch 128 --noise 0.12 --clean-image 1
+# - name: n025_c
 #   sku: G1
 #   command:
-#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.25 --batch 128 --noise 0.25
-# - name: n05
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.25_c --batch 128 --noise 0.25 --clean-image 1
+# - name: n05_c
 #   sku: G1
 #   command:
-#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.50 --batch 128 --noise 0.5
-# - name: n1
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_0.50_c --batch 128 --noise 0.5 --clean-image 1
+# - name: n1_c
 #   sku: G1
 #   command:
-#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_1.00 --batch 128 --noise 1.00
-# - name: certify_n012
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/noise_1.00_c --batch 128 --noise 1.00 --clean-image 1
+# - name: certify_n012_c
 #   sku: G1
 #   command:
-#   - python certify.py cifar10 models/cifar10/resnet110/noise_0.12/checkpoint.pth.tar 0.12 smoothing/data/predict/cifar10/resnet110/noise_0.12/test/sigma_0.12 --skip 20 --batch 128
-# - name: certify_n025
+#   - python certify.py cifar10 models/cifar10/resnet110/noise_0.12_c/checkpoint.pth.tar 0.12 smoothing/data/certify/cifar10/resnet110/noise_0.12_c/test/sigma_0.12_c --skip 20 --batch 128
+# - name: certify_n025_c
 #   sku: G1
 #   command:
-#   - python certify.py cifar10 models/cifar10/resnet110/noise_0.25/checkpoint.pth.tar 0.25 smoothing/data/predict/cifar10/resnet110/noise_0.25/test/sigma_0.25 --skip 20 --batch 128
-- name: certify_n05
+#   - python certify.py cifar10 models/cifar10/resnet110/noise_0.25_c/checkpoint.pth.tar 0.25 smoothing/data/certify/cifar10/resnet110/noise_0.25_c/test/sigma_0.25_c --skip 20 --batch 128
+# - name: certify_n05_c
+#   sku: G1
+#   command:
+#   - python certify.py cifar10 models/cifar10/resnet110/noise_0.50_c/checkpoint.pth.tar 0.50 smoothing/data/certify/cifar10/resnet110/noise_0.50_c/test/sigma_0.50_c --skip 20 --batch 128
+# - name: certify_n1_c
+#   sku: G1
+#   command:
+#   - python certify.py cifar10 models/cifar10/resnet110/noise_1.00_c/checkpoint.pth.tar 1.00 smoothing/data/certify/cifar10/resnet110/noise_1.00_c/test/sigma_1.00_c --skip 20 --batch 128
+- name: c
   sku: G1
   command:
-  - python certify.py cifar10 models/cifar10/resnet110/noise_0.50/checkpoint.pth.tar 0.50 smoothing/data/predict/cifar10/resnet110/noise_0.50/test/sigma_0.50 --skip 20 --batch 128
-# - name: certify_n1
-#   sku: G1
-#   command:
-#   - python certify.py cifar10 models/cifar10/resnet110/noise_1.00/checkpoint.pth.tar 1.00 smoothing/data/predict/cifar10/resnet110/noise_1.00/test/sigma_1.00 --skip 20 --batch 128
+  - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/c --batch 128 --natural-train 1
