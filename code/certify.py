@@ -9,33 +9,7 @@ import torch
 import datetime
 from architectures import get_architecture
 
-parser = argparse.ArgumentParser(description='Certify many examples')
-parser.add_argument("dataset", choices=DATASETS, help="which dataset")
-parser.add_argument("base_classifier", type=str, help="path to saved pytorch model of base classifier")
-parser.add_argument("sigma", type=float, help="noise hyperparameter")
-parser.add_argument("outfile", type=str, help="output file")
-parser.add_argument("--batch", type=int, default=1000, help="batch size")
-parser.add_argument("--skip", type=int, default=1, help="how many examples to skip")
-parser.add_argument("--max", type=int, default=-1, help="stop after this many examples")
-parser.add_argument("--split", choices=["train", "test"], default="test", help="train or test set")
-parser.add_argument("--N0", type=int, default=100)
-parser.add_argument("--N", type=int, default=100000, help="number of samples to use")
-parser.add_argument("--alpha", type=float, default=0.001, help="failure probability")
-args = parser.parse_args()
-
-if __name__ == "__main__":
-    args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
-    # args.output = os.environ.get('AMLT_OUTPUT_DIR', '../output')
-    args.base_classifier = os.path.join(args.data, args.base_classifier)
-    args.outfile = os.path.join(args.data, args.outfile)
-    outfile_path = os.path.dirname(args.outfile)
-    print('outfile_path: ', outfile_path)
-    if not os.path.exists(outfile_path):
-        os.makedirs(outfile_path)
-    # load the base classifier
-    checkpoint = torch.load(args.base_classifier)
-    base_classifier = get_architecture(checkpoint["arch"], args.dataset)
-    base_classifier.load_state_dict(checkpoint['state_dict'])
+def run_certify(args, base_classifier):
 
     # create the smooothed classifier g
     smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma)
@@ -68,3 +42,35 @@ if __name__ == "__main__":
             i, label, prediction, radius, correct, time_elapsed), file=f, flush=True)
 
     f.close()
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='Certify many examples')
+    parser.add_argument("dataset", choices=DATASETS, help="which dataset")
+    parser.add_argument("base_classifier", type=str, help="path to saved pytorch model of base classifier")
+    parser.add_argument("sigma", type=float, help="noise hyperparameter")
+    parser.add_argument("outfile", type=str, help="output file")
+    parser.add_argument("--batch", type=int, default=1000, help="batch size")
+    parser.add_argument("--skip", type=int, default=1, help="how many examples to skip")
+    parser.add_argument("--max", type=int, default=-1, help="stop after this many examples")
+    parser.add_argument("--split", choices=["train", "test"], default="test", help="train or test set")
+    parser.add_argument("--N0", type=int, default=100)
+    parser.add_argument("--N", type=int, default=100000, help="number of samples to use")
+    parser.add_argument("--alpha", type=float, default=0.001, help="failure probability")
+    args = parser.parse_args()
+
+    args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
+    args.output = os.environ.get('AMLT_OUTPUT_DIR', '../output')
+    args.base_classifier = os.path.join(args.data, args.base_classifier)
+    args.outfile = os.path.join(args.data, args.outfile)
+    outfile_path = os.path.dirname(args.outfile)
+    print('outfile_path: ', outfile_path)
+    if not os.path.exists(outfile_path):
+        os.makedirs(outfile_path)
+    # load the base classifier
+    checkpoint = torch.load(args.base_classifier)
+    base_classifier = get_architecture(checkpoint["arch"], args.dataset)
+    base_classifier.load_state_dict(checkpoint['state_dict'])
+    
+    run_certify(args, base_classifier)

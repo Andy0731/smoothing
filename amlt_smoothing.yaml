@@ -22,6 +22,7 @@ environment:
   - pip install matplotlib
   - pip install seaborn
   - pip install setGPU
+  - pip install attrdict
 
 # storage:
   # input:
