@@ -45,6 +45,206 @@ data:
   remote_dir: cifar/
 
 jobs:
+# - name: r110_n025_g1_lr0001
+#   sku: G1
+#   command:
+#   - python train.py --config resnet110/n025_lr0001.json
+# - name: r110_n025_g1_lr001
+#   sku: G1
+#   command:
+#   - python train.py --config resnet110/n025_lr001.json
+# - name: r110_n025_g1_lr01
+#   sku: G1
+#   command:
+#   - python train.py --config resnet110/n025_lr01.json
+# - name: r110_n025_g1_lr1
+#   sku: G1
+#   command:
+#   - python train.py --config resnet110/n025_lr1.json
+# - name: r110_n025_g1_lr10
+#   sku: G1
+#   command:
+#   - python train.py --config resnet110/n025_lr10.json
+# - name: r110_n025_g4_lr0001
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr0001.json
+# - name: r110_n025_g4_lr001
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr001.json
+# - name: r110_n025_g8_lr0001_sbn
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr0001.json
+# - name: r110_n025_g8_lr001_sbn
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr001.json
+# - name: r110_n025_g8_lr01_sbn
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr01.json
+# - name: r110_n025_g8_lr1_sbn
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr1.json
+# - name: r110_n025_g8_lr10_sbn
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr10.json
+# - name: r110_n025_g4_lr01_sbn_bs1
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs1.json
+# - name: r110_n025_g4_lr01_sbn_bs2
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs2.json
+# - name: r110_n025_g4_lr01_sbn_bs4
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs4.json
+# - name: r110_n025_g4_lr01_sbn_bs8
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs8.json
+# - name: r110_n025_g4_lr01_sbn_bs16
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs16.json
+# - name: r110_n025_g4_lr01_sbn_bs32
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs32.json
+# - name: r110_n025_g8_lr01_sbn_bs64
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs64.json
+# - name: r110_n025_g8_lr01_sbn_bs128
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs128.json
+# - name: r110_n025_g8_lr01_sbn_bs256
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs256.json
+# - name: r110_n025_g8_lr01_sbn_bs512
+#   sku: G8
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs512.json
+# - name: r110_n025_g4_lr1_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr1_bs128.json
+# - name: r110_n025_g4_lr001_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr001_bs128.json
+# - name: r110_n025_g4_lr0001_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr0001_bs128.json
+# - name: r110_n025_g4_lr005_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr005_bs128.json
+# - name: r110_n025_g4_lr0005_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr0005_bs128.json
+########## warm-up ###########
+- name: r110_n025_g4_lr01_sbn_bs16_wu
+  sku: G4
+  command:
+  - python train.py --config resnet110/n025_lr01_bs16_wu.json
+# - name: r110_n025_g4_lr01_sbn_bs128_wu
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs128_wu.json
+# - name: r110_n025_g4_lr01_sbn_bs1024_wu
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs1024_wu.json
+########## ResNet-101 ###########
+# - name: r101_n025_g4_lr01_sbn_bs16
+#   sku: G4
+#   command:
+#   - python train.py --config resnet101/n025_lr01_bs16.json
+# - name: r101_n025_g4_lr01_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet101/n025_lr01_bs128.json
+# - name: r101_n025_g4_lr01_sbn_bs512
+#   sku: G4
+#   command:
+#   - python train.py --config resnet101/n025_lr01_bs512.json
+########## ResNet152 ##########
+# - name: r152_n025_g4_lr01_sbn_bs16
+#   sku: G4
+#   command:
+#   - python train.py --config resnet152/n025_lr01_bs16.json
+# - name: r152_n025_g4_lr001_sbn_bs16
+#   sku: G4
+#   command:
+#   - python train.py --config resnet152/n025_lr001_bs16.json
+# - name: r152_n025_g4_lr01_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet152/n025_lr01_bs128.json
+# - name: r152_n025_g4_lr001_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet152/n025_lr001_bs128.json
+####### ResNet1199 ##########
+# - name: r1199_n025_g4_lr01_sbn_bs16
+#   sku: G4
+#   command:
+#   - python train.py --config resnet1199/n025_lr01_bs16.json
+# - name: r1199_n025_g4_lr001_sbn_bs16
+#   sku: G4
+#   command:
+#   - python train.py --config resnet1199/n025_lr001_bs16.json
+# - name: r1199_n025_g4_lr01_sbn_bs64
+#   sku: G4
+#   command:
+#   - python train.py --config resnet1199/n025_lr01_bs64.json
+# - name: r1199_n025_g4_lr001_sbn_bs64
+#   sku: G4
+#   command:
+#   - python train.py --config resnet1199/n025_lr001_bs64.json
+# - name: r1199_n025_g4_lr01_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet1199/n025_lr01_bs128.json
+# - name: r1199_n025_g4_lr001_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet1199/n025_lr001_bs128.json
+# - name: r101_n025_g4_lr1_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet101/n025_lr1_bs128.json
+# - name: r101_n025_g4_lr001_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet101/n025_lr001_bs128.json
+# - name: r101_n025_g4_lr0001_sbn_bs128
+#   sku: G4
+#   command:
+#   - python train.py --config resnet101/n025_lr0001_bs128.json
+# - name: r20_n1
+#   sku: G8
+#   command:
+#   - python train.py --config resnet20/n1.json
+# - name: r20_n05
+#   sku: G8
+#   command:
+#   - python train.py --config resnet20/n05.json
+# - name: r20_n025
+#   sku: G8
+#   command:
+#   - python train.py --config resnet20/n025.json
 # - name: fd_s4_l2_g1_sing
 #   sku: G2
 #   command:
@@ -85,7 +285,7 @@ jobs:
 #   sku: G1
 #   command:
 #   - python certify.py cifar10 models/cifar10/resnet110/noise_1.00_c/checkpoint.pth.tar 1.00 smoothing/data/certify/cifar10/resnet110/noise_1.00_c/test/sigma_1.00_c --skip 20 --batch 128
-- name: c
-  sku: G1
-  command:
-  - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/c --batch 128 --natural-train 1
+# - name: c
+#   sku: G1
+#   command:
+#   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/c --batch 128 --natural-train 1

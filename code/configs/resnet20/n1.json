@@ -1,7 +1,7 @@
 {
     "debug": 0,
     "dataset": "cifar10",
-    "arch": "cifar_resnet110",
+    "arch": "cifar_resnet20",
     "noise_sd": 1.0,
     "batch": 1024,
     "workers": 2,

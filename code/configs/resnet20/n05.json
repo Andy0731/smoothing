@@ -1,8 +1,8 @@
 {
     "debug": 0,
     "dataset": "cifar10",
-    "arch": "cifar_resnet110",
-    "noise_sd": 1.0,
+    "arch": "cifar_resnet20",
+    "noise_sd": 0.5,
     "batch": 1024,
     "workers": 2,
     "epochs": 90,
@@ -21,7 +21,7 @@
     "node_num": 1,
     
     "certify": 1,
-    "sigma": 1.0,
+    "sigma": 0.5,
     "skip": 20,
     "certify_bs": 1024,
     "N0": 100,

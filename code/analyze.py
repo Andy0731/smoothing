@@ -153,6 +153,13 @@ def markdown_table_certified_accuracy(outfile: str, radius_start: float, radius_
         f.write("\n")
     f.close()
 
+def plot_curve(ctf_filename):
+    lines = []
+    exp = ctf_filename.split('/')[-3]
+    setting = ctf_filename.split('/')[-1].split('_')[-1]
+    if os.path.isfile(ctf_filename):
+        lines.append(Line(ApproximateAccuracy(ctf_filename), exp + '_' + setting))
+    plot_certified_accuracy(ctf_filename, exp, 4.0, lines)
 
 if __name__ == "__main__":
     plot_certified_accuracy(
