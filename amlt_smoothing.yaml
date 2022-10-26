@@ -154,10 +154,10 @@ jobs:
 #   command:
 #   - python train.py --config resnet110/n025_lr0005_bs128.json
 ########## warm-up ###########
-- name: r110_n025_g4_lr01_sbn_bs16_wu
-  sku: G4
-  command:
-  - python train.py --config resnet110/n025_lr01_bs16_wu.json
+# - name: r110_n025_g4_lr01_sbn_bs16_wu
+#   sku: G4
+#   command:
+#   - python train.py --config resnet110/n025_lr01_bs16_wu.json
 # - name: r110_n025_g4_lr01_sbn_bs128_wu
 #   sku: G4
 #   command:
@@ -289,3 +289,43 @@ jobs:
 #   sku: G1
 #   command:
 #   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/c --batch 128 --natural-train 1
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_en05
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_en05.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl1_en05
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl1_en05.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en5
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl10_en5.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en05
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl10_en05.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en005
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl10_en005.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl10.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl20_en05
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl20_en05.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl100_en05
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl100_en05.json
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl1000_en05
+  sku: G4
+  command:
+  - python train.py --config consistency/n025_lr01_bs128_wu_kl1000_en05.json

@@ -4,6 +4,7 @@
 
 import argparse
 import json
+from multiprocessing import reduction
 import os
 import torch
 from torch.nn import CrossEntropyLoss
@@ -20,6 +21,7 @@ import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.multiprocessing as mp
 from torch.utils.tensorboard import SummaryWriter
+import torch.nn.functional as F
 from certify import run_certify, merge_ctf_files
 from analyze import plot_curve
 
@@ -82,7 +84,10 @@ def main(args):
         before = time.time()
         train_loader.sampler.set_epoch(epoch)
         test_loader.sampler.set_epoch(epoch)
-        train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd)
+        if hasattr(args, 'consistency') and args.consistency:
+            train_loss, train_acc, train_ce_loss, train_kl_loss, train_en_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd)
+        else:
+            train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd)
         test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
         after = time.time()
         if hasattr(args, 'warmup') and args.warmup == 1 and epoch < 5:
@@ -94,6 +99,10 @@ def main(args):
             writer.add_scalar('train_acc', train_acc, epoch)
             writer.add_scalar('test_loss', test_loss, epoch)
             writer.add_scalar('test_acc', test_acc, epoch)
+            if hasattr(args, 'consistency') and args.consistency:
+                writer.add_scalar('train_ce_loss', train_ce_loss, epoch)
+                writer.add_scalar('train_kl_loss', train_kl_loss, epoch)
+                writer.add_scalar('train_en_loss', train_en_loss, epoch)
 
             log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
                 epoch, str(datetime.timedelta(seconds=(after - before))),
@@ -139,6 +148,10 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
+    if hasattr(args, 'consistency') and args.consistency:
+        ce_losses = AverageMeter()
+        kl_losses = AverageMeter()
+        en_losses = AverageMeter()
     end = time.time()
 
     # switch to train mode
@@ -160,6 +173,10 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
                 targets_cln = targets.clone().detach()
 
             # augment inputs with noise
+            if hasattr(args, 'consistency') and args.consistency:
+                inputs = inputs.repeat(args.repeat_num, 1, 1, 1) # shape after repeat: (repeat_num * B, C, H, W)
+                targets = targets.repeat(args.repeat_num)
+            
             inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
 
             if args.clean_image:
@@ -167,8 +184,30 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
                 targets = torch.cat((targets_cln, targets), dim=0)
 
         # compute output
-        outputs = model(inputs)
+        outputs = model(inputs) # (B, class_num)
         loss = criterion(outputs, targets)
+
+        if hasattr(args, 'consistency') and args.consistency:
+            c_batch = inputs.size(0) // args.repeat_num
+            ce_loss = loss.clone().detach()
+            probs = F.softmax(outputs, -1) # (repeat_num*B, 10)
+            assert probs.shape == (args.repeat_num*c_batch, 10), 'outputs.shape: {}'.format(probs.shape)
+            probs = probs.view(args.repeat_num, c_batch, 10) # (repeat_num, B, 10)
+            probs_avg = torch.mean(probs, dim=0, keepdim=False) # (B, 10)
+            probs_avg = probs_avg.repeat(args.repeat_num, 1) # (repeat_num*B, 10)
+            probs = probs.view(args.repeat_num*c_batch, 10) # (repeat_num*B, 10)
+            # print('probs: ', probs)
+            # print('probs_avg: ', probs_avg)
+            kl_loss = F.kl_div(probs, probs_avg, reduction='none', log_target=True).sum(-1).mean() * args.kl_loss_w
+            # print('kl_loss: ', kl_loss.item())
+            en_loss = (- probs * torch.log(probs)).sum(-1).mean() * args.en_loss_w
+            if args.kl_loss:
+                loss += kl_loss
+            if args.en_loss:
+                loss += en_loss
+            ce_losses.update(ce_loss.item(), inputs.size(0))
+            kl_losses.update(kl_loss.item(), inputs.size(0))
+            en_losses.update(en_loss.item(), inputs.size(0))
 
         # measure accuracy and record loss
         acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
@@ -187,17 +226,23 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
 
         if i % args.print_freq == 0:
             print('Epoch: [{0}][{1}/{2}]\t'
-                  'lr: {lr:.4f}\t'
+                  'lr: {lr:.3f}\t'
                   'GPU: {gpu}\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                  'Acc@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                  'Acc@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+                #   'Time {batch_time.avg:.3f}\t'
+                #   'Data {data_time.avg:.3f}\t'
+                  'Loss {loss.avg:.4f}\t'
+                  'CE_Loss {ce_loss.avg:.4f}\t'
+                  'KL_Loss {kl_loss.avg:.8f}\t'
+                  'EN_Loss {en_loss.avg:.4f}\t'
+                  'Acc@1 {top1.avg:.3f}\t'
+                  'Acc@5 {top5.avg:.3f}'.format(
                 epoch, i, len(loader), batch_time=batch_time,
                 data_time=data_time, loss=losses, top1=top1, top5=top5, 
-                gpu=args.global_rank, lr=optimizer.param_groups[0]['lr']))
+                gpu=args.global_rank, lr=optimizer.param_groups[0]['lr'],
+                ce_loss=ce_losses, kl_loss=kl_losses, en_loss=en_losses))
 
+    if hasattr(args, 'consistency') and args.consistency:
+        return (losses.avg, top1.avg, ce_losses.avg, kl_losses.avg, en_losses.avg)
     return (losses.avg, top1.avg)
 
 
