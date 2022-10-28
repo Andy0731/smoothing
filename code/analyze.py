@@ -162,12 +162,18 @@ def plot_curve(ctf_filename):
     plot_certified_accuracy(ctf_filename, exp, 4.0, lines)
 
 if __name__ == "__main__":
+    ctf_files = [
+        "amlt/smoothing/r110_n025_g4_lr01_sbn_bs128_wu/resnet110/n025_lr01_bs128_wu/certify_sigma0.25",
+        "amlt/smoothing/con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en05_correct_en/consistency/n025_lr01_bs128_wu_kl10_en05/certify_sigma0.25",
+        "amlt/smoothing/con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_l2/consistency/n025_lr01_bs128_wu_kl10_l2/certify_sigma0.25",
+        "amlt/smoothing/con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_l2_en05/consistency/n025_lr01_bs128_wu_kl10_l2_en05/certify_sigma0.25",
+        "amlt/smoothing/con_r110_n025_g4_lr01_sbn_bs128_wu_kl100_l2_en05/consistency/n025_lr01_bs128_wu_kl100_l2_en05/certify_sigma0.25",
+        "amlt/smoothing/con_r110_n025_g4_lr01_sbn_bs128_wu_en05_correct_en/consistency/n025_lr01_bs128_wu_en05/certify_sigma0.25"
+    ]
+
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/vary_noise_cifar10_4.0", "CIFAR-10, vary $\sigma$", 4.0, [
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.12/test/sigma_0.12"), "$\sigma = 0.12$"),
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.25/test/sigma_0.25"), "$\sigma = 0.25$"),
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.50/test/sigma_0.50"), "$\sigma = 0.50$"),
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_1.00/test/sigma_1.00"), "$\sigma = 1.00$"),
+        "../amlt/smoothing/analysis/plots/consistency", "CIFAR-10, consistency", 1.0, [
+            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[-2].split('_w')[-1]) for ctf_file in ctf_files
         ])
     # latex_table_certified_accuracy(
     #     "analysis/latex/vary_noise_cifar10", 0.25, 1.5, 0.25, [

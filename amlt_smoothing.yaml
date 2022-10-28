@@ -289,43 +289,43 @@ jobs:
 #   sku: G1
 #   command:
 #   - python train.py cifar10 cifar_resnet110  models/cifar10/resnet110/c --batch 128 --natural-train 1
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_en05
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_en05_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_en05.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl1_en05
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl1_en05_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl1_en05.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en5
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en5_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl10_en5.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en05
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en05_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl10_en05.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en005
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_en005_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl10_en005.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl10_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl10.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl20_en05
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl20_en05_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl20_en05.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl100_en05
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl100_en05_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl100_en05.json
-- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl1000_en05
+- name: con_r110_n025_g4_lr01_sbn_bs128_wu_kl1000_en05_correct_en
   sku: G4
   command:
   - python train.py --config consistency/n025_lr01_bs128_wu_kl1000_en05.json

@@ -141,6 +141,13 @@ def main(args):
 #         cudnn.deterministic = False
 #         cudnn.benchmark = True
     
+def get_avg_feature(probs, args, c_batch):
+    assert probs.shape == (args.repeat_num*c_batch, 10), 'outputs.shape: {}'.format(probs.shape)
+    probs = probs.view(args.repeat_num, c_batch, 10) # (repeat_num, B, 10)
+    probs_avg = torch.mean(probs, dim=0, keepdim=False) # (B, 10)
+    probs_avg = probs_avg.repeat(args.repeat_num, 1) # (repeat_num*B, 10)
+    probs = probs.view(args.repeat_num*c_batch, 10) # (repeat_num*B, 10)
+    return probs_avg, probs
     
 def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float):
     batch_time = AverageMeter()
@@ -191,23 +198,30 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             c_batch = inputs.size(0) // args.repeat_num
             ce_loss = loss.clone().detach()
             probs = F.softmax(outputs, -1) # (repeat_num*B, 10)
-            assert probs.shape == (args.repeat_num*c_batch, 10), 'outputs.shape: {}'.format(probs.shape)
-            probs = probs.view(args.repeat_num, c_batch, 10) # (repeat_num, B, 10)
-            probs_avg = torch.mean(probs, dim=0, keepdim=False) # (B, 10)
-            probs_avg = probs_avg.repeat(args.repeat_num, 1) # (repeat_num*B, 10)
-            probs = probs.view(args.repeat_num*c_batch, 10) # (repeat_num*B, 10)
-            # print('probs: ', probs)
-            # print('probs_avg: ', probs_avg)
-            kl_loss = F.kl_div(probs, probs_avg, reduction='none', log_target=True).sum(-1).mean() * args.kl_loss_w
+            if (hasattr(args, 'kltol2') and args.kltol2) \
+                or (hasattr(args, 'kltol1') and args.kltol1):
+                outputs_cp = outputs.clone()
+                outputs_avg, outputs_cp = get_avg_feature(outputs_cp, args, c_batch)
+            probs_avg, probs = get_avg_feature(probs, args, c_batch)
+
+            if hasattr(args, 'kltol2') and args.kltol2:
+                kl_loss = F.mse_loss(outputs_cp, outputs_avg) * args.kl_loss_w
+            elif hasattr(args, 'kltol1') and args.kltol1:
+                kl_loss = F.l1_loss(outputs_cp, outputs_avg) * args.kl_loss_w
+            else:
+                kl_loss = F.kl_div(probs, probs_avg, reduction='none', log_target=True).sum(-1).mean() * args.kl_loss_w
             # print('kl_loss: ', kl_loss.item())
-            en_loss = (- probs * torch.log(probs)).sum(-1).mean() * args.en_loss_w
+            en_loss = (- probs_avg * torch.log(probs_avg)).sum(-1).mean() * args.en_loss_w
+
             if args.kl_loss:
                 loss += kl_loss
             if args.en_loss:
                 loss += en_loss
+
             ce_losses.update(ce_loss.item(), inputs.size(0))
             kl_losses.update(kl_loss.item(), inputs.size(0))
             en_losses.update(en_loss.item(), inputs.size(0))
+
 
         # measure accuracy and record loss
         acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
