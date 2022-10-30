@@ -223,7 +223,7 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             inputs = inputs.cuda()
             targets = targets.cuda()
 
-            if not args.natural_train:
+            if hasattr(args, 'natural_test') and (not args.natural_test):
                 # augment inputs with noise
                 inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
 
@@ -232,6 +232,8 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             loss = criterion(outputs, targets)
 
             # measure accuracy and record loss
+
+            
             acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
             losses.update(loss.item(), inputs.size(0))
             top1.update(acc1.item(), inputs.size(0))

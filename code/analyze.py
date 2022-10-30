@@ -162,13 +162,27 @@ def plot_curve(ctf_filename):
     plot_certified_accuracy(ctf_filename, exp, 4.0, lines)
 
 if __name__ == "__main__":
+    ctf_files = [
+        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs16/resnet110/n0_lr01_bs16/certify_sigma0.25",
+        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs128/resnet110/n0_lr01_bs128/certify_sigma0.25",
+        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024/resnet110/n0_lr01_bs1024/certify_sigma0.25",
+        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs16_wu/resnet110/n0_lr01_bs16_wu/certify_sigma0.25",
+        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs128_wu/resnet110/n0_lr01_bs128_wu/certify_sigma0.25",
+        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024_wu/resnet110/n0_lr01_bs1024_wu/certify_sigma0.25"
+        # "amlt/smoothing/r110_n025_g4_lr01_sbn_bs1024/resnet110/n025_lr01_bs1024/certify_sigma0.25"
+    ]
+
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/vary_noise_cifar10_4.0", "CIFAR-10, vary $\sigma$", 4.0, [
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.12/test/sigma_0.12"), "$\sigma = 0.12$"),
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.25/test/sigma_0.25"), "$\sigma = 0.25$"),
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.50/test/sigma_0.50"), "$\sigma = 0.50$"),
-            Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_1.00/test/sigma_1.00"), "$\sigma = 1.00$"),
+        "../amlt/smoothing/analysis/plots/n025_vary_bs_wu", "CIFAR-10, n025 vary batch size warmup", 1.0, [
+            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[-2].split('_sbn')[-1]) for ctf_file in ctf_files
         ])
+    # plot_certified_accuracy(
+    #     "../amlt/smoothing/analysis/plots/vary_noise_cifar10_4.0", "CIFAR-10, vary $\sigma$", 4.0, [
+    #         Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.12/test/sigma_0.12"), "$\sigma = 0.12$"),
+    #         Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.25/test/sigma_0.25"), "$\sigma = 0.25$"),
+    #         Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.50/test/sigma_0.50"), "$\sigma = 0.50$"),
+    #         Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_1.00/test/sigma_1.00"), "$\sigma = 1.00$"),
+    #     ])
     # latex_table_certified_accuracy(
     #     "analysis/latex/vary_noise_cifar10", 0.25, 1.5, 0.25, [
     #         Line(ApproximateAccuracy("data/certify/cifar10/resnet110/noise_0.12/test/sigma_0.12"), "$\sigma = 0.12$"),

@@ -1,0 +1,30 @@
+{
+    "debug": 0,
+    "dataset": "cifar10",
+    "arch": "cifar_resnet110",
+    "noise_sd": 0.0,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 90,
+    "lr_step_size": 30,
+    "lr": 0.005,
+    "gamma": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 10,
+    "clean_image": 0,
+    "natural_train": 0,
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 1,
+    "sigma": 0.25,
+    "skip": 20,
+    "certify_bs": 1024,
+    "N0": 100,
+    "N": 100000,
+    "alpha": 0.001
+}
