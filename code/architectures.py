@@ -24,7 +24,7 @@ def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
     :return: a Pytorch module
     """
     if arch == "resnet50" and dataset == "imagenet":
-        model = torch.nn.DataParallel(resnet50(pretrained=False))
+        model = resnet50()
         cudnn.benchmark = True
     elif arch == "cifar_resnet20":
         model = resnet_cifar(depth=20, num_classes=10)
@@ -34,6 +34,6 @@ def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
         model = resnet_cifar(depth=1199, num_classes=10, block_name='bottleneck')
     elif "normal_" in arch:
         model = eval(arch + '()')
-        print('model: ', model)
+        # print('model: ', model)
     normalize_layer = get_normalize_layer(dataset)
     return torch.nn.Sequential(normalize_layer, model)

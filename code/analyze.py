@@ -163,18 +163,34 @@ def plot_curve(ctf_filename):
 
 if __name__ == "__main__":
     ctf_files = [
-        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs16/resnet110/n0_lr01_bs16/certify_sigma0.25",
-        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs128/resnet110/n0_lr01_bs128/certify_sigma0.25",
-        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024/resnet110/n0_lr01_bs1024/certify_sigma0.25",
-        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs16_wu/resnet110/n0_lr01_bs16_wu/certify_sigma0.25",
-        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs128_wu/resnet110/n0_lr01_bs128_wu/certify_sigma0.25",
-        "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024_wu/resnet110/n0_lr01_bs1024_wu/certify_sigma0.25"
+        "amlt/smoothing/r50_n025_g4_lr01_sbn_bs16_m4/resnet50/n025_lr01_bs16_m4/certify_sigma0.25",
+        "amlt/smoothing/r50_n025_g4_lr01_sbn_bs16_m4_wu/resnet50/n025_lr01_bs16_m4_wu/certify_sigma0.25",
+        "amlt/smoothing/r50_n025_g4_lr1_sbn_bs128_m4/resnet50/n025_lr1_bs128_m4/certify_sigma0.25",
+        "amlt/smoothing/r50_n025_g4_lr01_sbn_bs128_m4/resnet50/n025_lr01_bs128_m4/certify_sigma0.25",
+        "amlt/smoothing/r50_n025_g4_lr001_sbn_bs128_m4/resnet50/n025_lr001_bs128_m4/certify_sigma0.25",
+        "amlt/smoothing/r50_n025_g4_lr0001_sbn_bs128_m4/resnet50/n025_lr0001_bs128_m4/certify_sigma0.25",
+        "amlt/smoothing/r50_n025_g4_lr01_sbn_bs128_m4_wu/resnet50/n025_lr01_bs128_m4_wu/certify_sigma0.25",
+
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs16/resnet110/n0_lr01_bs16/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs32/resnet110/n0_lr01_bs32/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs64/resnet110/n0_lr01_bs64/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs128/resnet110/n0_lr01_bs128/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs256/resnet110/n0_lr01_bs256/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs512/resnet110/n0_lr01_bs512/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024/resnet110/n0_lr01_bs1024/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs16_wu/resnet110/n0_lr01_bs16_wu/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs128_wu/resnet110/n0_lr01_bs128_wu/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024_wu/resnet110/n0_lr01_bs1024_wu/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024_m2/resnet110/n0_lr01_bs1024_m2/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024_m4/resnet110/n0_lr01_bs1024_m4/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024_m8/resnet110/n0_lr01_bs1024_m8/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs1024_m16/resnet110/n0_lr01_bs1024_m16/certify_sigma0.25"
         # "amlt/smoothing/r110_n025_g4_lr01_sbn_bs1024/resnet110/n025_lr01_bs1024/certify_sigma0.25"
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/n025_vary_bs_wu", "CIFAR-10, n025 vary batch size warmup", 1.0, [
-            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[-2].split('_sbn')[-1]) for ctf_file in ctf_files
+        "../amlt/smoothing/analysis/plots/in_r50_n025", "ImageNet R50 n025", 1.0, [
+            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.replace('_sbn','').replace('_m4','').split('/')[2].split('_g4_')[-1]) for ctf_file in ctf_files
         ])
     # plot_certified_accuracy(
     #     "../amlt/smoothing/analysis/plots/vary_noise_cifar10_4.0", "CIFAR-10, vary $\sigma$", 4.0, [

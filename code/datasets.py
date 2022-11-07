@@ -16,7 +16,7 @@ DATASETS = ["imagenet", "cifar10"]
 def get_dataset(dataset: str, split: str, datapath: str = None) -> Dataset:
     """Return the dataset as a PyTorch Dataset object"""
     if dataset == "imagenet":
-        return _imagenet(split)
+        return _imagenet(split, datapath)
     elif dataset == "cifar10":
         return _cifar10(split, datapath)
 
@@ -55,22 +55,22 @@ def _cifar10(split: str, datapath: str = None) -> Dataset:
         return datasets.CIFAR10(datapath if datapath else "./dataset_cache", train=False, download=True, transform=transforms.ToTensor())
 
 
-def _imagenet(split: str) -> Dataset:
-    if not IMAGENET_LOC_ENV in os.environ:
-        raise RuntimeError("environment variable for ImageNet directory not set")
+def _imagenet(split: str, datapath: str = None) -> Dataset:
+    # if not IMAGENET_LOC_ENV in os.environ:
+    #     raise RuntimeError("environment variable for ImageNet directory not set")
 
-    dir = os.environ[IMAGENET_LOC_ENV]
+    # dir = os.environ[IMAGENET_LOC_ENV]
     if split == "train":
-        subdir = os.path.join(dir, "train")
+        subdir = os.path.join(datapath, "train")
         transform = transforms.Compose([
-            transforms.RandomSizedCrop(224),
+            transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor()
         ])
     elif split == "test":
-        subdir = os.path.join(dir, "val")
+        subdir = os.path.join(datapath, "val")
         transform = transforms.Compose([
-            transforms.Scale(256),
+            transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor()
         ])

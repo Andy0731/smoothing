@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from datasets import get_dataset
 from architectures import get_architecture
 from torch.optim import SGD, Optimizer
-from torch.optim.lr_scheduler import StepLR, LinearLR
+from torch.optim.lr_scheduler import StepLR, LinearLR, CosineAnnealingLR
 import time
 import datetime
 from train_utils import AverageMeter, accuracy, init_logfile, log
@@ -22,6 +22,7 @@ import torch.multiprocessing as mp
 from torch.utils.tensorboard import SummaryWriter
 from certify import run_certify, merge_ctf_files
 from analyze import plot_curve
+from common import get_args
 
 
 def main_spawn(args):
@@ -39,6 +40,17 @@ def main_worker(gpu, args):
         world_size=args.world_size, rank=args.global_rank)
     main(args)
 
+def multinode_start(args, env_args):
+    args.master_uri = "tcp://%s:%s" % (env_args.get("MASTER_ADDR"), env_args.get("MASTER_PORT"))
+    args.node_rank = env_args.get("NODE_RANK")
+    args.ngpus_per_node = torch.cuda.device_count()
+    args.world_size = env_args.get("WORLD_SIZE")
+    args.local_rank = env_args.get("LOCAL_RANK")
+    args.global_rank = env_args.get("RANK")
+    torch.cuda.set_device(args.local_rank)
+    print('global_rank ', args.global_rank, ' local_rank ', args.local_rank, ' GPU ', torch.cuda.current_device())
+    dist.init_process_group(backend=args.dist_backend, init_method=args.master_uri, world_size=args.world_size, rank=args.global_rank)
+    main(args)
 
 def main(args):
 
@@ -74,37 +86,47 @@ def main(args):
 
     criterion = CrossEntropyLoss().cuda()
     optimizer = SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
-    scheduler_step = StepLR(optimizer, step_size=args.lr_step_size, gamma=args.gamma)
+
+    if hasattr(args, 'consin_lr') and args.consin_lr == 1:
+        scheduler_step = CosineAnnealingLR(optimizer, args.epochs)
+    else: 
+        scheduler_step = StepLR(optimizer, step_size=args.lr_step_size, gamma=args.gamma)
+
     if hasattr(args, 'warmup') and args.warmup == 1:
         scheduler_linear = LinearLR(optimizer, start_factor=0.2, end_factor=1.0, total_iters=4, last_epoch=- 1)
 
     for epoch in range(args.epochs):
         before = time.time()
         train_loader.sampler.set_epoch(epoch)
-        test_loader.sampler.set_epoch(epoch)
         train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd)
-        test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
+        if epoch % args.test_freq == 0 or epoch == args.epochs - 1:
+            test_loader.sampler.set_epoch(epoch)
+            test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
         after = time.time()
         if hasattr(args, 'warmup') and args.warmup == 1 and epoch < 5:
             scheduler_linear.step()
-        scheduler_step.step()
+        else:
+            scheduler_step.step()
 
         if args.global_rank == 0:
             writer.add_scalar('train_loss', train_loss, epoch)
             writer.add_scalar('train_acc', train_acc, epoch)
-            writer.add_scalar('test_loss', test_loss, epoch)
-            writer.add_scalar('test_acc', test_acc, epoch)
+            writer.add_scalar('lr', scheduler_step.get_last_lr()[0], epoch)
+            if epoch % args.test_freq == 0 or epoch == args.epochs - 1:
+                writer.add_scalar('test_loss', test_loss, epoch)
+                writer.add_scalar('test_acc', test_acc, epoch)
 
             log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
                 epoch, str(datetime.timedelta(seconds=(after - before))),
                 scheduler_step.get_last_lr()[0], train_loss, train_acc, test_loss, test_acc))
 
-            torch.save({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-            }, os.path.join(args.outdir, 'checkpoint.pth.tar'))
+            if epoch == args.epochs - 1:
+                torch.save({
+                    'epoch': epoch + 1,
+                    'arch': args.arch,
+                    'state_dict': model.state_dict(),
+                    'optimizer': optimizer.state_dict(),
+                }, os.path.join(args.outdir, 'checkpoint.pth.tar'))
     
     if args.ddp and args.certify:
         certify_loader = DataLoader(test_dataset, batch_size=1,
@@ -258,6 +280,8 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
 
 if __name__ == "__main__":
 
+    env_args = get_args()
+
     parser = argparse.ArgumentParser(description='Robustness')
     parser.add_argument('--config', type=str, required=True)
     ps = parser.parse_args()
@@ -268,17 +292,26 @@ if __name__ == "__main__":
     cfg = json.load(open(os.path.join("configs", cfg_file)))
     args = AttrDict(cfg)
     args.output = os.environ.get('AMLT_OUTPUT_DIR', os.path.join('/D_data/kaqiu/randomized_smoothing/', args.dataset))
-    args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
+    assert args.dataset in ['cifar10', 'imagenet'], 'dataset must be cifar10 or imagenet, but got {}'.format(args.dataset)
+    if args.dataset == 'cifar10':
+        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
+    elif args.dataset == 'imagenet':
+        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
-    if not os.path.exists(args.outdir):
-        os.makedirs(args.outdir)
-
-    if args.debug == 1:
-        args.batch = min(64, args.batch)
-        args.epochs = 1
-        args.skip = 1000
-
-    if args.ddp:
-        main_spawn(args)
+    if args.node_num > 1:
+        if env_args.get('RANK') == 0 and not os.path.exists(args.outdir):
+            os.makedirs(args.outdir)
+        multinode_start(args, env_args)
     else:
-        main(args)
+        if not os.path.exists(args.outdir):
+            os.makedirs(args.outdir)
+
+        if args.debug == 1:
+            args.batch = min(64, args.batch)
+            # args.epochs = 1
+            args.skip = 1000
+
+        if args.ddp:
+            main_spawn(args)
+        else:
+            main(args)
