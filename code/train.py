@@ -96,6 +96,7 @@ def main(args):
         scheduler_linear = LinearLR(optimizer, start_factor=0.2, end_factor=1.0, total_iters=4, last_epoch=- 1)
 
     for epoch in range(args.epochs):
+        lr = optimizer.param_groups[0]['lr']
         before = time.time()
         train_loader.sampler.set_epoch(epoch)
         train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd)
@@ -103,22 +104,18 @@ def main(args):
             test_loader.sampler.set_epoch(epoch)
             test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
         after = time.time()
-        if hasattr(args, 'warmup') and args.warmup == 1 and epoch < 5:
-            scheduler_linear.step()
-        else:
-            scheduler_step.step()
 
         if args.global_rank == 0:
             writer.add_scalar('train_loss', train_loss, epoch)
             writer.add_scalar('train_acc', train_acc, epoch)
-            writer.add_scalar('lr', scheduler_step.get_last_lr()[0], epoch)
+            writer.add_scalar('lr', lr, epoch)
             if epoch % args.test_freq == 0 or epoch == args.epochs - 1:
                 writer.add_scalar('test_loss', test_loss, epoch)
                 writer.add_scalar('test_acc', test_acc, epoch)
 
             log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
                 epoch, str(datetime.timedelta(seconds=(after - before))),
-                scheduler_step.get_last_lr()[0], train_loss, train_acc, test_loss, test_acc))
+                lr, train_loss, train_acc, test_loss, test_acc))
 
             if epoch == args.epochs - 1:
                 torch.save({
@@ -127,6 +124,11 @@ def main(args):
                     'state_dict': model.state_dict(),
                     'optimizer': optimizer.state_dict(),
                 }, os.path.join(args.outdir, 'checkpoint.pth.tar'))
+        
+        if hasattr(args, 'warmup') and args.warmup == 1 and epoch < 5:
+            scheduler_linear.step()
+        else:
+            scheduler_step.step()
     
     if args.ddp and args.certify:
         certify_loader = DataLoader(test_dataset, batch_size=1,
