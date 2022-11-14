@@ -25,17 +25,11 @@ environment:
   - pip install attrdict
 
 # storage:
-  # input:
-  #   storage_account_name: input_storage_account
-  #   container_name: amlt
-  # output:
-  #   storage_account_name: output_storage_account
-  #   container_name: kaqiu
-  #   mount_dir: /mnt/output
-  # external:
-  #   storage_account_name: external_storage_account
-  #   container_name: dataset
-  #   mount_dir: /mnt/shared_data
+#   my_output:
+#     storage_account_name: West US 2
+#     container_name: kaqiu
+#     mount_dir: kaqiu/projects/amlt_local/smoothing/
+#     local_dir: $CONFIG_DIR/amlt/smoothing/
 
 code:
   local_dir: $CONFIG_DIR/code
@@ -47,67 +41,13 @@ data:
   remote_dir: cifar/
 
 jobs:
-# - name: r152_n025_lr01_bs16_e200
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_lr01_bs16_e200.json
-# - name: r152_n025_lr01_bs16_e400
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_lr01_bs16_e400.json
-# - name: r152_n025_lr01_bs16_e800
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_lr01_bs16_e800.json
-# - name: r152_n025_lr01_bs128_e200
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_lr01_bs128_e200.json
-# - name: r152_n025_lr01_bs128_e400
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_lr01_bs128_e400.json
-# - name: r152_n025_lr01_bs128_e800
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_lr01_bs128_e800.json
-# - name: r152_n025_coslr01_bs16_e200
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_coslr01_bs16_e200.json
-# - name: r152_n025_coslr01_bs16_e400
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_coslr01_bs16_e400.json
-# - name: r152_n025_coslr01_bs16_e800
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_coslr01_bs16_e800.json
-# - name: r152_n025_coslr01_bs128_e200
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_coslr01_bs128_e200.json
-# - name: r152_n025_coslr01_bs128_e400
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_coslr01_bs128_e400.json
-# - name: r152_n025_coslr01_bs128_e800
-#   sku: G4
-#   command:
-#   - python train.py --config resnet152/n025_coslr01_bs128_e800.json
-- name: r152_n025_lr01_bs16_e100
-  sku: G4
+- name: r110_n025_coslr01_bs128_e51200_v2
+  sku: 2xG8
+  process_count_per_node: 8
   command:
-  - python train.py --config resnet152/n025_lr01_bs16_e100.json
-- name: r152_n025_lr01_bs128_e100
-  sku: G4
+  - python train.py --config resnet110/n025_coslr01_bs128_e51200_v2.json
+- name: r110_n025_coslr01_bs128_e102400_v2
+  sku: 2xG8
+  process_count_per_node: 8
   command:
-  - python train.py --config resnet152/n025_lr01_bs128_e100.json
-- name: r152_n025_coslr01_bs16_e100
-  sku: G4
-  command:
-  - python train.py --config resnet152/n025_coslr01_bs16_e100.json
-- name: r152_n025_coslr01_bs128_e100
-  sku: G4
-  command:
-  - python train.py --config resnet152/n025_coslr01_bs128_e100.json
+  - python train.py --config resnet110/n025_coslr01_bs128_e102400_v2.json

@@ -17,6 +17,8 @@ def get_args():
     "OMPI_COMM_WORLD_SIZE",
     "OMPI_COMM_WORLD_LOCAL_RANK",
     "AZ_BATCHAI_MPI_MASTER_NODE",
+    "AMLT_OUTPUT_DIR",
+    "AMLT_DATA_DIR",
   ]
   args = dict(gpus_per_node=torch.cuda.device_count())
   missing = []

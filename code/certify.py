@@ -15,13 +15,13 @@ def merge_ctf_files(ctf_filename, args):
     return
 
 
-def run_certify(args, base_classifier, loader):
+def run_certify(args, base_classifier, loader, split='test'):
 
     # create the smooothed classifier g
     smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma)
 
     # prepare output file
-    ctf_name = os.path.join(args.outdir, 'certify_sigma{}'.format(args.sigma) + '_rank{}'.format(args.global_rank))
+    ctf_name = os.path.join(args.outdir, 'certify_sigma{}_{}'.format(args.sigma, split) + '_rank{}'.format(args.global_rank))
     args.cft_name = ctf_name
     ctf_file = open(ctf_name, 'w')
     if args.global_rank == 0:
@@ -42,6 +42,7 @@ def run_certify(args, base_classifier, loader):
         correct = int(prediction == label)
 
         time_elapsed = str(datetime.timedelta(seconds=(after_time - before_time)))
+        print("{}\t{}\t{}\t{:.3}\t{}\t{}".format(i + args.global_rank, label, prediction, radius, correct, time_elapsed))
         print("{}\t{}\t{}\t{:.3}\t{}\t{}".format(
             i + args.global_rank, label, prediction, radius, correct, time_elapsed), file=ctf_file, flush=True)
 

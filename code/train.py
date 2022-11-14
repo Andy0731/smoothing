@@ -75,6 +75,16 @@ def main(args):
 
     model = get_architecture(args.arch, args.dataset)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+    if hasattr(args, 'resume') and args.resume:
+        resume_path = os.path.join(args.smoothing_path, args.resume)
+        print('Loading checkpoint ', resume_path)
+        assert os.path.isfile(resume_path), 'Could not find {}'.format(resume_path)
+        ckpt = torch.load(resume_path)
+        print('Checkpoint info: ', 'epoch ', ckpt['epoch'], ' arch ', ckpt['arch'])
+        model_sd = ckpt['state_dict']
+        model_sd = {k[len('module.'):]:v for k,v in model_sd.items()}
+        model.load_state_dict(model_sd)
+
     model.cuda(args.local_rank)
     if args.ddp:
         model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
@@ -129,19 +139,29 @@ def main(args):
             scheduler_linear.step()
         else:
             scheduler_step.step()
-    
+
+    if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
+        certify_loader = DataLoader(train_dataset, batch_size=1,
+            num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
+        certify_loader.sampler.set_epoch(0)
+        certify_plot(args, model, certify_loader, 'train')
+
     if args.ddp and args.certify:
         certify_loader = DataLoader(test_dataset, batch_size=1,
-            num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)  
-        run_certify(args, model, certify_loader)
-        close_flag = torch.ones(1).cuda()
-        print('rank ', args.global_rank, ', close_flag ', close_flag)
-        dist.all_reduce(close_flag, op=dist.ReduceOp.SUM)
-        print('rank ', args.global_rank, ', close_flag ', close_flag)
-        if args.global_rank == 0:
-            ctf_filename = args.cft_name.replace('_rank0', '')
-            merge_ctf_files(ctf_filename, args)
-            plot_curve(ctf_filename)
+            num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
+        certify_loader.sampler.set_epoch(0)
+        certify_plot(args, model, certify_loader, 'test')
+
+def certify_plot(args, model, certify_loader, split):
+    run_certify(args, model, certify_loader, split)
+    close_flag = torch.ones(1).cuda()
+    print('rank ', args.global_rank, ', close_flag ', close_flag)
+    dist.all_reduce(close_flag, op=dist.ReduceOp.SUM)
+    print('rank ', args.global_rank, ', close_flag ', close_flag)
+    if args.global_rank == 0:
+        ctf_filename = args.cft_name.replace('_rank0', '')
+        merge_ctf_files(ctf_filename, args)
+        plot_curve(ctf_filename)
 
 
 # def init_seeds(seed=0, cuda_deterministic=True):
@@ -297,8 +317,13 @@ if __name__ == "__main__":
     assert args.dataset in ['cifar10', 'imagenet'], 'dataset must be cifar10 or imagenet, but got {}'.format(args.dataset)
     if args.dataset == 'cifar10':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
+        if args.data == '/D_data/kaqiu/cifar10/': # local
+            args.smoothing_path = '../amlt'
+        else: # itp
+            args.smoothing_path = args.data
     elif args.dataset == 'imagenet':
-        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')
+        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')    
+
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
     if args.node_num > 1:
         if env_args.get('RANK') == 0 and not os.path.exists(args.outdir):
@@ -310,7 +335,7 @@ if __name__ == "__main__":
 
         if args.debug == 1:
             args.batch = min(64, args.batch)
-            # args.epochs = 1
+            args.epochs = 5
             args.skip = 1000
 
         if args.ddp:
