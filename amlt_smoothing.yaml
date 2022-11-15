@@ -1,15 +1,15 @@
 description: Locuslab Smoothing
 
 target:
-  # service: amlk8s
-  # name: itplabrr1cl1
-  # vc: resrchvc
+  service: amlk8s
+  name: itplabrr1cl1
+  vc: resrchvc
 
   # service: amlk8s
   # name: ms-shared
 
-  service: sing
-  name: msrresrchvc
+  # service: sing
+  # name: msrresrchvc
 
 environment:
   # image: amlt-sing/pytorch-1.7.0-cuda11.0-cudnn8-devel
@@ -41,12 +41,12 @@ data:
   remote_dir: cifar/
 
 jobs:
-- name: r110_n025_coslr01_bs128_e51200_v2
+- name: r110_n025_coslr01_bs128_e51200_v2_k8s
   sku: 2xG8
   process_count_per_node: 8
   command:
   - python train.py --config resnet110/n025_coslr01_bs128_e51200_v2.json
-- name: r110_n025_coslr01_bs128_e102400_v2
+- name: r110_n025_coslr01_bs128_e102400_v2_k8s
   sku: 2xG8
   process_count_per_node: 8
   command:
