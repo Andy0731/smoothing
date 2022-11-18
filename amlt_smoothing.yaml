@@ -1,15 +1,15 @@
 description: Locuslab Smoothing
 
 target:
-  service: amlk8s
-  name: itplabrr1cl1
-  vc: resrchvc
+  # service: amlk8s
+  # name: itplabrr1cl1
+  # vc: resrchvc
 
   # service: amlk8s
   # name: ms-shared
 
-  # service: sing
-  # name: msrresrchvc
+  service: sing
+  name: msrresrchvc
 
 environment:
   # image: amlt-sing/pytorch-1.7.0-cuda11.0-cudnn8-devel
@@ -24,13 +24,6 @@ environment:
   - pip install setGPU
   - pip install attrdict
 
-# storage:
-#   my_output:
-#     storage_account_name: West US 2
-#     container_name: kaqiu
-#     mount_dir: kaqiu/projects/amlt_local/smoothing/
-#     local_dir: $CONFIG_DIR/amlt/smoothing/
-
 code:
   local_dir: $CONFIG_DIR/code
 
@@ -41,13 +34,20 @@ data:
   remote_dir: cifar/
 
 jobs:
-- name: r110_n025_coslr01_bs128_e51200_v2_k8s
-  sku: 2xG8
-  process_count_per_node: 8
+- name: r110_n025_coslr01_bs128_e200_dav3
+  sku: G4
+  # process_count_per_node: 8
   command:
-  - python train.py --config resnet110/n025_coslr01_bs128_e51200_v2.json
-- name: r110_n025_coslr01_bs128_e102400_v2_k8s
-  sku: 2xG8
-  process_count_per_node: 8
+  - python train.py --config configs/resnet110/n025_coslr01_bs128_e200_dav3.json
+- name: r110_n025_coslr01_bs128_e1600_dav3
+  sku: G4
   command:
-  - python train.py --config resnet110/n025_coslr01_bs128_e102400_v2.json
+  - python train.py --config configs/resnet110/n025_coslr01_bs128_e1600_dav3.json
+- name: r110_n025_coslr01_bs128_e200_damix
+  sku: G4
+  command:
+  - python train.py --config configs/resnet110/n025_coslr01_bs128_e200_damix.json
+- name: r110_n025_coslr01_bs128_e1600_damix
+  sku: G4
+  command:
+  - python train.py --config configs/resnet110/n025_coslr01_bs128_e1600_damix.json

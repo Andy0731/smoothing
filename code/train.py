@@ -56,7 +56,8 @@ def main(args):
 
     writer = SummaryWriter(args.outdir) if args.global_rank == 0 else None
 
-    train_dataset = get_dataset(args.dataset, 'train', args.data)
+    dataaug = args.dataaug if hasattr(args, 'dataaug') else None
+    train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug)
     test_dataset = get_dataset(args.dataset, 'test', args.data)
     # pin_memory = (args.dataset == "imagenet")
     pin_memory = True

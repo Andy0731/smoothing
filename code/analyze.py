@@ -167,10 +167,20 @@ if __name__ == "__main__":
         # "amlt/smoothing/r110_n025_coslr01_bs16_e200_cert_train/resnet110/n025_coslr01_bs16_e200_cert_train/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs16_e400_cert_train/resnet110/n025_coslr01_bs16_e400_cert_train/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs16_e800_cert_train/resnet110/n025_coslr01_bs16_e800_cert_train/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e200_cert_train/resnet110/n025_coslr01_bs128_e200_cert_train/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e400_cert_train/resnet110/n025_coslr01_bs128_e400_cert_train/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e800_cert_train/resnet110/n025_coslr01_bs128_e800_cert_train/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
+
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e200_cert_train/resnet110/n025_coslr01_bs128_e200_cert_train/certify_sigma0.25",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e200_damix/resnet110/n025_coslr01_bs128_e200_damix/certify_sigma0.25_train",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e200_dav3/resnet110/n025_coslr01_bs128_e200_dav3/certify_sigma0.25_train",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e400_cert_train/resnet110/n025_coslr01_bs128_e400_cert_train/certify_sigma0.25",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e800_cert_train/resnet110/n025_coslr01_bs128_e800_cert_train/certify_sigma0.25",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e3200/resnet110/n025_coslr01_bs128_e3200/certify_sigma0.25_train",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e6400_m2/resnet110/n025_coslr01_bs128_e6400/certify_sigma0.25_train",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e25600_m4/resnet110/n025_coslr01_bs128_e25600/certify_sigma0.25_train",
+
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600_damix/resnet110/n025_coslr01_bs128_e1600_damix/certify_sigma0.25_train",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600_dav3/resnet110/n025_coslr01_bs128_e1600_dav3/certify_sigma0.25_train",        
 
         # "amlt/smoothing/r110_n025_lr01_bs16_e200_cert_train/resnet110/n025_lr01_bs16_e200_cert_train/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_lr01_bs16_e400_cert_train/resnet110/n025_lr01_bs16_e400_cert_train/certify_sigma0.25",
@@ -199,10 +209,17 @@ if __name__ == "__main__":
         # "amlt/smoothing/r152_n025_lr01_bs16_e400/resnet152/n025_lr01_bs16_e400/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs16_e800/resnet152/n025_lr01_bs16_e800/certify_sigma0.25",
 
+        "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
+        "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
+
         # "amlt/smoothing/r152_n025_lr01_bs128_e100/resnet152/n025_lr01_bs128_e100/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e200/resnet152/n025_lr01_bs128_e200/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e400/resnet152/n025_lr01_bs128_e400/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e800/resnet152/n025_lr01_bs128_e800/certify_sigma0.25",
+        # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
+        "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
+        "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
 
         # "amlt/smoothing/r110_n025_lr01_bs16_e200/resnet110/n025_lr01_bs16_e200/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_lr01_bs16_e400/resnet110/n025_lr01_bs16_e400/certify_sigma0.25",
@@ -213,10 +230,19 @@ if __name__ == "__main__":
         # "amlt/smoothing/r110_n025_coslr01_bs16_e200/resnet110/n025_coslr01_bs16_e200/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs16_e400/resnet110/n025_coslr01_bs16_e400/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs16_e800/resnet110/n025_coslr01_bs16_e800/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e200/resnet110/n025_coslr01_bs128_e200/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e400/resnet110/n025_coslr01_bs128_e400/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e800/resnet110/n025_coslr01_bs128_e800/certify_sigma0.25",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
+
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e200/resnet110/n025_coslr01_bs128_e200/certify_sigma0.25",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e200_damix/resnet110/n025_coslr01_bs128_e200_damix/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e200_dav3/resnet110/n025_coslr01_bs128_e200_dav3/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e400/resnet110/n025_coslr01_bs128_e400/certify_sigma0.25",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e800/resnet110/n025_coslr01_bs128_e800/certify_sigma0.25",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600_damix/resnet110/n025_coslr01_bs128_e1600_damix/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600_dav3/resnet110/n025_coslr01_bs128_e1600_dav3/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e3200/resnet110/n025_coslr01_bs128_e3200/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e6400_m2/resnet110/n025_coslr01_bs128_e6400/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e25600_m4/resnet110/n025_coslr01_bs128_e25600/certify_sigma0.25_test",
 
         # "amlt/smoothing/r110_n025_g4_lr01_sbn_bs16_wu/resnet110/n025_lr01_bs16_wu/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_g4_lr01_sbn_bs128_wu/resnet110/n025_lr01_bs128_wu/certify_sigma0.25"
@@ -247,9 +273,8 @@ if __name__ == "__main__":
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/r110_n025_coslr01_bs128_cert_train", "CIFAR10 R110 n025 coslr01 bs128 cert train", 1.0, [
-            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('r110_n025_coslr01_bs128_','') 
-                + ctf_file.split('/')[-1].replace('certify_sigma0.25','')) for ctf_file in ctf_files
+        "../amlt/smoothing/analysis/plots/r110_r152_e1600_e12800_test", "CIFAR10 R110-R152 coslr01 bs128 test", 1.0, [
+            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('n025_coslr01_bs128_','').replace('_m2','').replace('_m8','')) for ctf_file in ctf_files
         ])
     # plot_certified_accuracy(
     #     "../amlt/smoothing/analysis/plots/vary_noise_cifar10_4.0", "CIFAR-10, vary $\sigma$", 4.0, [
