@@ -21,13 +21,17 @@ class ApproximateAccuracy(Accuracy):
     def __init__(self, data_file_path: str):
         self.data_file_path = data_file_path
 
-    def at_radii(self, radii: np.ndarray) -> np.ndarray:
+    def at_radii(self, radii: np.ndarray) -> tuple:
         df = pd.read_csv(self.data_file_path, delimiter="\t")
-        return np.array([self.at_radius(df, radius) for radius in radii])
+        return ((np.array([self.at_radius(df, radius) for radius in radii]),
+            np.array([self.at_radius_only_roubst(df, radius) for radius in radii]),
+            df["correct"].mean()))
 
     def at_radius(self, df: pd.DataFrame, radius: float):
         return (df["correct"] & (df["radius"] >= radius)).mean()
 
+    def at_radius_only_roubst(self, df: pd.DataFrame, radius: float):
+        return (df["radius"] >= radius).mean()
 
 class HighProbAccuracy(Accuracy):
     def __init__(self, data_file_path: str, alpha: float, rho: float):
@@ -61,15 +65,22 @@ def plot_certified_accuracy(outfile: str, title: str, max_radius: float,
         os.makedirs(outdir)
     radii = np.arange(0, max_radius + radius_step, radius_step)
     plt.figure()
-    for line in lines:
-        plt.plot(radii * line.scale_x, line.quantity.at_radii(radii), line.plot_fmt)
-
+    colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
+    assert len(lines) < 8, 'plot at most 7*2 curves!'
+    for idx, line in enumerate(lines):
+        robust_acc, robustness, accuracy = line.quantity.at_radii(radii)
+        line.legend = line.legend + '_acc{:.1f}'.format(accuracy * 100)
+        plt.plot(radii * line.scale_x, robust_acc, color=colors[idx % 7], linestyle='solid', label=line.legend)
+        plt.plot(radii * line.scale_x, robustness, color=colors[idx % 7], linestyle='dashed', label=line.legend + '_ro')
+        
     plt.ylim((0, 1))
     plt.xlim((0, max_radius))
     plt.tick_params(labelsize=14)
     plt.xlabel("radius", fontsize=16)
     plt.ylabel("certified accuracy", fontsize=16)
-    plt.legend([method.legend for method in lines], loc='upper right', fontsize=16)
+    # plt.legend([method.legend for method in lines], loc='upper right', fontsize=16)
+    # plt.legend([method.legend for method in lines], fontsize=10)
+    plt.legend(fontsize=10)
     plt.savefig(outfile + ".pdf")
     plt.tight_layout()
     plt.title(title, fontsize=20)
@@ -209,17 +220,17 @@ if __name__ == "__main__":
         # "amlt/smoothing/r152_n025_lr01_bs16_e400/resnet152/n025_lr01_bs16_e400/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs16_e800/resnet152/n025_lr01_bs16_e800/certify_sigma0.25",
 
-        "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
-        "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
+        # "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
 
         # "amlt/smoothing/r152_n025_lr01_bs128_e100/resnet152/n025_lr01_bs128_e100/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e200/resnet152/n025_lr01_bs128_e200/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e400/resnet152/n025_lr01_bs128_e400/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e800/resnet152/n025_lr01_bs128_e800/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
-        "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
         # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
-        "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
 
         # "amlt/smoothing/r110_n025_lr01_bs16_e200/resnet110/n025_lr01_bs16_e200/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_lr01_bs16_e400/resnet110/n025_lr01_bs16_e400/certify_sigma0.25",
@@ -236,13 +247,13 @@ if __name__ == "__main__":
         # "amlt/smoothing/r110_n025_coslr01_bs128_e200_dav3/resnet110/n025_coslr01_bs128_e200_dav3/certify_sigma0.25_test",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e400/resnet110/n025_coslr01_bs128_e400/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e800/resnet110/n025_coslr01_bs128_e800/certify_sigma0.25",
-        # "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
+        "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e1600_damix/resnet110/n025_coslr01_bs128_e1600_damix/certify_sigma0.25_test",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e1600_dav3/resnet110/n025_coslr01_bs128_e1600_dav3/certify_sigma0.25_test",
-        # "amlt/smoothing/r110_n025_coslr01_bs128_e3200/resnet110/n025_coslr01_bs128_e3200/certify_sigma0.25_test",
-        # "amlt/smoothing/r110_n025_coslr01_bs128_e6400_m2/resnet110/n025_coslr01_bs128_e6400/certify_sigma0.25_test",
-        # "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
-        # "amlt/smoothing/r110_n025_coslr01_bs128_e25600_m4/resnet110/n025_coslr01_bs128_e25600/certify_sigma0.25_test",
+        "amlt/smoothing/r110_n025_coslr01_bs128_e3200/resnet110/n025_coslr01_bs128_e3200/certify_sigma0.25_test",
+        "amlt/smoothing/r110_n025_coslr01_bs128_e6400_m2/resnet110/n025_coslr01_bs128_e6400/certify_sigma0.25_test",
+        "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
+        "amlt/smoothing/r110_n025_coslr01_bs128_e25600_m4/resnet110/n025_coslr01_bs128_e25600/certify_sigma0.25_test",
 
         # "amlt/smoothing/r110_n025_g4_lr01_sbn_bs16_wu/resnet110/n025_lr01_bs16_wu/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_g4_lr01_sbn_bs128_wu/resnet110/n025_lr01_bs128_wu/certify_sigma0.25"
@@ -256,7 +267,7 @@ if __name__ == "__main__":
         # "amlt/smoothing/r50_n025_g4_lr01_sbn_bs128_m4_wu/resnet50/n025_lr01_bs128_m4_wu/certify_sigma0.25",
 
         # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs16/resnet110/n0_lr01_bs16/certify_sigma0.25",
-        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs32/resnet110/n0_lr01_bs32/certify_sigma0.25",
+        # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs32/resnet110/n0_lr01_bs32/ceApproximateAccuracyrtify_sigma0.25",
         # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs64/resnet110/n0_lr01_bs64/certify_sigma0.25",
         # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs128/resnet110/n0_lr01_bs128/certify_sigma0.25",
         # "amlt/smoothing/r110_n0_g4_lr01_sbn_bs256/resnet110/n0_lr01_bs256/certify_sigma0.25",
@@ -273,9 +284,10 @@ if __name__ == "__main__":
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/r110_r152_e1600_e12800_test", "CIFAR10 R110-R152 coslr01 bs128 test", 1.0, [
-            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('n025_coslr01_bs128_','').replace('_m2','').replace('_m8','')) for ctf_file in ctf_files
+        "../amlt/smoothing/analysis/plots/r110_test_sep", "CIFAR10 R110 test", 1.0, [
+            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('n025_coslr01_bs128_','').replace('_cert_train','').replace('_m2','').replace('_m8','')) for ctf_file in ctf_files
         ])
+    
     # plot_certified_accuracy(
     #     "../amlt/smoothing/analysis/plots/vary_noise_cifar10_4.0", "CIFAR-10, vary $\sigma$", 4.0, [
     #         Line(ApproximateAccuracy("../amlt/smoothing/data/predict/cifar10/resnet110/noise_0.12/test/sigma_0.12"), "$\sigma = 0.12$"),
