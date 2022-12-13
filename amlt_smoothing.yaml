@@ -32,22 +32,28 @@ data:
   # remote_dir: imagenet/
   local_dir: /D_data/kaqiu/cifar10/
   remote_dir: cifar/
+  # local_dir: /D_data/kaqiu/imagenet32/
+  # remote_dir: imagenet32/
 
 jobs:
-- name: r110_n025_coslr01_bs128_e200_dav3
-  sku: G4
-  # process_count_per_node: 8
-  command:
-  - python train.py --config configs/resnet110/n025_coslr01_bs128_e200_dav3.json
-- name: r110_n025_coslr01_bs128_e1600_dav3
-  sku: G4
-  command:
-  - python train.py --config configs/resnet110/n025_coslr01_bs128_e1600_dav3.json
-- name: r110_n025_coslr01_bs128_e200_damix
+# - name: pt_imgn32_r152_n025_coslr1_e400_m16
+#   sku: 16xG4
+#   command:
+#   - python train.py --config configs/imagenet32/r152_n025_coslr1_e400.json
+#   process_count_per_node: 4
+- name: ft_r152_imgn32n025e200_coslr001_bs128_n025_e40
   sku: G4
   command:
-  - python train.py --config configs/resnet110/n025_coslr01_bs128_e200_damix.json
-- name: r110_n025_coslr01_bs128_e1600_damix
+  - python train.py --config configs/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e40.json
+- name: ft_r152_imgn32n025e200_coslr001_bs128_n025_e100
   sku: G4
   command:
-  - python train.py --config configs/resnet110/n025_coslr01_bs128_e1600_damix.json
+  - python train.py --config configs/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100.json
+- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e40
+  sku: G4
+  command:
+  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e40.json
+- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e100
+  sku: G4
+  command:
+  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100.json

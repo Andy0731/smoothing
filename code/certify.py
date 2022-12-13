@@ -17,6 +17,8 @@ def merge_ctf_files(ctf_filename, args):
 
 def run_certify(args, base_classifier, loader, split='test'):
 
+    skip = args.skip if split == 'test' else args.skip_train
+
     # create the smooothed classifier g
     smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma)
 
@@ -31,7 +33,7 @@ def run_certify(args, base_classifier, loader, split='test'):
     for i, (x, label) in enumerate(loader):
 
         # only certify every args.skip examples, and stop after args.max examples
-        if i % args.skip != 0:
+        if i % skip != 0:
             continue
 
         before_time = time()

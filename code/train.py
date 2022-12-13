@@ -83,8 +83,15 @@ def main(args):
         ckpt = torch.load(resume_path)
         print('Checkpoint info: ', 'epoch ', ckpt['epoch'], ' arch ', ckpt['arch'])
         model_sd = ckpt['state_dict']
-        model_sd = {k[len('module.'):]:v for k,v in model_sd.items()}
-        model.load_state_dict(model_sd)
+        # model_sd = {k[len('module.'):]:v for k,v in model_sd.items()}
+        new_model_sd = {}
+        for k,v in model_sd.items():
+            if 'finetune' in args.outdir and ('fc' in k or 'linear' in k):
+                continue 
+            new_model_sd[k[len('module.'):]] = v
+        model_sd = new_model_sd
+        strict = False if 'finetune' in args.outdir else True        
+        model.load_state_dict(model_sd, strict=strict)
 
     model.cuda(args.local_rank)
     if args.ddp:
@@ -315,7 +322,7 @@ if __name__ == "__main__":
     cfg = json.load(open(os.path.join("configs", cfg_file)))
     args = AttrDict(cfg)
     args.output = os.environ.get('AMLT_OUTPUT_DIR', os.path.join('/D_data/kaqiu/randomized_smoothing/', args.dataset))
-    assert args.dataset in ['cifar10', 'imagenet'], 'dataset must be cifar10 or imagenet, but got {}'.format(args.dataset)
+    assert args.dataset in ['cifar10', 'imagenet', 'imagenet32'], 'dataset must be cifar10 or imagenet, but got {}'.format(args.dataset)
     if args.dataset == 'cifar10':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
         if args.data == '/D_data/kaqiu/cifar10/': # local
@@ -323,7 +330,9 @@ if __name__ == "__main__":
         else: # itp
             args.smoothing_path = args.data
     elif args.dataset == 'imagenet':
-        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')    
+        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')
+    elif args.dataset == 'imagenet32':
+        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet32/')
 
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
     if args.node_num > 1:
@@ -336,8 +345,9 @@ if __name__ == "__main__":
 
         if args.debug == 1:
             args.batch = min(64, args.batch)
-            args.epochs = 5
-            args.skip = 1000
+            args.epochs = 1
+            args.skip = 10000
+            args.skip_train = 100000
 
         if args.ddp:
             main_spawn(args)

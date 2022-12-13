@@ -1,0 +1,46 @@
+II[0m Active project: "smoothing" in "/home/kaqiu/lucuslab/smoothing", v9.9.5 (latest: v9.11.0).[0m
+- azml_int: false
+  code:
+    export_env: AMLT_CODE_DIR
+    git_branch: pretrain
+    git_repo_dir: code
+    git_sha: 2c4b609d58dfcd22f1971507ebc03caa149bb82f
+    pre_existing: false
+    remote_dir: projects/smoothing/amlt-code/ba8e82aae1d10123a5c51fb1d77d7dad
+    storage_id: default
+  command:
+  - printenv | grep AISC_JOB_INSTANCE_ID
+  - python train.py --config configs/imagenet32/r152_n025_coslr1_e400.json
+  data:
+    local_dir: /D_data/kaqiu/imagenet32/
+    remote_dir: imagenet32/
+    storage_id: default
+  datacache: {}
+  environment:
+    env: {}
+    image: wuzhiron/pytorch:pytorch1.10.0-cuda11.3-cudnn8-singularity
+    image_setup: []
+    registry: registry.hub.docker.com
+    setup:
+    - pip install scipy
+    - pip install pandas
+    - pip install statsmodels
+    - pip install matplotlib
+    - pip install seaborn
+    - pip install setGPU
+    - pip install attrdict
+    skip_conda_packages_on_sing: []
+  id: 21341ab9-d381-4e01-9387-cb641bc7dbb8
+  mpi: false
+  name: pt_imgn32_r152_n025_coslr1_e400
+  process_count_per_node: 8
+  results_dir: projects/smoothing/amlt-results/7330024814.52206-aca41462-7f2f-4359-b763-38baec38e017
+  sku: 2x16G8-V100
+  sla_tier: Premium
+  status: running
+  submit_args:
+    env:
+      JOB_EXECUTION_MODE: Basic
+      MKL_THREADING_LAYER: GNU
+  tags: []
+

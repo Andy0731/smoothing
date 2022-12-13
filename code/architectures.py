@@ -27,13 +27,15 @@ def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
         model = resnet50()
         cudnn.benchmark = True
     elif arch == "cifar_resnet20":
-        model = resnet_cifar(depth=20, num_classes=10)
+        model = resnet_cifar(depth=20, num_classes=10 if 'cifar' in dataset else 1000)
     elif arch == "cifar_resnet110":
-        model = resnet_cifar(depth=110, num_classes=10)
+        model = resnet_cifar(depth=110, num_classes=10 if 'cifar' in dataset else 1000)
     elif arch == "cifar_resnet1199":
-        model = resnet_cifar(depth=1199, num_classes=10, block_name='bottleneck')
+        model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
     elif "normal_" in arch:
-        model = eval(arch + '()')
-        # print('model: ', model)
+        if 'cifar' in dataset:
+            model = eval(arch + '()')
+        elif 'imagenet' in dataset:
+            model = eval(arch + '(num_classes=1000)')
     normalize_layer = get_normalize_layer(dataset)
     return torch.nn.Sequential(normalize_layer, model)
