@@ -19,8 +19,9 @@ def run_certify(args, base_classifier, loader, split='test'):
 
     skip = args.skip if split == 'test' else args.skip_train
 
+    use_amp = True if (hasattr(args, 'amp') and args.amp) else False
     # create the smooothed classifier g
-    smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma)
+    smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
 
     # prepare output file
     ctf_name = os.path.join(args.outdir, 'certify_sigma{}_{}'.format(args.sigma, split) + '_rank{}'.format(args.global_rank))

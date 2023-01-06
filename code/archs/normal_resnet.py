@@ -129,12 +129,20 @@ def ResNet101(**kwargs):
 def ResNet152(**kwargs):
     return ResNet(Bottleneck, [3,8,36,3], **kwargs)
 
+def ResNet300(**kwargs):
+    return ResNet(Bottleneck, [6,16,72,6], **kwargs)
+
+def ResNet152Wide2(**kwargs):
+    return ResNet(Bottleneck, [3,8,36,3], wm=2, **kwargs)
+
 resnet50 = ResNet50
 resnet18 = ResNet18
 resnet34 = ResNet34
 resnet101 = ResNet101
 resnet152 = ResNet152
 resnet18wide = ResNet18Wide
+resnet300 = ResNet300
+resnet152wide2 = ResNet152Wide2
 
 # resnet18thin = ResNet18Thin
 def test():

@@ -24,6 +24,8 @@ def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = N
         return _cifar10(split, datapath, dataaug)
     elif dataset == 'imagenet32':
         return _imagenet32(split, datapath, dataaug)
+    elif dataset == 'ti500k':
+        return TiTop50KDataset(datapath)
 
 
 def get_num_classes(dataset: str):
@@ -31,6 +33,8 @@ def get_num_classes(dataset: str):
     if "imagenet" in dataset:
         return 1000
     elif dataset == "cifar10":
+        return 10
+    elif dataset == "ti500k":
         return 10
 
 
@@ -41,6 +45,8 @@ def get_normalize_layer(dataset: str) -> torch.nn.Module:
     elif dataset == "cifar10":
         return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
     elif dataset == "imagenet32":
+        return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
+    elif dataset == "ti500k":
         return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
 
 
@@ -249,3 +255,37 @@ class ImageNetDS(Dataset):
             if not check_integrity(fpath, md5):
                 return False
         return True
+
+
+## To use this dataset, please contact the authors of https://arxiv.org/pdf/1905.13736.pdf
+# to get access to this pickle file (ti_top_50000_pred_v3.1.pickle) containing the dataset.
+class TiTop50KDataset(Dataset):
+    """500K images closest to the CIFAR-10 dataset from 
+        the 80 Millon Tiny Images Datasets"""
+    def __init__(self, datapath):
+        super(TiTop50KDataset, self).__init__()
+        dataset_path = os.path.join(datapath, 'ti_500K_pseudo_labeled.pickle')
+
+        self.dataset_dict = pickle.load(open(dataset_path,'rb'))
+        #{'data', 'extrapolated_targets', 'ti_index', 
+        # 'prediction_model', 'prediction_model_epoch'}
+        
+        self.length = len(self.dataset_dict['data'])
+        self.transforms = transforms.Compose([
+                    transforms.Resize((32,32)),
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor()
+                ])
+
+    def __getitem__(self, index):
+        img = self.dataset_dict['data'][index]
+        target = self.dataset_dict['extrapolated_targets'][index]
+        
+        img = Image.fromarray(img)
+        img = self.transforms(img)
+
+        return img, target
+                
+    def __len__(self):
+        return self.length

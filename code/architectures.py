@@ -9,11 +9,15 @@ from archs.normal_resnet import resnet34 as normal_resnet34
 from archs.normal_resnet import resnet50 as normal_resnet50
 from archs.normal_resnet import resnet101 as normal_resnet101
 from archs.normal_resnet import resnet152 as normal_resnet152
+from archs.normal_resnet import resnet300 as normal_resnet300
+from archs.normal_resnet import resnet152wide2 as normal_resnet152wide2
+
 # resnet50 - the classic ResNet-50, sized for ImageNet
 # cifar_resnet20 - a 20-layer residual network sized for CIFAR
 # cifar_resnet110 - a 110-layer residual network sized for CIFAR
 ARCHITECTURES = ["resnet50", "cifar_resnet20", "cifar_resnet110", 
-                "normal_resnet18", "normal_resnet18wide", "normal_resnet34", "normal_resnet50", "normal_resnet101", "normal_resnet152"]
+                "normal_resnet18", "normal_resnet18wide", "normal_resnet34", "normal_resnet50", "normal_resnet101", "normal_resnet152",
+                "normal_resnet300", "normal_resnet152wide2"]
 
 
 def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
@@ -23,6 +27,7 @@ def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
     :param dataset: the dataset - should be in the datasets.DATASETS list
     :return: a Pytorch module
     """
+    print('arch:', arch, ' dataset: ', dataset)
     if arch == "resnet50" and dataset == "imagenet":
         model = resnet50()
         cudnn.benchmark = True
@@ -33,9 +38,11 @@ def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
     elif arch == "cifar_resnet1199":
         model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
     elif "normal_" in arch:
-        if 'cifar' in dataset:
+        if ('cifar' in dataset) or ('ti500k' in dataset):
             model = eval(arch + '()')
         elif 'imagenet' in dataset:
-            model = eval(arch + '(num_classes=1000)')
+            model = arch + '(num_classes=1000)'
+            print('model: ', model)
+            model = eval(model)
     normalize_layer = get_normalize_layer(dataset)
     return torch.nn.Sequential(normalize_layer, model)

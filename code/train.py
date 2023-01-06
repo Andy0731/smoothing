@@ -54,24 +54,29 @@ def multinode_start(args, env_args):
 
 def main(args):
 
+    time_start = time.time()
     writer = SummaryWriter(args.outdir) if args.global_rank == 0 else None
 
     dataaug = args.dataaug if hasattr(args, 'dataaug') else None
     train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug)
-    test_dataset = get_dataset(args.dataset, 'test', args.data)
+    has_testset = False if args.dataset == 'ti500k' else True
+    if has_testset:
+        test_dataset = get_dataset(args.dataset, 'test', args.data)
     # pin_memory = (args.dataset == "imagenet")
     pin_memory = True
     if args.ddp:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
         train_loader = DataLoader(train_dataset, batch_size=args.batch,
             num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
-        test_sampler = torch.utils.data.distributed.DistributedSampler(test_dataset)
-        test_loader = DataLoader(test_dataset, batch_size=args.batch,
-            num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)        
+        if has_testset:
+            test_sampler = torch.utils.data.distributed.DistributedSampler(test_dataset)
+            test_loader = DataLoader(test_dataset, batch_size=args.batch,
+                num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)        
     else:
         train_loader = DataLoader(train_dataset, shuffle=True, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
-        test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
+        if has_testset:
+            test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
 
     model = get_architecture(args.arch, args.dataset)
@@ -118,7 +123,7 @@ def main(args):
         before = time.time()
         train_loader.sampler.set_epoch(epoch)
         train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd)
-        if epoch % args.test_freq == 0 or epoch == args.epochs - 1:
+        if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
             test_loader.sampler.set_epoch(epoch)
             test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
         after = time.time()
@@ -127,13 +132,18 @@ def main(args):
             writer.add_scalar('train_loss', train_loss, epoch)
             writer.add_scalar('train_acc', train_acc, epoch)
             writer.add_scalar('lr', lr, epoch)
-            if epoch % args.test_freq == 0 or epoch == args.epochs - 1:
+            if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
                 writer.add_scalar('test_loss', test_loss, epoch)
                 writer.add_scalar('test_acc', test_acc, epoch)
 
-            log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
-                epoch, str(datetime.timedelta(seconds=(after - before))),
-                lr, train_loss, train_acc, test_loss, test_acc))
+            if has_testset:
+                log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
+                    epoch, str(datetime.timedelta(seconds=(after - before))),
+                    lr, train_loss, train_acc, test_loss, test_acc))
+            else:
+                log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
+                    epoch, str(datetime.timedelta(seconds=(after - before))),
+                    lr, train_loss, train_acc))                
 
             if epoch == args.epochs - 1:
                 torch.save({
@@ -147,18 +157,27 @@ def main(args):
             scheduler_linear.step()
         else:
             scheduler_step.step()
+    time_train_end = time.time()
+    time_train = datetime.timedelta(seconds=time_train_end - time_start)
+    print('training time: ', time_train)
 
     if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
         certify_loader = DataLoader(train_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
         certify_loader.sampler.set_epoch(0)
         certify_plot(args, model, certify_loader, 'train')
+        time_ctf_train_end = time.time()
+        time_ctf_train = datetime.timedelta(seconds=time_ctf_train_end - time_train_end)
+        print('certify training set time: ', time_ctf_train)
 
     if args.ddp and args.certify:
         certify_loader = DataLoader(test_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
         certify_loader.sampler.set_epoch(0)
         certify_plot(args, model, certify_loader, 'test')
+        time_ctf_test_end = time.time()
+        time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_ctf_train_end)
+        print('certify test set time: ', time_ctf_test)
 
 def certify_plot(args, model, certify_loader, split):
     run_certify(args, model, certify_loader, split)
@@ -193,12 +212,17 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
     top5 = AverageMeter()
     end = time.time()
 
+    use_amp = True if (hasattr(args, 'amp') and args.amp) else False
+    scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
+
     # switch to train mode
     model.train()
 
     for i, (inputs, targets) in enumerate(loader):
         # measure data loading time
         data_time.update(time.time() - end)
+
+        optimizer.zero_grad()
 
         if args.debug and i > 1:
             break
@@ -219,8 +243,9 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
                 targets = torch.cat((targets_cln, targets), dim=0)
 
         # compute output
-        outputs = model(inputs)
-        loss = criterion(outputs, targets)
+        with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=use_amp):
+            outputs = model(inputs)
+            loss = criterion(outputs, targets)
 
         # measure accuracy and record loss
         acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
@@ -229,9 +254,14 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         top5.update(acc5.item(), inputs.size(0))
 
         # compute gradient and do SGD step
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
+        # optimizer.zero_grad() # set_to_none=True here can modestly improve performance
+
+        # optimizer.zero_grad()
+        # loss.backward()
+        # optimizer.step()
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -261,6 +291,8 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
     top5 = AverageMeter()
     end = time.time()
 
+    use_amp = True if (hasattr(args, 'amp') and args.amp) else False
+
     # switch to eval mode
     model.eval()
 
@@ -280,12 +312,11 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
                 inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
 
             # compute output
-            outputs = model(inputs)
-            loss = criterion(outputs, targets)
+            with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=use_amp):
+                outputs = model(inputs)
+                loss = criterion(outputs, targets)
 
-            # measure accuracy and record loss
-
-            
+            # measure accuracy and record loss            
             acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
             losses.update(loss.item(), inputs.size(0))
             top1.update(acc1.item(), inputs.size(0))
@@ -322,7 +353,7 @@ if __name__ == "__main__":
     cfg = json.load(open(os.path.join("configs", cfg_file)))
     args = AttrDict(cfg)
     args.output = os.environ.get('AMLT_OUTPUT_DIR', os.path.join('/D_data/kaqiu/randomized_smoothing/', args.dataset))
-    assert args.dataset in ['cifar10', 'imagenet', 'imagenet32'], 'dataset must be cifar10 or imagenet, but got {}'.format(args.dataset)
+    assert args.dataset in ['cifar10', 'imagenet', 'imagenet32', 'ti500k'], 'dataset must be cifar10 or imagenet or ti500k, but got {}'.format(args.dataset)
     if args.dataset == 'cifar10':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
         if args.data == '/D_data/kaqiu/cifar10/': # local
@@ -333,6 +364,8 @@ if __name__ == "__main__":
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')
     elif args.dataset == 'imagenet32':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet32/')
+    elif args.dataset == 'ti500k':
+        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/ti500k/')
 
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
     if args.node_num > 1:
@@ -344,9 +377,9 @@ if __name__ == "__main__":
             os.makedirs(args.outdir)
 
         if args.debug == 1:
-            args.batch = min(64, args.batch)
-            args.epochs = 1
-            args.skip = 10000
+            args.batch = min(8, args.batch)
+            args.epochs = 10
+            args.skip = 5000
             args.skip_train = 100000
 
         if args.ddp:

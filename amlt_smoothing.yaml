@@ -30,30 +30,80 @@ code:
 data:
   # local_dir: /D_data/kaqiu/imagenet/
   # remote_dir: imagenet/
-  local_dir: /D_data/kaqiu/cifar10/
-  remote_dir: cifar/
-  # local_dir: /D_data/kaqiu/imagenet32/
-  # remote_dir: imagenet32/
+  # local_dir: /D_data/kaqiu/cifar10/
+  # remote_dir: cifar/
+  local_dir: /D_data/kaqiu/imagenet32/
+  remote_dir: imagenet32/
+  # local_dir: /D_data/kaqiu/ti500k
+  # remote_dir: ti500k/
 
 jobs:
-# - name: pt_imgn32_r152_n025_coslr1_e400_m16
-#   sku: 16xG4
+# - name: pt_ti500k_r152_n025_coslr1_e100
+#   sku: 2xG8-V100
 #   command:
-#   - python train.py --config configs/imagenet32/r152_n025_coslr1_e400.json
+#   - python train.py --config configs/ti500k/r152_n025_coslr1_e100.json
+#   process_count_per_node: 8
+# - name: ft_r152_ti500kn025lr01e100_coslr0001_bs128_n025_e100_P100
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r152_ti500kn025lr01e100_coslr0001_bs128_n025_e100.json
+# - name: pt_imgn32_r300_n025_coslr01_e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r300_n025_coslr01_e100.json
+#   process_count_per_node: 8
+# - name: pt_imgn32_r152w2_n025_coslr1_e100
+#   sku: 32xG4-P100
+#   command:
+#   - python train.py --config configs/imagenet32/r152w2_n025_coslr1_e100.json
 #   process_count_per_node: 4
-- name: ft_r152_imgn32n025e200_coslr001_bs128_n025_e40
-  sku: G4
+# - name: ft_r152_ti500kn025lr01e800_coslr001_bs128_n025_e40
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r152_ti500kn025lr01e800_coslr001_bs128_n025_e40.json
+# - name: ft_r152_ti500kn025lr01e800_coslr001_bs128_n025_e100_P100
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r152_ti500kn025lr01e800_coslr001_bs128_n025_e100.json
+# - name: ft_r300_imgn32n025e100_coslr01_bs128_n025_e40
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r300_imgn32n025e100_coslr01_bs128_n025_e40.json
+# - name: ft_r300_imgn32n025e100_coslr001_bs128_n025_e40
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r300_imgn32n025e100_coslr001_bs128_n025_e40.json
+# - name: ft_r300_imgn32n025e100_coslr0001_bs128_n025_e40
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r300_imgn32n025e100_coslr0001_bs128_n025_e40.json
+# - name: ft_r300_imgn32n025e100_coslr01_bs128_n025_e100
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r300_imgn32n025e100_coslr01_bs128_n025_e100.json
+# - name: ft_r300_imgn32n025e100_coslr001_bs128_n025_e100
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r300_imgn32n025e100_coslr001_bs128_n025_e100.json
+# - name: ft_r300_imgn32n025e100_coslr0001_bs128_n025_e100
+#   sku: G4
+#   command:
+#   - python train.py --config configs/finetune/r300_imgn32n025e100_coslr0001_bs128_n025_e100.json
+# - name: pt_imgn32_r152w2_n025_coslr1_e100_V100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152w2_n025_coslr1_e100.json
+#   process_count_per_node: 8
+# - name: pt_imgn32_r300_n025_coslr01_e200
+#   sku: 32xG4-P100
+#   command:
+#   - python train.py --config configs/imagenet32/r300_n025_coslr01_e200.json
+#   process_count_per_node: 4
+- name: pt_imgn32_r152w2_n025_coslr01_e100
+  sku: 4xG8-V100
   command:
-  - python train.py --config configs/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e40.json
-- name: ft_r152_imgn32n025e200_coslr001_bs128_n025_e100
-  sku: G4
-  command:
-  - python train.py --config configs/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100.json
-- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e40
-  sku: G4
-  command:
-  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e40.json
-- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e100
-  sku: G4
-  command:
-  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100.json
+  - python train.py --config configs/imagenet32/r152w2_n025_coslr01_e100.json
+  process_count_per_node: 8
+
+
+
