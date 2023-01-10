@@ -1,0 +1,31 @@
+{
+    "debug": 0,
+    "dataset": "imagenet32",
+    "arch": "resnet152",
+    "noise_sd": 0.0,
+    "batch": 256,
+    "workers": 2,
+    "epochs": 100,
+    "lr": 0.6,
+    "momentum": 0.9,
+    "weight_decay": 1e-6,
+    "print_freq": 100,
+    "amp": 1,
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 8,
+    
+    "moco": 1,
+    "dataaug": "moco_two_crops",
+    "moco_m_cos": 1,
+    "crop_min": 0.2,
+    "moco_dim": 256,
+    "moco_mlp_dim": 4096,
+    "moco_t": 1.0,
+    "moco_m": 0.99,
+    "optimizer": "lars",
+    "warmup_epochs": 10
+        
+}
