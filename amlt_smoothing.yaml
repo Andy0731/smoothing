@@ -30,10 +30,10 @@ code:
 data:
   # local_dir: /D_data/kaqiu/imagenet/
   # remote_dir: imagenet/
-  # local_dir: /D_data/kaqiu/cifar10/
-  # remote_dir: cifar/
-  local_dir: /D_data/kaqiu/imagenet32/
-  remote_dir: imagenet32/
+  local_dir: /D_data/kaqiu/cifar10/
+  remote_dir: cifar/
+  # local_dir: /D_data/kaqiu/imagenet32/
+  # remote_dir: imagenet32/
   # local_dir: /D_data/kaqiu/ti500k
   # remote_dir: ti500k/
 
@@ -99,11 +99,37 @@ jobs:
 #   command:
 #   - python train.py --config configs/imagenet32/r300_n025_coslr01_e200.json
 #   process_count_per_node: 4
-- name: pt_imgn32_r152w2_n025_coslr01_e100
-  sku: 4xG8-V100
+# - name: pt_imgn32_r152w2_n025_coslr01_e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152w2_n025_coslr01_e100.json
+#   process_count_per_node: 8
+# - name: r152_nat_n0_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/n0_coslr01_bs128_e100.json
+# - name: r152_n025base_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/n025base_coslr01_bs128_e100.json
+# - name: r152_n025line50_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/n025line50_coslr01_bs128_e100.json
+# - name: r152_n025line100_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/n025line100_coslr01_bs128_e100.json
+# - name: r152_n025step1e50_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/n025step1e50_coslr01_bs128_e100.json
+- name: r152_n025step5e50_coslr01_bs128_e100
+  sku: G4-P100
   command:
-  - python train.py --config configs/imagenet32/r152w2_n025_coslr01_e100.json
-  process_count_per_node: 8
-
-
+  - python train.py --config configs/resnet152/n025step5e50_coslr01_bs128_e100.json
+# - name: r152_n025step5e100_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/n025step5e100_coslr01_bs128_e100.json
 

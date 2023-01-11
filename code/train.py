@@ -14,7 +14,7 @@ from torch.optim import SGD, Optimizer
 from torch.optim.lr_scheduler import StepLR, LinearLR, CosineAnnealingLR
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, init_logfile, log
+from train_utils import AverageMeter, accuracy, init_logfile, log, get_noise
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -132,6 +132,7 @@ def main(args):
             writer.add_scalar('train_loss', train_loss, epoch)
             writer.add_scalar('train_acc', train_acc, epoch)
             writer.add_scalar('lr', lr, epoch)
+            writer.add_scalar('noise', args.cur_noise, epoch)
             if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
                 writer.add_scalar('test_loss', test_loss, epoch)
                 writer.add_scalar('test_acc', test_acc, epoch)
@@ -229,6 +230,7 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
 
         inputs = inputs.cuda()
         targets = targets.cuda()
+        args.cur_noise = noise_sd
 
         if not args.natural_train:
             if args.clean_image:
@@ -236,6 +238,8 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
                 targets_cln = targets.clone().detach()
 
             # augment inputs with noise
+            noise_sd = get_noise(epoch, args)
+            args.cur_noise = noise_sd
             inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
 
             if args.clean_image:
@@ -269,16 +273,17 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
 
         if i % args.print_freq == 0:
             print('Epoch: [{0}][{1}/{2}]\t'
-                  'lr: {lr:.4f}\t'
+                  'lr: {lr:.3f}\t'
                   'GPU: {gpu}\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
+                #   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                #   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
+                  'Noise: {noise:.3f}\t'
                   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                   'Acc@1 {top1.val:.3f} ({top1.avg:.3f})\t'
                   'Acc@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
                 epoch, i, len(loader), batch_time=batch_time,
                 data_time=data_time, loss=losses, top1=top1, top5=top5, 
-                gpu=args.global_rank, lr=optimizer.param_groups[0]['lr']))
+                gpu=args.global_rank, lr=optimizer.param_groups[0]['lr'], noise=args.cur_noise))
 
     return (losses.avg, top1.avg)
 
@@ -378,7 +383,7 @@ if __name__ == "__main__":
 
         if args.debug == 1:
             args.batch = min(8, args.batch)
-            args.epochs = 10
+            args.epochs = 100
             args.skip = 5000
             args.skip_train = 100000
 

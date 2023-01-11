@@ -43,3 +43,18 @@ def log(filename: str, text: str):
     f = open(filename, 'a')
     f.write(text+"\n")
     f.close()
+
+def get_noise(epoch, args):
+    if hasattr(args, 'noise_mode') and args.noise_mode == 'linear':
+        if epoch < args.noise_ep:
+            return args.noise_sd * float(epoch) / float(args.noise_ep)
+        else:
+            return args.noise_sd
+    elif hasattr(args, 'noise_mode') and args.noise_mode.startswith('step'):
+        step = int(args.noise_mode.replace('step', ''))
+        if epoch < args.noise_ep:
+            return (epoch // (args.noise_ep // step)) * (args.noise_sd / step)
+        else:
+            return args.noise_sd
+    else:
+        return args.noise_sd
