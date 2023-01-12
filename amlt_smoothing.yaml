@@ -108,28 +108,75 @@ jobs:
 #   sku: G4-P100
 #   command:
 #   - python train.py --config configs/resnet152/n0_coslr01_bs128_e100.json
-# - name: r152_n025base_coslr01_bs128_e100
+# - name: tc_r152_n025base_coslr01_bs128_e100
 #   sku: G4-P100
 #   command:
-#   - python train.py --config configs/resnet152/n025base_coslr01_bs128_e100.json
-# - name: r152_n025line50_coslr01_bs128_e100
+#   - python train.py --config configs/resnet152/tc_n025base_coslr01_bs128_e100.json
+# - name: tc_r152_n025line50_coslr01_bs128_e100
 #   sku: G4-P100
 #   command:
-#   - python train.py --config configs/resnet152/n025line50_coslr01_bs128_e100.json
-# - name: r152_n025line100_coslr01_bs128_e100
+#   - python train.py --config configs/resnet152/tc_n025line50_coslr01_bs128_e100.json
+# - name: tc_r152_n025line100_coslr01_bs128_e100
 #   sku: G4-P100
 #   command:
-#   - python train.py --config configs/resnet152/n025line100_coslr01_bs128_e100.json
-# - name: r152_n025step1e50_coslr01_bs128_e100
+#   - python train.py --config configs/resnet152/tc_n025line100_coslr01_bs128_e100.json
+# - name: tc_r152_n025step1e50_coslr01_bs128_e100
 #   sku: G4-P100
 #   command:
-#   - python train.py --config configs/resnet152/n025step1e50_coslr01_bs128_e100.json
-- name: r152_n025step5e50_coslr01_bs128_e100
+#   - python train.py --config configs/resnet152/tc_n025step1e50_coslr01_bs128_e100.json
+# - name: tc_r152_n025step5e50_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/tc_n025step5e50_coslr01_bs128_e100.json
+# - name: tc_r152_n025step5e100_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/tc_n025step5e100_coslr01_bs128_e100.json
+# - name: ft_moco_r1522crope100_coslr001_bs128_n025_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config code/configs/finetune/moco_r1522crope100_coslr001_bs128_n025_e100.json
+# - name: ft_moco_r1522croppad32e100_coslr001_bs128_n025_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config code/configs/finetune/moco_r1522croppad32e100_coslr001_bs128_n025_e100.json
+# - name: ft_moco_r152cropn025e100_coslr001_bs128_n025_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config code/configs/finetune/moco_r152cropn025e100_coslr001_bs128_n025_e100.json
+# - name: ft_moco_r1522onlynoise025e100lr006_coslr001_bs128_n025_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/finetune/moco_r1522onlynoise025e100lr006_coslr001_bs128_n025_e100.json
+- name: ft_moco_r152cropn025e100lr006_coslr001_bs128_n025_e100
   sku: G4-P100
   command:
-  - python train.py --config configs/resnet152/n025step5e50_coslr01_bs128_e100.json
-# - name: r152_n025step5e100_coslr01_bs128_e100
+  - python train.py --config configs/finetune/moco_r152cropn025e100lr006_coslr001_bs128_n025_e100.json
+- name: ft_moco_r1522crope100lr006_coslr001_bs128_n025_e100
+  sku: G4-P100
+  command:
+  - python train.py --config configs/finetune/moco_r1522crope100lr006_coslr001_bs128_n025_e100.json
+- name: ft_moco_r1522noise025e100lr006_coslr001_bs128_n025_e100
+  sku: G4-P100
+  command:
+  - python train.py --config configs/finetune/moco_r1522noise025e100lr006_coslr001_bs128_n025_e100.json
+# - name: ft_r152w2_imgn32n025e100_coslr01_bs128_n025_e100
 #   sku: G4-P100
 #   command:
-#   - python train.py --config configs/resnet152/n025step5e100_coslr01_bs128_e100.json
-
+#   - python train.py --config configs/finetune/r152w2_imgn32n025e100_coslr01_bs128_n025_e100.json
+# - name: ft_r152w2_imgn32n025e100_coslr001_bs128_n025_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/finetune/r152w2_imgn32n025e100_coslr001_bs128_n025_e100.json
+# - name: ft_r152w2_imgn32n025e100_coslr0001_bs128_n025_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/finetune/r152w2_imgn32n025e100_coslr0001_bs128_n025_e100.json
+# - name: tv_r152_n025base_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config configs/resnet152/tv_n025base_coslr01_bs128_e100.json
+# - name: tv_r152_nat_n0_coslr01_bs128_e100
+#   sku: G4-P100
+#   command:
+#   - python train.py --config code/configs/resnet152/tv_n0_coslr01_bs128_e100.json

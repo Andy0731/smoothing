@@ -11,10 +11,9 @@ from torch.utils.data import DataLoader
 from datasets import get_dataset
 from architectures import get_architecture
 from torch.optim import SGD, Optimizer
-from torch.optim.lr_scheduler import StepLR, LinearLR, CosineAnnealingLR
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, init_logfile, log, get_noise
+from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -23,6 +22,7 @@ from torch.utils.tensorboard import SummaryWriter
 from certify import run_certify, merge_ctf_files
 from analyze import plot_curve
 from common import get_args
+import shutil
 
 
 def main_spawn(args):
@@ -81,52 +81,92 @@ def main(args):
 
     model = get_architecture(args.arch, args.dataset)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-    if hasattr(args, 'resume') and args.resume:
-        resume_path = os.path.join(args.smoothing_path, args.resume)
-        print('Loading checkpoint ', resume_path)
-        assert os.path.isfile(resume_path), 'Could not find {}'.format(resume_path)
-        ckpt = torch.load(resume_path)
-        print('Checkpoint info: ', 'epoch ', ckpt['epoch'], ' arch ', ckpt['arch'])
-        model_sd = ckpt['state_dict']
-        # model_sd = {k[len('module.'):]:v for k,v in model_sd.items()}
-        new_model_sd = {}
-        for k,v in model_sd.items():
-            if 'finetune' in args.outdir and ('fc' in k or 'linear' in k):
-                continue 
-            new_model_sd[k[len('module.'):]] = v
-        model_sd = new_model_sd
-        strict = False if 'finetune' in args.outdir else True        
-        model.load_state_dict(model_sd, strict=strict)
-
     model.cuda(args.local_rank)
     if args.ddp:
         model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
 
-    if args.ddp and args.global_rank == 0:
-        print(args)
-        logfilename = os.path.join(args.outdir, 'log.txt')
-        init_logfile(logfilename, "epoch\ttime\tlr\ttrain loss\ttrain acc\ttestloss\ttest acc")
-
     criterion = CrossEntropyLoss().cuda()
     optimizer = SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
-    if hasattr(args, 'consin_lr') and args.consin_lr == 1:
-        scheduler_step = CosineAnnealingLR(optimizer, args.epochs)
-    else: 
-        scheduler_step = StepLR(optimizer, step_size=args.lr_step_size, gamma=args.gamma)
+    args.use_amp = True if (hasattr(args, 'amp') and args.amp) else False
+    scaler = torch.cuda.amp.GradScaler(enabled=args.use_amp)
 
-    if hasattr(args, 'warmup') and args.warmup == 1:
-        scheduler_linear = LinearLR(optimizer, start_factor=0.2, end_factor=1.0, total_iters=4, last_epoch=- 1)
+    # if retry
+    if os.path.isfile(os.path.join(args.outdir, 'checkpoint.pth.tar')):
+        args.retry = 1
+        args.resume = 'checkpoint.pth.tar'
+        args.resume_path = os.path.join(args.outdir, args.resume)
 
-    for epoch in range(args.epochs):
+    if hasattr(args, 'resume') and args.resume:
+        # if retry
+        if hasattr(args, 'retry') and args.retry:
+            resume_path = args.resume_path
+        # if not retry
+        else:
+            resume_path = os.path.join(args.smoothing_path, args.resume)
+        print('Loading checkpoint ', resume_path)
+        assert os.path.isfile(resume_path), 'Could not find {}'.format(resume_path)
+
+        # Map model to be loaded to specified single gpu.
+        loc = 'cuda:{}'.format(args.local_rank)
+        ckpt = torch.load(resume_path, map_location=loc)
+
+        print('Checkpoint info: ', 'epoch ', ckpt['epoch'], ' arch ', ckpt['arch'])
+
+        # load model
+        if 'moco' in resume_path:
+            # rename moco pre-trained keys
+            linear_keyword = 'fc'
+            state_dict = ckpt['state_dict']
+            for k in list(state_dict.keys()):
+                # retain only base_encoder up to before the embedding layer
+                if k.startswith('module.base_encoder') and not k.startswith('module.base_encoder.%s' % linear_keyword):
+                    # remove prefix
+                    state_dict[k[len("module.base_encoder."):]] = state_dict[k]
+                # delete renamed or unused k
+                del state_dict[k]
+            model.module[1].load_state_dict(state_dict, strict=False)
+            # assert set(msg.missing_keys) == {"%s.weight" % linear_keyword, "%s.bias" % linear_keyword}
+        elif 'finetune' in args.outdir:
+            state_dict = ckpt['state_dict']
+            for k in list(state_dict.keys()):
+                if ('fc' in k) or ('linear' in k):
+                    del state_dict[k]
+            model.load_state_dict(state_dict, strict=False)
+        else:
+            model.load_state_dict(ckpt['state_dict'])
+
+        # model_sd = ckpt['state_dict']
+        # # model_sd = {k[len('module.'):]:v for k,v in model_sd.items()}
+        # new_model_sd = {}
+        # for k,v in model_sd.items():
+        #     if 'finetune' in args.outdir and ('fc' in k or 'linear' in k):
+        #         continue 
+        #     new_model_sd[k[len('module.'):]] = v
+        # model_sd = new_model_sd
+        # strict = False if 'finetune' in args.outdir else True        
+        # model.load_state_dict(model_sd, strict=strict)
+
+        # if retry
+        if hasattr(args, 'retry') and args.retry:
+            args.start_epoch = ckpt['epoch']
+            optimizer.load_state_dict(ckpt['optimizer'])
+            scaler.load_state_dict(ckpt['scaler'])
+
+    if not hasattr(args, 'warmup_epochs'):
+        args.warmup_epochs = 5
+
+    if args.ddp and args.global_rank == 0:
+        print(args)
+
+    start_epoch = args.start_epoch if (hasattr(args, 'retry') and args.retry) else 0
+    for epoch in range(start_epoch, args.epochs):
         lr = optimizer.param_groups[0]['lr']
-        before = time.time()
         train_loader.sampler.set_epoch(epoch)
-        train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd)
+        train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler)
         if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
             test_loader.sampler.set_epoch(epoch)
             test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
-        after = time.time()
 
         if args.global_rank == 0:
             writer.add_scalar('train_loss', train_loss, epoch)
@@ -135,50 +175,44 @@ def main(args):
             writer.add_scalar('noise', args.cur_noise, epoch)
             if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
                 writer.add_scalar('test_loss', test_loss, epoch)
-                writer.add_scalar('test_acc', test_acc, epoch)
+                writer.add_scalar('test_acc', test_acc, epoch)       
 
-            if has_testset:
-                log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
-                    epoch, str(datetime.timedelta(seconds=(after - before))),
-                    lr, train_loss, train_acc, test_loss, test_acc))
-            else:
-                log(logfilename, "{}\t{:.3}\t{:.3}\t{:.3}\t{:.3}".format(
-                    epoch, str(datetime.timedelta(seconds=(after - before))),
-                    lr, train_loss, train_acc))                
+            ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
+            torch.save({
+                'epoch': epoch + 1,
+                'arch': args.arch,
+                'state_dict': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'scaler': scaler.state_dict(),
+            }, ckpt_file)
 
             if epoch == args.epochs - 1:
-                torch.save({
-                    'epoch': epoch + 1,
-                    'arch': args.arch,
-                    'state_dict': model.state_dict(),
-                    'optimizer': optimizer.state_dict(),
-                }, os.path.join(args.outdir, 'checkpoint.pth.tar'))
-        
-        if hasattr(args, 'warmup') and args.warmup == 1 and epoch < 5:
-            scheduler_linear.step()
-        else:
-            scheduler_step.step()
+                shutil.copyfile(ckpt_file, ckpt_file.replace('checkpoint', 'model_latest'))
+
     time_train_end = time.time()
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
     print('training time: ', time_train)
 
-    if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
-        certify_loader = DataLoader(train_dataset, batch_size=1,
-            num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
-        certify_loader.sampler.set_epoch(0)
-        certify_plot(args, model, certify_loader, 'train')
-        time_ctf_train_end = time.time()
-        time_ctf_train = datetime.timedelta(seconds=time_ctf_train_end - time_train_end)
-        print('certify training set time: ', time_ctf_train)
-
+    # certify test set
     if args.ddp and args.certify:
         certify_loader = DataLoader(test_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
         certify_loader.sampler.set_epoch(0)
         certify_plot(args, model, certify_loader, 'test')
         time_ctf_test_end = time.time()
-        time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_ctf_train_end)
+        time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_train_end)
         print('certify test set time: ', time_ctf_test)
+
+    # certify training set
+    if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
+        certify_loader = DataLoader(train_dataset, batch_size=1,
+            num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
+        certify_loader.sampler.set_epoch(0)
+        certify_plot(args, model, certify_loader, 'train')
+        time_ctf_train_end = time.time()
+        time_ctf_train = datetime.timedelta(seconds=time_ctf_train_end - time_ctf_test_end)
+        print('certify training set time: ', time_ctf_train)
+
 
 def certify_plot(args, model, certify_loader, split):
     run_certify(args, model, certify_loader, split)
@@ -205,7 +239,7 @@ def certify_plot(args, model, certify_loader, split):
 #         cudnn.benchmark = True
     
     
-def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float):
+def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float, scaler=None):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -213,11 +247,10 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
     top5 = AverageMeter()
     end = time.time()
 
-    use_amp = True if (hasattr(args, 'amp') and args.amp) else False
-    scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
-
     # switch to train mode
     model.train()
+        
+    adjust_learning_rate(optimizer, epoch, args)
 
     for i, (inputs, targets) in enumerate(loader):
         # measure data loading time
@@ -247,7 +280,7 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
                 targets = torch.cat((targets_cln, targets), dim=0)
 
         # compute output
-        with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=use_amp):
+        with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
             outputs = model(inputs)
             loss = criterion(outputs, targets)
 
@@ -296,8 +329,6 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
     top5 = AverageMeter()
     end = time.time()
 
-    use_amp = True if (hasattr(args, 'amp') and args.amp) else False
-
     # switch to eval mode
     model.eval()
 
@@ -317,7 +348,7 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
                 inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
 
             # compute output
-            with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=use_amp):
+            with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
                 outputs = model(inputs)
                 loss = criterion(outputs, targets)
 

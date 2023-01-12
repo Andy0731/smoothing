@@ -635,10 +635,10 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_r152_ti500kn025lr0001e200_coslr001_bs128_n025_e100_P100/finetune/r152_ti500kn025lr0001e200_coslr001_bs128_n025_e100/certify_sigma0.25_test",
 
         # r300 vs r152, pretrain on imagenet32
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e100_m8/imagenet32/r152_n025_coslr1_e100/certify_sigma0.25_train",
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e200/imagenet32/r152_n025_coslr1_e200/certify_sigma0.25_train",
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e400_m16/imagenet32/r152_n025_coslr1_e400/certify_sigma0.25_train",
-        # "amlt/smoothing/pt_imgn32_r300_n025_coslr01_e100/imagenet32/r300_n025_coslr01_e100/certify_sigma0.25_train",
+        "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e100_m8/imagenet32/r152_n025_coslr1_e100/certify_sigma0.25_train",
+        "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e200/imagenet32/r152_n025_coslr1_e200/certify_sigma0.25_train",
+        "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e400_m16/imagenet32/r152_n025_coslr1_e400/certify_sigma0.25_train",
+        "amlt/smoothing/pt_imgn32_r300_n025_coslr01_e100/imagenet32/r300_n025_coslr01_e100/certify_sigma0.25_train",
 
         # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e100_m8/imagenet32/r152_n025_coslr1_e100/certify_sigma0.25_test",
         # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e200/imagenet32/r152_n025_coslr1_e200/certify_sigma0.25_test",
