@@ -22,7 +22,6 @@ def get_dataset(dataset: str,
     split: str, 
     datapath: str = None, 
     dataaug: str = None, 
-    crop_min: float = None, 
     noise_sd: float = 0.0) -> Dataset:
 
     """Return the dataset as a PyTorch Dataset object"""
@@ -31,7 +30,7 @@ def get_dataset(dataset: str,
     elif dataset == "cifar10":
         return _cifar10(split, datapath, dataaug)
     elif dataset == 'imagenet32':
-        return _imagenet32(split, datapath, dataaug, crop_min, noise_sd)
+        return _imagenet32(split, datapath, dataaug, noise_sd)
     elif dataset == 'ti500k':
         return TiTop50KDataset(datapath)
 
@@ -120,11 +119,11 @@ def _imagenet(split: str, datapath: str = None, dataaug: str = None) -> Dataset:
     return datasets.ImageFolder(subdir, transform)
 
 
-def _imagenet32(split: str, datapath: str = None, dataaug: str = None, crop_min: float = 0.2, noise_sd: float = 0.0) -> Dataset:
+def _imagenet32(split: str, datapath: str = None, dataaug: str = None, noise_sd: float = 0.0) -> Dataset:
     if split == "train":
         if dataaug == 'moco_v3_aug':
             img_transforms = transforms.Compose([
-                transforms.RandomResizedCrop(32, scale=(crop_min, 1.0)),
+                transforms.RandomResizedCrop(32),
                 transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)], p=0.8),
                 transforms.RandomGrayscale(p=0.2),
                 transforms.RandomApply([transforms.GaussianBlur(kernel_size=(3, 7), sigma=(0.1, 2.0))], p=1.0),
@@ -211,7 +210,32 @@ def _imagenet32(split: str, datapath: str = None, dataaug: str = None, crop_min:
             ]            
 
             img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
-                transforms.Compose(augmentation2))     
+                transforms.Compose(augmentation2))
+
+        elif dataaug == 'moco_1crop2noise':
+            normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
+            noise1 = transforms.Compose([
+                moco.loader.GaussianNoise(noise_sd),
+                normalize
+            ])
+            noise2 = transforms.Compose([
+                moco.loader.GaussianNoise(noise_sd),
+                normalize
+            ])
+            twonoise = moco.loader.TwoCropsTransform(noise1, noise2)
+
+            img_transforms = transforms.Compose([
+                transforms.RandomCrop(32, padding=4), 
+                transforms.RandomApply([
+                    transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
+                ], p=0.8),
+                transforms.RandomGrayscale(p=0.2),
+                transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=0.1),
+                transforms.RandomApply([moco.loader.Solarize()], p=0.2),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                twonoise,
+            ])
 
         else:
             img_transforms = transforms.Compose([

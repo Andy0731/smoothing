@@ -98,12 +98,12 @@ class MoCo(nn.Module):
 
 class MoCo_ResNet(MoCo):
     def _build_projector_and_predictor_mlps(self, dim, mlp_dim):
-        hidden_dim = self.base_encoder.fc.weight.shape[1]
-        del self.base_encoder.fc, self.momentum_encoder.fc # remove original fc layer
+        hidden_dim = self.base_encoder.linear.weight.shape[1]
+        del self.base_encoder.linear, self.momentum_encoder.linear # remove original linear layer
 
         # projectors
-        self.base_encoder.fc = self._build_mlp(2, hidden_dim, mlp_dim, dim)
-        self.momentum_encoder.fc = self._build_mlp(2, hidden_dim, mlp_dim, dim)
+        self.base_encoder.linear = self._build_mlp(2, hidden_dim, mlp_dim, dim)
+        self.momentum_encoder.linear = self._build_mlp(2, hidden_dim, mlp_dim, dim)
 
         # predictor
         self.predictor = self._build_mlp(2, dim, mlp_dim, dim, False)

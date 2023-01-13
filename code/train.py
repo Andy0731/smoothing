@@ -20,12 +20,14 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.multiprocessing as mp
 from torch.utils.tensorboard import SummaryWriter
 from common import get_args
+from archs.normal_resnet import resnet152 as normal_resnet152
 
 # add for moco
 import moco.optimizer
 import moco.builder
 import torch.backends.cudnn as cudnn
 from functools import partial
+import shutil
 
 
 def main_spawn(args):
@@ -67,8 +69,7 @@ def main(args):
     # create model
     print("=> creating model '{}'".format(args.arch))
     model = moco.builder.MoCo_ResNet(
-        partial(torchvision_models.__dict__[args.arch], zero_init_residual=True), 
-        args.moco_dim, args.moco_mlp_dim, args.moco_t)
+        eval(args.arch), args.moco_dim, args.moco_mlp_dim, args.moco_t)
     
     # infer learning rate before changing batch size
     args.lr = args.lr * args.batch * args.world_size / 256    
@@ -91,6 +92,13 @@ def main(args):
     use_amp = True if (hasattr(args, 'amp') and args.amp) else False
     scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
     args.use_amp = use_amp
+
+    # if retry
+    retry_ckpt = os.path.join(args.retry_path, 'checkpoint.pth.tar')
+    if os.path.isfile(retry_ckpt):
+        args.resume = retry_ckpt
+
+    args.start_epoch = 0
 
     # optionally resume from a checkpoint
     if hasattr(args, 'resume') and args.resume:
@@ -115,7 +123,7 @@ def main(args):
 
     # Data loading code
     dataaug = args.dataaug if hasattr(args, 'dataaug') else None
-    train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug, args.crop_min, args.noise_sd)
+    train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug, args.noise_sd)
     has_testset = False if (args.dataset == 'ti500k' or args.moco) else True
     if has_testset:
         test_dataset = get_dataset(args.dataset, 'test', args.data)
@@ -157,23 +165,22 @@ def main(args):
     if args.ddp and args.global_rank == 0:
         print(args)
 
-    for epoch in range(args.epochs):
-        before = time.time()
+    for epoch in range(args.start_epoch, args.epochs):
         train_loader.sampler.set_epoch(epoch)
         # train for one epoch
         train(train_loader, model, optimizer, scaler, writer, epoch, args)
 
-        after = time.time()
-
-        if args.global_rank == 0:      
-            if epoch == args.epochs - 1:
-                torch.save({
-                    'epoch': epoch + 1,
-                    'arch': args.arch,
-                    'state_dict': model.state_dict(),
-                    'optimizer': optimizer.state_dict(),
-                    'scaler': scaler.state_dict(),
-                }, os.path.join(args.outdir, 'checkpoint.pth.tar'))
+        if args.global_rank == 0:
+            ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
+            ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
+            torch.save({
+                'epoch': epoch + 1,
+                'arch': args.arch,
+                'state_dict': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'scaler': scaler.state_dict(),
+            }, ckpt_file)
+            shutil.copyfile(ckpt_file, ckpt_file_cp)
     
     time_train_end = time.time()
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
@@ -280,6 +287,10 @@ if __name__ == "__main__":
     elif args.dataset == 'ti500k':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/ti500k/')
 
+    args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
+    if not os.path.exists(args.retry_path):
+        os.makedirs(args.retry_path)
+
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
     if args.node_num > 1:
         if env_args.get('RANK') == 0 and not os.path.exists(args.outdir):
@@ -291,7 +302,7 @@ if __name__ == "__main__":
 
         if args.debug == 1:
             args.batch = min(8, args.batch)
-            args.epochs = 1
+            args.epochs = 100
             args.skip = 5000
             args.skip_train = 100000
 

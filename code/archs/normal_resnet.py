@@ -69,7 +69,7 @@ class Bottleneck(nn.Module):
 
 class ResNet(nn.Module):
     # feat_scale lets us deal with CelebA, other non-32x32 datasets
-    def __init__(self, block, num_blocks, num_classes=10, feat_scale=1, wm=1):
+    def __init__(self, block, num_blocks, num_classes=10, feat_scale=1, wm=1, zero_init_residual: bool = False,):
         super(ResNet, self).__init__()
 
         widths = [64, 128, 256, 512]

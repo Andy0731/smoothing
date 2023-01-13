@@ -124,26 +124,53 @@ jobs:
 #   command:
 #   - python train.py --config configs/moco/r152_2onlynoise025_e100.json
 #   process_count_per_node: 4
-- name: pt_moco_r152_2crop_e100_lr006
+# - name: pt_moco_r152_2crop_e100_lr006
+#   sku: 8xG4-P100
+#   command:
+#   - python train.py --config configs/moco/r152_2crop_e100_lr006.json
+#   process_count_per_node: 4
+# - name: pt_moco_r152_2noise025_e100_lr006
+#   sku: 8xG4-P100
+#   command:
+#   - python train.py --config configs/moco/r152_2noise025_e100_lr006.json
+#   process_count_per_node: 4
+# - name: pt_moco_r152_2onlynoise025_e100_lr006
+#   sku: 8xG4-P100
+#   command:
+#   - python train.py --config configs/moco/r152_2onlynoise025_e100_lr006.json
+#   process_count_per_node: 4
+# - name: pt_moco_r152_cropn025_e100_lr006
+#   sku: 8xG4-P100
+#   command:
+#   - python train.py --config configs/moco/r152_cropn025_e100_lr006.json
+#   process_count_per_node: 4
+- name: pt_moco_nmr152_2crop_e100
   sku: 8xG4-P100
   command:
-  - python train.py --config configs/moco/r152_2crop_e100_lr006.json
+  - python train.py --config configs/moco/nmr152_2crop_e100.json
   process_count_per_node: 4
-- name: pt_moco_r152_2noise025_e100_lr006
+- name: pt_moco_nmr152_2noise025_e100
   sku: 8xG4-P100
   command:
-  - python train.py --config configs/moco/r152_2noise025_e100_lr006.json
+  - python train.py --config configs/moco/nmr152_2noise025_e100.json
   process_count_per_node: 4
-- name: pt_moco_r152_2onlynoise025_e100_lr006
+- name: pt_moco_nmr152_2onlynoise025_e100
   sku: 8xG4-P100
   command:
-  - python train.py --config configs/moco/r152_2onlynoise025_e100_lr006.json
+  - python train.py --config configs/moco/nmr152_2onlynoise025_e100.json
   process_count_per_node: 4
-- name: pt_moco_r152_cropn025_e100_lr006
+- name: pt_moco_nmr152_cropn025_e100
   sku: 8xG4-P100
   command:
-  - python train.py --config configs/moco/r152_cropn025_e100_lr006.json
+  - python train.py --config configs/moco/nmr152_cropn025_e100.json
   process_count_per_node: 4
-
-
-
+- name: pt_moco_nmr152_cropn025_e200
+  sku: 4xG8-V100
+  command:
+  - python train.py --config configs/moco/nmr152_cropn025_e200.json
+  process_count_per_node: 8
+- name: pt_moco_nmr152_1crop2noise_e100
+  sku: 8xG4-P100
+  command:
+  - python train.py --config configs/moco/nmr152_1crop2noise_e100.json
+  process_count_per_node: 4
