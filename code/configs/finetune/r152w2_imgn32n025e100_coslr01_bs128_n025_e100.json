@@ -1,5 +1,5 @@
 {
-    "debug": 0,
+    "debug": 1,
     "dataset": "cifar10",
     "arch": "normal_resnet152wide2",
     "noise_sd": 0.25,
@@ -17,6 +17,7 @@
     "warmup": 1,
     "consin_lr": 1,
     "resume": "smoothing/pt_imgn32_r152w2_n025_coslr01_e100/imagenet32/r152w2_n025_coslr01_e100/checkpoint.pth.tar",
+    "amp": 1,
 
     "ddp": 1,
     "dist_url": "tcp://127.0.0.1:23456",
@@ -28,7 +29,7 @@
     "sigma": 0.25,
     "skip": 20,
     "skip_train": 100,
-    "certify_bs": 1024,
+    "certify_bs": 512,
     "N0": 100,
     "N": 100000,
     "alpha": 0.001
