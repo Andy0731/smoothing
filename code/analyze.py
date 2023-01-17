@@ -660,10 +660,11 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_r152_ti500kn025lr01e100_coslr001_bs128_n025_e100_P100/finetune/r152_ti500kn025lr01e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",     
         # "amlt/smoothing/ft_r300_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r300_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
 
-        # # r300 vs r152, imgn32 vs ti500k, pretrain + finetune, test
-        # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
-        # "amlt/smoothing/ft_r152_ti500kn025lr01e100_coslr001_bs128_n025_e100_P100/finetune/r152_ti500kn025lr01e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",     
-        # "amlt/smoothing/ft_r300_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r300_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        # r300 vs r152, imgn32 vs ti500k, pretrain + finetune, test
+        "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        "amlt/smoothing/ft_r152_ti500kn025lr01e100_coslr001_bs128_n025_e100_P100/finetune/r152_ti500kn025lr01e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",     
+        "amlt/smoothing/ft_r300_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r300_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        "amlt/smoothing/ft_r152w2_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152w2_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
 
         # # moco r152 pretrain on imagenet32, finetune on cifar10, test
         # "amlt/smoothing/ft_moco_r152cropn025e100_coslr001_bs128_n025_e100/finetune/moco_r152cropn025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
@@ -671,19 +672,19 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_moco_r1522croppad32e100_coslr001_bs128_n025_e100/finetune/moco_r1522croppad32e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_r1522onlynoise025e100lr006_coslr001_bs128_n025_e100/finetune/moco_r1522onlynoise025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_test",
 
-        # increasing noise
-        "amlt/smoothing/tc_r152_n025base_coslr01_bs128_e100/resnet152/tc_n025base_coslr01_bs128_e100/certify_sigma0.25_test",
-        "amlt/smoothing/tc_r152_n025line50_coslr01_bs128_e100/resnet152/tc_n025line50_coslr01_bs128_e100/certify_sigma0.25_test",
-        "amlt/smoothing/tc_r152_n025line100_coslr01_bs128_e100/resnet152/tc_n025line100_coslr01_bs128_e100/certify_sigma0.25_test",
-        "amlt/smoothing/tc_r152_n025step1e50_coslr01_bs128_e100/resnet152/tc_n025step1e50_coslr01_bs128_e100/certify_sigma0.25_test",
-        "amlt/smoothing/tc_r152_n025step5e50_coslr01_bs128_e100/resnet152/tc_n025step5e50_coslr01_bs128_e100/certify_sigma0.25_test",
-        "amlt/smoothing/tc_r152_n025step5e100_coslr01_bs128_e100/resnet152/tc_n025step5e100_coslr01_bs128_e100/certify_sigma0.25_test",
+        # # increasing noise
+        # "amlt/smoothing/tc_r152_n025base_coslr01_bs128_e100/resnet152/tc_n025base_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/tc_r152_n025line50_coslr01_bs128_e100/resnet152/tc_n025line50_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/tc_r152_n025line100_coslr01_bs128_e100/resnet152/tc_n025line100_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/tc_r152_n025step1e50_coslr01_bs128_e100/resnet152/tc_n025step1e50_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/tc_r152_n025step5e50_coslr01_bs128_e100/resnet152/tc_n025step5e50_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/tc_r152_n025step5e100_coslr01_bs128_e100/resnet152/tc_n025step5e100_coslr01_bs128_e100/certify_sigma0.25_test",
 
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/tc_increasing_noise_test", "tc_r152_increasingnoise_coslr01_bs128_e100", 1.0, [
-            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('tc_r152_','').replace('coslr01_bs128_e100','')) for ctf_file in ctf_files
+        "../amlt/smoothing/analysis/plots/ft_r152_r300_r152w2_test", "ft_coslr001_bs128_n025_e100", 1.0, [
+            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('ft_','').replace('coslr001_bs128_n025_e100','').replace('_P100','')) for ctf_file in ctf_files
         ])
     
     # plot_certified_accuracy(
