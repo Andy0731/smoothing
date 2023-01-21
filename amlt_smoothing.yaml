@@ -8,8 +8,12 @@ target:
   # service: amlk8s
   # name: ms-shared
 
-  service: sing
-  name: msrresrchvc
+  # service: sing
+  # name: msrresrchvc
+
+  service: aml
+  # name: V100-32G
+  name: V100-32G-sc
 
 environment:
   # image: amlt-sing/pytorch-1.7.0-cuda11.0-cudnn8-devel
@@ -145,32 +149,32 @@ jobs:
 #   - python train.py --config configs/moco/r152_cropn025_e100_lr006.json
 #   process_count_per_node: 4
 - name: pt_moco_nmr152_2crop_e100
-  sku: 8xG4-P100
+  sku: 1xG8-V100
   command:
   - python train.py --config configs/moco/nmr152_2crop_e100.json
-  process_count_per_node: 4
+  # process_count_per_node: 4
 - name: pt_moco_nmr152_2noise025_e100
-  sku: 8xG4-P100
+  sku: 1xG8-V100
   command:
   - python train.py --config configs/moco/nmr152_2noise025_e100.json
-  process_count_per_node: 4
-- name: pt_moco_nmr152_2onlynoise025_e100
-  sku: 8xG4-P100
-  command:
-  - python train.py --config configs/moco/nmr152_2onlynoise025_e100.json
-  process_count_per_node: 4
-- name: pt_moco_nmr152_cropn025_e100
-  sku: 8xG4-P100
-  command:
-  - python train.py --config configs/moco/nmr152_cropn025_e100.json
-  process_count_per_node: 4
+  # process_count_per_node: 4
+# - name: pt_moco_nmr152_2onlynoise025_e100
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_2onlynoise025_e100.json
+#   # process_count_per_node: 4
+# - name: pt_moco_nmr152_cropn025_e100
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_cropn025_e100.json
+#   # process_count_per_node: 4
 - name: pt_moco_nmr152_cropn025_e200
-  sku: 4xG8-V100
+  sku: 2xG8-V100
   command:
   - python train.py --config configs/moco/nmr152_cropn025_e200.json
   process_count_per_node: 8
-- name: pt_moco_nmr152_1crop2noise_e100
-  sku: 8xG4-P100
-  command:
-  - python train.py --config configs/moco/nmr152_1crop2noise_e100.json
-  process_count_per_node: 4
+# - name: pt_moco_nmr152_1crop2noise_e100
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_1crop2noise_e100.json
+#   # process_count_per_node: 4

@@ -1,9 +1,9 @@
 {
     "debug": 0,
     "dataset": "imagenet32",
-    "arch": "resnet152",
+    "arch": "normal_resnet152",
     "noise_sd": 0.25,
-    "batch": 256,
+    "batch": 512,
     "workers": 2,
     "epochs": 200,
     "lr": 0.6,
@@ -15,7 +15,7 @@
     "ddp": 1,
     "dist_url": "tcp://127.0.0.1:23456",
     "dist_backend": "nccl",
-    "node_num": 4,
+    "node_num": 2,
     
     "moco": 1,
     "dataaug": "moco_two_crops",

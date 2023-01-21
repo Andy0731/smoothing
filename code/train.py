@@ -116,6 +116,7 @@ def main(args):
             scaler.load_state_dict(checkpoint['scaler'])
             print("=> loaded checkpoint '{}' (epoch {})"
                   .format(args.resume, checkpoint['epoch']))
+            del checkpoint
         else:
             print("=> no checkpoint found at '{}'".format(args.resume))
 
@@ -173,14 +174,17 @@ def main(args):
         if args.global_rank == 0:
             ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
             ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
-            torch.save({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-                'scaler': scaler.state_dict(),
-            }, ckpt_file)
-            shutil.copyfile(ckpt_file, ckpt_file_cp)
+            try:
+                torch.save({
+                    'epoch': epoch + 1,
+                    'arch': args.arch,
+                    'state_dict': model.state_dict(),
+                    'optimizer': optimizer.state_dict(),
+                    'scaler': scaler.state_dict(),
+                }, ckpt_file)
+                shutil.copyfile(ckpt_file, ckpt_file_cp)
+            except OSError:
+                print("OSError when saving checkpoint in epoch ", epoch)
     
     time_train_end = time.time()
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
@@ -287,25 +291,26 @@ if __name__ == "__main__":
     elif args.dataset == 'ti500k':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/ti500k/')
 
-    args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
-    if not os.path.exists(args.retry_path):
-        os.makedirs(args.retry_path)
+    if args.debug == 1:
+        args.node_num = 1
+        args.batch = min(8, args.batch)
+        args.epochs = 100
+        args.skip = 5000
+        args.skip_train = 100000
 
+    args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
     if args.node_num > 1:
         if env_args.get('RANK') == 0 and not os.path.exists(args.outdir):
             os.makedirs(args.outdir)
+        if env_args.get('RANK') == 0 and not os.path.exists(args.retry_path):
+            os.makedirs(args.retry_path)        
         multinode_start(args, env_args)
     else:
         if not os.path.exists(args.outdir):
             os.makedirs(args.outdir)
-
-        if args.debug == 1:
-            args.batch = min(8, args.batch)
-            args.epochs = 100
-            args.skip = 5000
-            args.skip_train = 100000
-
+        if not os.path.exists(args.retry_path):
+            os.makedirs(args.retry_path)        
         if args.ddp:
             main_spawn(args)
         else:
