@@ -92,6 +92,12 @@ def main(args):
     scaler = torch.cuda.amp.GradScaler(enabled=args.use_amp)
 
     # if retry
+    retry_ckpt = os.path.join(args.retry_path, 'checkpoint.pth.tar')
+    if os.path.isfile(retry_ckpt):
+        args.resume = retry_ckpt
+        args.retry = 1
+
+        
     if os.path.isfile(os.path.join(args.outdir, 'checkpoint.pth.tar')):
         args.retry = 1
         args.resume = 'checkpoint.pth.tar'
@@ -403,21 +409,26 @@ if __name__ == "__main__":
     elif args.dataset == 'ti500k':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/ti500k/')
 
+    if args.debug == 1:
+        args.node_num = 1
+        args.batch = min(8, args.batch)
+        args.epochs = 100
+        args.skip = 5000
+        args.skip_train = 100000
+    
+    args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
     if args.node_num > 1:
         if env_args.get('RANK') == 0 and not os.path.exists(args.outdir):
             os.makedirs(args.outdir)
+        if env_args.get('RANK') == 0 and not os.path.exists(args.retry_path):
+            os.makedirs(args.retry_path) 
         multinode_start(args, env_args)
     else:
         if not os.path.exists(args.outdir):
             os.makedirs(args.outdir)
-
-        if args.debug == 1:
-            args.batch = min(8, args.batch)
-            args.epochs = 100
-            args.skip = 5000
-            args.skip_train = 100000
-
+        if not os.path.exists(args.retry_path):
+            os.makedirs(args.retry_path)  
         if args.ddp:
             main_spawn(args)
         else:
