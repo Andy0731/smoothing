@@ -91,38 +91,44 @@ def main(args):
     args.use_amp = True if (hasattr(args, 'amp') and args.amp) else False
     scaler = torch.cuda.amp.GradScaler(enabled=args.use_amp)
 
+    # if finetune from checkpoint
+    if hasattr(args, 'resume') and args.resume:
+        if args.local == 1:
+            args.resume = os.path.join(args.smoothing_path, args.resume)
+        else:
+            resume_list = args.resume.split('/')
+            resume_list.pop(1)
+            args.resume = '/'.join(resume_list)
+            args.resume = os.path.join(args.smoothing_path, args.resume)
+
     # if retry
+    retry = 0
     retry_ckpt = os.path.join(args.retry_path, 'checkpoint.pth.tar')
     if os.path.isfile(retry_ckpt):
         args.resume = retry_ckpt
-        args.retry = 1
+        retry = 1
 
-        
-    if os.path.isfile(os.path.join(args.outdir, 'checkpoint.pth.tar')):
-        args.retry = 1
-        args.resume = 'checkpoint.pth.tar'
-        args.resume_path = os.path.join(args.outdir, args.resume)
-
-    if hasattr(args, 'resume') and args.resume:
-        # if retry
-        if hasattr(args, 'retry') and args.retry:
-            resume_path = args.resume_path
-        # if not retry
-        else:
-            resume_path = os.path.join(args.smoothing_path, args.resume)
-        print('Loading checkpoint ', resume_path)
-        assert os.path.isfile(resume_path), 'Could not find {}'.format(resume_path)
+    if hasattr(args, 'resume'):
+        print('Loading checkpoint ', args.resume)
+        assert os.path.isfile(args.resume), 'Could not find {}'.format(args.resume)
 
         # Map model to be loaded to specified single gpu.
         loc = 'cuda:{}'.format(args.local_rank)
-        ckpt = torch.load(resume_path, map_location=loc)
+        ckpt = torch.load(args.resume, map_location=loc)
 
         print('Checkpoint info: ', 'epoch ', ckpt['epoch'], ' arch ', ckpt['arch'])
 
-        # load model
-        if 'moco' in resume_path:
+        # retry
+        if retry:
+            args.start_epoch = ckpt['epoch']
+            model.load_state_dict(ckpt['state_dict'])
+            optimizer.load_state_dict(ckpt['optimizer'])
+            scaler.load_state_dict(ckpt['scaler'])            
+
+        # finetune on CIFAR10, pretrain on ImageNet32/Ti500k with MOCO
+        elif 'moco' in args.resume:
             # rename moco pre-trained keys
-            linear_keyword = 'fc'
+            linear_keyword = 'linear'
             state_dict = ckpt['state_dict']
             for k in list(state_dict.keys()):
                 # retain only base_encoder up to before the embedding layer
@@ -133,14 +139,19 @@ def main(args):
                 del state_dict[k]
             model.module[1].load_state_dict(state_dict, strict=False)
             # assert set(msg.missing_keys) == {"%s.weight" % linear_keyword, "%s.bias" % linear_keyword}
+
+        # finetune on CIFAR10, pretrain on ImageNet32/Ti500k with adding noise
         elif 'finetune' in args.outdir:
             state_dict = ckpt['state_dict']
             for k in list(state_dict.keys()):
                 if ('fc' in k) or ('linear' in k):
                     del state_dict[k]
             model.load_state_dict(state_dict, strict=False)
+
         else:
             model.load_state_dict(ckpt['state_dict'])
+
+        del ckpt
 
         # model_sd = ckpt['state_dict']
         # # model_sd = {k[len('module.'):]:v for k,v in model_sd.items()}
@@ -153,19 +164,13 @@ def main(args):
         # strict = False if 'finetune' in args.outdir else True        
         # model.load_state_dict(model_sd, strict=strict)
 
-        # if retry
-        if hasattr(args, 'retry') and args.retry:
-            args.start_epoch = ckpt['epoch']
-            optimizer.load_state_dict(ckpt['optimizer'])
-            scaler.load_state_dict(ckpt['scaler'])
-
     if not hasattr(args, 'warmup_epochs'):
         args.warmup_epochs = 5
 
     if args.ddp and args.global_rank == 0:
         print(args)
 
-    start_epoch = args.start_epoch if (hasattr(args, 'retry') and args.retry) else 0
+    start_epoch = args.start_epoch if retry else 0
     for epoch in range(start_epoch, args.epochs):
         lr = optimizer.param_groups[0]['lr']
         train_loader.sampler.set_epoch(epoch)
@@ -184,16 +189,18 @@ def main(args):
                 writer.add_scalar('test_acc', test_acc, epoch)       
 
             ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
-            torch.save({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-                'scaler': scaler.state_dict(),
-            }, ckpt_file)
-
-            if epoch == args.epochs - 1:
-                shutil.copyfile(ckpt_file, ckpt_file.replace('checkpoint', 'model_latest'))
+            ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
+            try:
+                torch.save({
+                    'epoch': epoch + 1,
+                    'arch': args.arch,
+                    'state_dict': model.state_dict(),
+                    'optimizer': optimizer.state_dict(),
+                    'scaler': scaler.state_dict(),
+                }, ckpt_file)
+                shutil.copyfile(ckpt_file, ckpt_file_cp)
+            except OSError:
+                print("OSError when saving checkpoint in epoch ", epoch)
 
     time_train_end = time.time()
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
@@ -400,14 +407,33 @@ if __name__ == "__main__":
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
         if args.data == '/D_data/kaqiu/cifar10/': # local
             args.smoothing_path = '../amlt'
+            args.local = 1
         else: # itp
-            args.smoothing_path = args.data
+            args.local = 0
+            if hasattr(args, 'pretrain_data'):
+                print('args.data: ', args.data)
+                args.smoothing_path = args.data.replace('cifar', args.pretrain_data)
+                print('args.smoothing_path: ', args.smoothing_path)
+            else:
+                args.smoothing_path = args.data
     elif args.dataset == 'imagenet':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')
     elif args.dataset == 'imagenet32':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet32/')
+        if args.data == '/D_data/kaqiu/imagenet32/': # local
+            args.smoothing_path = '../amlt'
+            args.local = 1
+        else: # itp
+            args.smoothing_path = args.data
+            args.local = 0
     elif args.dataset == 'ti500k':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/ti500k/')
+        if args.data == '/D_data/kaqiu/ti500k/': # local
+            args.smoothing_path = '../amlt'
+            args.local = 1
+        else: # itp
+            args.smoothing_path = args.data
+            args.local = 0        
 
     if args.debug == 1:
         args.node_num = 1

@@ -1,6 +1,6 @@
 {
     "debug": 0,
-    "pretrain_data": "imagenet32",
+    "pretrain_data": "ti500k",
     "dataset": "cifar10",
     "arch": "normal_resnet152",
     "noise_sd": 0.25,
@@ -15,7 +15,7 @@
     "test_freq": 10,
     "clean_image": 0,
     "natural_train": 0,
-    "resume": "smoothing/pt_moco_nmr152_2onlynoise025_e100/moco/nmr152_2onlynoise025_e100/checkpoint.pth.tar",
+    "resume": "smoothing/pt_moco_ti500k_nmr152_2noise025_e100/moco/ti500k_nmr152_2noise025_e100/checkpoint.pth.tar",
     "amp": 1,
 
     "ddp": 1,

@@ -8,8 +8,12 @@ target:
   # service: amlk8s
   # name: ms-shared
 
-  service: sing
-  name: msrresrchvc
+  # service: sing
+  # name: msrresrchvc
+
+  service: aml
+  # name: V100-32G
+  name: V100-32G-sc  
 
 environment:
   # image: amlt-sing/pytorch-1.7.0-cuda11.0-cudnn8-devel
@@ -180,3 +184,52 @@ jobs:
 #   sku: G4-P100
 #   command:
 #   - python train.py --config code/configs/resnet152/tv_n0_coslr01_bs128_e100.json
+# - name: ft_moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100.json
+- name: ft_moco_nmrr152cropn025e100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr152cropn025e100_coslr001_bs128_n025_e100.json
+- name: ft_moco_nmrr152cropn025e200_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr152cropn025e200_coslr001_bs128_n025_e100.json
+- name: ft_moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100.json
+- name: ft_moco_nmrr1522crope100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr1522crope100_coslr001_bs128_n025_e100.json
+- name: ft_moco_nmrr1522noise025e100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr1522noise025e100_coslr001_bs128_n025_e100.json
+- name: ft_moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100.json
+- name: ft_moco_ti500k_nmrr152cropn025e100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_ti500k_nmrr152cropn025e100_coslr001_bs128_n025_e100.json
+- name: ft_moco_ti500k_nmrr152cropn025e200_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_ti500k_nmrr152cropn025e200_coslr001_bs128_n025_e100.json
+- name: ft_moco_ti500k_nmrr1521crop2noisee100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_ti500k_nmrr1521crop2noisee100_coslr001_bs128_n025_e100.json
+- name: ft_moco_ti500k_nmrr1522crope100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_ti500k_nmrr1522crope100_coslr001_bs128_n025_e100.json
+- name: ft_moco_ti500k_nmrr1522noise025e100_coslr001_bs128_n025_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_ti500k_nmrr1522noise025e100_coslr001_bs128_n025_e100.json
+

@@ -15,7 +15,7 @@
     "test_freq": 10,
     "clean_image": 0,
     "natural_train": 0,
-    "resume": "smoothing/pt_moco_nmr152_2onlynoise025_e100/moco/nmr152_2onlynoise025_e100/checkpoint.pth.tar",
+    "resume": "smoothing/pt_moco_nmr152_cropn025_e100/moco/nmr152_cropn025_e100/checkpoint.pth.tar",
     "amp": 1,
 
     "ddp": 1,
