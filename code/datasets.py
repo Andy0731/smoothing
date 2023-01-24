@@ -32,7 +32,7 @@ def get_dataset(dataset: str,
     elif dataset == 'imagenet32':
         return _imagenet32(split, datapath, dataaug, noise_sd)
     elif dataset == 'ti500k':
-        return TiTop50KDataset(datapath)
+        return TiTop50KDataset(datapath, dataaug, noise_sd)
 
 
 def get_num_classes(dataset: str):
@@ -118,131 +118,135 @@ def _imagenet(split: str, datapath: str = None, dataaug: str = None) -> Dataset:
         ])
     return datasets.ImageFolder(subdir, transform)
 
+def get_img_transform(dataaug: str = None, noise_sd: float = 0.0):
+    if dataaug == 'moco_v3_aug':
+        img_transforms = transforms.Compose([
+            transforms.RandomResizedCrop(32),
+            transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([transforms.GaussianBlur(kernel_size=(3, 7), sigma=(0.1, 2.0))], p=1.0),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+    elif dataaug == 'moco_mix_aug':
+        img_transforms = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomApply([transforms.ColorJittekar(0.4, 0.4, 0.2, 0.1)], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([transforms.GaussianBlur(kernel_size=(3, 7), sigma=(0.1, 2.0))], p=1.0),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+    elif dataaug == 'moco_two_crops':
+        normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
+        # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
+        augmentation1 = [
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomApply([
+                transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
+            ], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=1.0),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ]
+
+        augmentation2 = [
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomApply([
+                transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
+            ], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=0.1),
+            transforms.RandomApply([moco.loader.Solarize()], p=0.2),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ]            
+
+        img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
+            transforms.Compose(augmentation2))
+
+    elif dataaug == 'moco_two_noise':
+        normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
+        # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
+        augmentation1 = [
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ]
+
+        augmentation2 = [
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ]            
+
+        img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
+            transforms.Compose(augmentation2))       
+
+    elif dataaug == 'moco_two_only_noise':
+        normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
+        # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
+        augmentation1 = [
+            transforms.ToTensor(),
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ]
+
+        augmentation2 = [
+            transforms.ToTensor(),
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ]            
+
+        img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
+            transforms.Compose(augmentation2))
+
+    elif dataaug == 'moco_1crop2noise':
+        normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
+        noise1 = transforms.Compose([
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ])
+        noise2 = transforms.Compose([
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ])
+        twonoise = moco.loader.TwoCropsTransform(noise1, noise2)
+
+        img_transforms = transforms.Compose([
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomApply([
+                transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
+            ], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=0.1),
+            transforms.RandomApply([moco.loader.Solarize()], p=0.2),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            twonoise,
+        ])
+
+    else:
+        img_transforms = transforms.Compose([
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomHorizontalFlip(), 
+            transforms.ToTensor()
+        ])
+    
+    return img_transforms
 
 def _imagenet32(split: str, datapath: str = None, dataaug: str = None, noise_sd: float = 0.0) -> Dataset:
     if split == "train":
-        if dataaug == 'moco_v3_aug':
-            img_transforms = transforms.Compose([
-                transforms.RandomResizedCrop(32),
-                transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)], p=0.8),
-                transforms.RandomGrayscale(p=0.2),
-                transforms.RandomApply([transforms.GaussianBlur(kernel_size=(3, 7), sigma=(0.1, 2.0))], p=1.0),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-            ])
-        elif dataaug == 'moco_mix_aug':
-            img_transforms = transforms.Compose([
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomApply([transforms.ColorJittekar(0.4, 0.4, 0.2, 0.1)], p=0.8),
-                transforms.RandomGrayscale(p=0.2),
-                transforms.RandomApply([transforms.GaussianBlur(kernel_size=(3, 7), sigma=(0.1, 2.0))], p=1.0),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-            ])
-        elif dataaug == 'moco_two_crops':
-            normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
-            # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
-            augmentation1 = [
-                transforms.RandomCrop(32, padding=4), 
-                transforms.RandomApply([
-                    transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
-                ], p=0.8),
-                transforms.RandomGrayscale(p=0.2),
-                transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=1.0),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ]
-
-            augmentation2 = [
-                transforms.RandomCrop(32, padding=4), 
-                transforms.RandomApply([
-                    transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
-                ], p=0.8),
-                transforms.RandomGrayscale(p=0.2),
-                transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=0.1),
-                transforms.RandomApply([moco.loader.Solarize()], p=0.2),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ]            
-
-            img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
-                transforms.Compose(augmentation2))
-
-        elif dataaug == 'moco_two_noise':
-            normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
-            # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
-            augmentation1 = [
-                transforms.RandomCrop(32, padding=4), 
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ]
-
-            augmentation2 = [
-                transforms.RandomCrop(32, padding=4), 
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ]            
-
-            img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
-                transforms.Compose(augmentation2))       
-
-        elif dataaug == 'moco_two_only_noise':
-            normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
-            # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
-            augmentation1 = [
-                transforms.ToTensor(),
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ]
-
-            augmentation2 = [
-                transforms.ToTensor(),
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ]            
-
-            img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
-                transforms.Compose(augmentation2))
-
-        elif dataaug == 'moco_1crop2noise':
-            normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
-            noise1 = transforms.Compose([
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ])
-            noise2 = transforms.Compose([
-                moco.loader.GaussianNoise(noise_sd),
-                normalize
-            ])
-            twonoise = moco.loader.TwoCropsTransform(noise1, noise2)
-
-            img_transforms = transforms.Compose([
-                transforms.RandomCrop(32, padding=4), 
-                transforms.RandomApply([
-                    transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
-                ], p=0.8),
-                transforms.RandomGrayscale(p=0.2),
-                transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=0.1),
-                transforms.RandomApply([moco.loader.Solarize()], p=0.2),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                twonoise,
-            ])
-
-        else:
-            img_transforms = transforms.Compose([
-                transforms.RandomCrop(32, padding=4), 
-                transforms.RandomHorizontalFlip(), 
-                transforms.ToTensor()
-            ])
+        img_transforms = get_img_transform(dataaug, noise_sd)
         return ImageNetDS(datapath, 32, train=True, transform=img_transforms)
     elif split == "test":
         return ImageNetDS(datapath, 32, train=False, transform=transforms.ToTensor())
@@ -386,7 +390,7 @@ class ImageNetDS(Dataset):
 class TiTop50KDataset(Dataset):
     """500K images closest to the CIFAR-10 dataset from 
         the 80 Millon Tiny Images Datasets"""
-    def __init__(self, datapath):
+    def __init__(self, datapath, dataaug, noise_sd):
         super(TiTop50KDataset, self).__init__()
         dataset_path = os.path.join(datapath, 'ti_500K_pseudo_labeled.pickle')
 
@@ -395,12 +399,13 @@ class TiTop50KDataset(Dataset):
         # 'prediction_model', 'prediction_model_epoch'}
         
         self.length = len(self.dataset_dict['data'])
-        self.transforms = transforms.Compose([
-                    transforms.Resize((32,32)),
-                    transforms.RandomCrop(32, padding=4),
-                    transforms.RandomHorizontalFlip(),
-                    transforms.ToTensor()
-                ])
+        self.transforms = get_img_transform(dataaug, noise_sd)
+        # self.transforms = transforms.Compose([
+        #             transforms.Resize((32,32)),
+        #             transforms.RandomCrop(32, padding=4),
+        #             transforms.RandomHorizontalFlip(),
+        #             transforms.ToTensor()
+        #         ])
 
     def __getitem__(self, index):
         img = self.dataset_dict['data'][index]
