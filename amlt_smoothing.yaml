@@ -36,10 +36,10 @@ data:
   # remote_dir: imagenet/
   # local_dir: /D_data/kaqiu/cifar10/
   # remote_dir: cifar/
-  # local_dir: /D_data/kaqiu/imagenet32/
-  # remote_dir: imagenet32/
-  local_dir: /D_data/kaqiu/ti500k
-  remote_dir: ti500k/
+  local_dir: /D_data/kaqiu/imagenet32/
+  remote_dir: imagenet32/
+  # local_dir: /D_data/kaqiu/ti500k
+  # remote_dir: ti500k/
 
 jobs:
 # - name: pt_ti500k_r152_n025_coslr1_e100
@@ -208,33 +208,48 @@ jobs:
 #   command:
 #   - python train.py --config configs/moco/nmr152_cropn025_e200_lr006.json
 #   process_count_per_node: 8
-- name: pt_moco_ti500k_nmr152_2crop_e100_lr006
-  sku: 1xG8-V100
-  command:
-  - python train.py --config configs/moco/ti500k_nmr152_2crop_e100_lr006.json
-  # process_count_per_node: 4
-- name: pt_moco_ti500k_nmr152_2noise025_e100_lr006
-  sku: 1xG8-V100
-  command:
-  - python train.py --config configs/moco/ti500k_nmr152_2noise025_e100_lr006.json
-  # process_count_per_node: 4
-- name: pt_moco_ti500k_nmr152_2onlynoise025_e100_lr006
-  sku: 1xG8-V100
-  command:
-  - python train.py --config configs/moco/ti500k_nmr152_2onlynoise025_e100_lr006.json
-  # process_count_per_node: 4
-- name: pt_moco_ti500k_nmr152_cropn025_e100_lr006
-  sku: 1xG8-V100
-  command:
-  - python train.py --config configs/moco/ti500k_nmr152_cropn025_e100_lr006.json
-  # process_count_per_node: 4
+# - name: pt_moco_ti500k_nmr152_2crop_e100_lr006
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/ti500k_nmr152_2crop_e100_lr006.json
+#   # process_count_per_node: 4
+# - name: pt_moco_ti500k_nmr152_2noise025_e100_lr006
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/ti500k_nmr152_2noise025_e100_lr006.json
+#   # process_count_per_node: 4
+# - name: pt_moco_ti500k_nmr152_2onlynoise025_e100_lr006
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/ti500k_nmr152_2onlynoise025_e100_lr006.json
+#   # process_count_per_node: 4
+# - name: pt_moco_ti500k_nmr152_cropn025_e100_lr006
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/ti500k_nmr152_cropn025_e100_lr006.json
+#   # process_count_per_node: 4
 - name: pt_moco_ti500k_nmr152_cropn025_e200_lr006
   sku: 2xG8-V100
   command:
   - python train.py --config configs/moco/ti500k_nmr152_cropn025_e200_lr006.json
   process_count_per_node: 8
-- name: pt_moco_ti500k_nmr152_1crop2noise_e100_lr006
-  sku: 1xG8-V100
-  command:
-  - python train.py --config configs/moco/ti500k_nmr152_1crop2noise_e100_lr006.json
+# - name: pt_moco_ti500k_nmr152_1crop2noise_e100_lr006
+#   sku: 1xG8-V100
+#   command:
+#   - python train.py --config configs/moco/ti500k_nmr152_1crop2noise_e100_lr006.json
   # process_count_per_node: 4
+# - name: pt_moco_nmr152_2noise025_e200
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_2noise025_e200.json
+#   process_count_per_node: 8
+# - name: pt_moco_nmr152_2noise025_e400
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_2noise025_e400.json
+#   process_count_per_node: 8
+# - name: pt_moco_nmr152_2noise025_e800
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_2noise025_e800.json
+#   process_count_per_node: 8
