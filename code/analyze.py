@@ -680,28 +680,43 @@ if __name__ == "__main__":
         # "amlt/smoothing/tc_r152_n025step5e50_coslr01_bs128_e100/resnet152/tc_n025step5e50_coslr01_bs128_e100/certify_sigma0.25_test",
         # "amlt/smoothing/tc_r152_n025step5e100_coslr01_bs128_e100/resnet152/tc_n025step5e100_coslr01_bs128_e100/certify_sigma0.25_test",
 
-        # normal_resnet152 MOCO pretrain on imagenet32 lr06, finetune on cifar10 lr001 e100, train
-        "amlt/smoothing/ft_moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/finetune/moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_nmrr1522crope100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522crope100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train"
-
+        # # normal_resnet152 MOCO pretrain on imagenet32 lr06, finetune on cifar10 lr001 e100, train
+        # "amlt/smoothing/ft_moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/finetune/moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_nmrr1522crope100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522crope100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train"
 
         # # normal_resnet152 MOCO pretrain on imagenet32 lr06, finetune on cifar10 lr001 e100, test
         # "amlt/smoothing/ft_moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/finetune/moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_nmrr1522crope100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522crope100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
-        # "amlt/smoothing/ft_moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        "amlt/smoothing/ft_moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test"
+
+        # # # normal_resnet152 MOCO pretrain on ti500k lr06, finetune on cifar10 lr001 e100, train
+        # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e200_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e200_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522crope100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522crope100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522noise025e100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522noise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+
+        # # # normal_resnet152 MOCO pretrain on ti500k lr06, finetune on cifar10 lr001 e100, test
+        # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e200_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e200_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522crope100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522crope100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        "amlt/smoothing/ft_moco_ti500k_nmrr1522noise025e100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522noise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
 
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/ft_moco_nmrr152_train", "ft_moco_nmrr152_coslr001_bs128_n025_e100_train", 1.0, [
-            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('ft_','').replace('coslr001_bs128_n025_e100','').replace('_P100','')) for ctf_file in ctf_files
+        "../amlt/smoothing/analysis/plots/ft_moco_imgn32_vs_ti500k_nmrr152_test", "ft_moco_imgn32_vs_ti500k_nmrr152_coslr001_bs128_e100_test", 1.0, [
+            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('ft_','').replace('coslr001_bs128_n025_e100','')) for ctf_file in ctf_files
         ])
     
     # plot_certified_accuracy(
