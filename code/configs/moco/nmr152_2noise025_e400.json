@@ -3,7 +3,7 @@
     "dataset": "imagenet32",
     "arch": "normal_resnet152",
     "noise_sd": 0.25,
-    "batch": 512,
+    "batch": 128,
     "workers": 2,
     "epochs": 400,
     "lr": 0.6,
