@@ -243,11 +243,11 @@ jobs:
 #   command:
 #   - python train.py --config configs/moco/nmr152_2noise025_e200.json
 #   process_count_per_node: 8
-- name: pt_moco_nmr152_2noise025_e400_v10032g
-  sku: 2xG8-V100
-  command:
-  - python train.py --config configs/moco/nmr152_2noise025_e400_v10032g.json
-  process_count_per_node: 8
+# - name: pt_moco_nmr152_2noise025_e400_v10032g
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_2noise025_e400_v10032g.json
+#   process_count_per_node: 8
 - name: pt_moco_nmr152_2noise025_e800_v10032g
   sku: 2xG8-V100
   command:
