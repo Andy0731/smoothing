@@ -288,3 +288,19 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/rep_n025_coslr001_bs128_e100.json
+- name: ft_r152_imgn32n025e100_coslr001_bs128_n025_e800
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e800.json
+- name: ft_r152_imgn32n025e100_coslr001_bs128_n025_e1600
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e1600.json
+- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e800
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e800.json
+- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e1600
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e1600.json

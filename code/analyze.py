@@ -232,7 +232,7 @@ def plot_curve(ctf_filename):
     setting = ctf_filename.split('/')[-1].split('_')[-1]
     if os.path.isfile(ctf_filename):
         lines.append(Line(ApproximateAccuracy(ctf_filename), exp + '_' + setting))
-    plot_certified_accuracy(ctf_filename, exp, 4.0, lines)
+    plot_certified_accuracy(ctf_filename, exp, 1.0, lines)
 
 if __name__ == "__main__":
     ctf_files = [
@@ -241,6 +241,7 @@ if __name__ == "__main__":
         # "amlt/smoothing/r110_n025_coslr01_bs16_e400_cert_train/resnet110/n025_coslr01_bs16_e400_cert_train/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs16_e800_cert_train/resnet110/n025_coslr01_bs16_e800_cert_train/certify_sigma0.25",
 
+        # train from scratch on CIFAR10, resnet110 n025 coslr01 bs128, vary ep, train
         # "amlt/smoothing/r110_n025_coslr01_bs128_e200_cert_train/resnet110/n025_coslr01_bs128_e200_cert_train/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e200_damix/resnet110/n025_coslr01_bs128_e200_damix/certify_sigma0.25_train",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e200_dav3/resnet110/n025_coslr01_bs128_e200_dav3/certify_sigma0.25_train",
@@ -252,6 +253,7 @@ if __name__ == "__main__":
         # "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e25600_m4/resnet110/n025_coslr01_bs128_e25600/certify_sigma0.25_train",
 
+        # train from scratch on CIFAR10, resnet110 n025 coslr01 bs128, vary ep, test
         # "amlt/smoothing/r110_n025_coslr01_bs128_e200/resnet110/n025_coslr01_bs128_e200/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e200_damix/resnet110/n025_coslr01_bs128_e200_damix/certify_sigma0.25_test",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e200_dav3/resnet110/n025_coslr01_bs128_e200_dav3/certify_sigma0.25_test",
@@ -298,14 +300,19 @@ if __name__ == "__main__":
         # "amlt/smoothing/r110_n025_coslr01_bs128_e1600/resnet110/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
         # "amlt/smoothing/r110_n025_coslr01_bs128_e12800_m2/resnet110/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
 
-        "amlt/smoothing/r152_n025_lr01_bs128_e100/resnet152/n025_lr01_bs128_e100/certify_sigma0.25",
+        # train from scratch on CIFAR10, normal_resnet152, n025 coslr01 bs128, vary ep, train 
+        # "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
+
+        # train from scratch on CIFAR10, normal_resnet152, n025 coslr01 bs128, vary ep, test
+        "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr01_bs128_e100/resnet152/n025_lr01_bs128_e100/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e200/resnet152/n025_lr01_bs128_e200/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e400/resnet152/n025_lr01_bs128_e400/certify_sigma0.25",
         # "amlt/smoothing/r152_n025_lr01_bs128_e800/resnet152/n025_lr01_bs128_e800/certify_sigma0.25",
-        # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
         # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_test",
-        # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
-        # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
+        "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_test",
 
         # "amlt/smoothing/r110_n025_lr01_bs16_e200/resnet110/n025_lr01_bs16_e200/certify_sigma0.25",
         # "amlt/smoothing/r110_n025_lr01_bs16_e400/resnet110/n025_lr01_bs16_e400/certify_sigma0.25",
@@ -347,27 +354,27 @@ if __name__ == "__main__":
         # "amlt/smoothing/r110_n025_g4_lr01_sbn_bs1024/resnet110/n025_lr01_bs1024/certify_sigma0.25",
 
         # imagenet32
-        # r110 n0 bs256 e100 train
+        # r110 n0 bs256 e100, vary lr, train
         # "amlt/smoothing/imgn32_r110_n0_coslr001_bs256_e100/imagenet32/r110_n0_coslr001_e100/certify_sigma0.25_train",
         # "amlt/smoothing/imgn32_r110_n0_coslr01_bs256_e100/imagenet32/r110_n0_e100/certify_sigma0.25_train",
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e100/imagenet32/r110_n0_coslr1_e100/certify_sigma0.25_train",
         # "amlt/smoothing/imgn32_r110_n0_coslr10_bs256_e100/imagenet32/r110_n0_coslr10_e100/certify_sigma0.25_train",
         # "amlt/smoothing/imgn32_r110_n0_coslr100_bs256_e100/imagenet32/r110_n0_coslr100_e100/certify_sigma0.25_train",
 
-        # # r110 n0 bs256 e100 test
+        # # r110 n0 bs256 e100, vary lr, test
         # "amlt/smoothing/imgn32_r110_n0_coslr001_bs256_e100/imagenet32/r110_n0_coslr001_e100/certify_sigma0.25_test",
         # "amlt/smoothing/imgn32_r110_n0_coslr01_bs256_e100/imagenet32/r110_n0_e100/certify_sigma0.25_test",
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e100/imagenet32/r110_n0_coslr1_e100/certify_sigma0.25_test",
         # "amlt/smoothing/imgn32_r110_n0_coslr10_bs256_e100/imagenet32/r110_n0_coslr10_e100/certify_sigma0.25_test",
         # "amlt/smoothing/imgn32_r110_n0_coslr100_bs256_e100/imagenet32/r110_n0_coslr100_e100/certify_sigma0.25_test",
 
-        # # r110 n0 bs256 coslr1 train
+        # # r110 n0 bs256 coslr1, coslr1, vary ep, train
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e100/imagenet32/r110_n0_coslr1_e100/certify_sigma0.25_train",
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e200/imagenet32/r110_n0_coslr1_e200/certify_sigma0.25_train",
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e400/imagenet32/r110_n0_coslr1_e400/certify_sigma0.25_train",
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e800/imagenet32/r110_n0_coslr1_e800/certify_sigma0.25_train",    
 
-        # # r110 n0 bs256 coslr1 test
+        # # r110 n0 bs256 coslr1, coslr1, vary ep, test
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e100/imagenet32/r110_n0_coslr1_e100/certify_sigma0.25_test",
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e200/imagenet32/r110_n0_coslr1_e200/certify_sigma0.25_test",
         # "amlt/smoothing/imgn32_r110_n0_coslr1_bs256_e400/imagenet32/r110_n0_coslr1_e400/certify_sigma0.25_test",
@@ -524,6 +531,18 @@ if __name__ == "__main__":
         # "amlt/smoothing/imgn32n025e400_coslr001_bs128_n025_e40/finetune/imgn32n025e400_coslr001_bs128_n025_e40/certify_sigma0.25_test",
         # "amlt/smoothing/imgn32n025e800_coslr001_bs128_n025_e40/finetune/imgn32n025e800_coslr001_bs128_n025_e40/certify_sigma0.25_test",
 
+        # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, train
+        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e100_m8/imagenet32/r152_n025_coslr1_e100/certify_sigma0.25_train",
+        # # "amlt/smoothing/pt_imgn32_r152_n025_coslr01_e100_m8/imagenet32/r152_n025_coslr01_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e200/imagenet32/r152_n025_coslr1_e200/certify_sigma0.25_train",
+        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e400_m16/imagenet32/r152_n025_coslr1_e400/certify_sigma0.25_train",
+
+        # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, test
+        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e100_m8/imagenet32/r152_n025_coslr1_e100/certify_sigma0.25_test",
+        # # "amlt/smoothing/pt_imgn32_r152_n025_coslr01_e100_m8/imagenet32/r152_n025_coslr01_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e200/imagenet32/r152_n025_coslr1_e200/certify_sigma0.25_test",
+        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e400_m16/imagenet32/r152_n025_coslr1_e400/certify_sigma0.25_test",
+
         # # r152 pretrain on imagenet32 with noise_sd 0.25 e100, finetune on cifar10, vary lr, vary epochs ; train
         # "amlt/smoothing/ft_r152_imgn32n025e100_coslr01_bs128_n025_e10/finetune/r152_imgn32n025e100_coslr01_bs128_n025_e10/certify_sigma0.25_train",
         # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e10/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e10/certify_sigma0.25_train",
@@ -546,27 +565,15 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_r152_imgn32n025e100_coslr0001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr0001_bs128_n025_e100/certify_sigma0.25_test",
 
-        # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, train
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e100_m8/imagenet32/r152_n025_coslr1_e100/certify_sigma0.25_train",
-        # # "amlt/smoothing/pt_imgn32_r152_n025_coslr01_e100_m8/imagenet32/r152_n025_coslr01_e100/certify_sigma0.25_train",
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e200/imagenet32/r152_n025_coslr1_e200/certify_sigma0.25_train",
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e400_m16/imagenet32/r152_n025_coslr1_e400/certify_sigma0.25_train",
-
-        # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, test
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e100_m8/imagenet32/r152_n025_coslr1_e100/certify_sigma0.25_test",
-        # # "amlt/smoothing/pt_imgn32_r152_n025_coslr01_e100_m8/imagenet32/r152_n025_coslr01_e100/certify_sigma0.25_test",
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e200/imagenet32/r152_n025_coslr1_e200/certify_sigma0.25_test",
-        # "amlt/smoothing/pt_imgn32_r152_n025_coslr1_e400_m16/imagenet32/r152_n025_coslr1_e400/certify_sigma0.25_test",
-
         # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, finetune on cifar10 coslr001 bs128 n025 e100, train
         # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
         # "amlt/smoothing/ft_r152_imgn32n025e200_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100/certify_sigma0.25_train",
         # "amlt/smoothing/ft_r152_imgn32n025e400_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100/certify_sigma0.25_train",
 
         # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, finetune on cifar10 coslr001 bs128 n025 e100, test
-        # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
-        # "amlt/smoothing/ft_r152_imgn32n025e200_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100/certify_sigma0.25_test",
-        # "amlt/smoothing/ft_r152_imgn32n025e400_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        "amlt/smoothing/ft_r152_imgn32n025e200_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        "amlt/smoothing/ft_r152_imgn32n025e400_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100/certify_sigma0.25_test",
 
         # # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, finetune on cifar10 coslr001 bs128 n025 e40, train
         # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e40/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e40/certify_sigma0.25_train",
@@ -656,7 +663,7 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_r300_imgn32n025e100_coslr0001_bs128_n025_e100/finetune/r300_imgn32n025e100_coslr0001_bs128_n025_e100/certify_sigma0.25_test",
 
         # # r300 vs r152, imgn32 vs ti500k, pretrain + finetune, train
-        "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
         # "amlt/smoothing/ft_r152_ti500kn025lr01e100_coslr001_bs128_n025_e100_P100/finetune/r152_ti500kn025lr01e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",     
         # "amlt/smoothing/ft_r300_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r300_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
 
@@ -688,7 +695,7 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522noise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
         # "amlt/smoothing/ft_moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train"
 
-        # # normal_resnet152 MOCO pretrain on imagenet32 lr06, finetune on cifar10 lr001 e100, test
+        # # # normal_resnet152 MOCO pretrain on imagenet32 lr06, finetune on cifar10 lr001 e100, test
         # "amlt/smoothing/ft_moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/finetune/moco_nmrr152cropn025e200_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/finetune/moco_nmrr1521crop2noisee100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
@@ -729,14 +736,14 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522onlynoise025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
 
         # # normal_resnet152 MOCO pretrain on ti500k lr006, finetune on cifar10 lr001 e100, train
-        "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e200lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e200lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_ti500k_nmrr1521crop2noisee100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1521crop2noisee100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_ti500k_nmrr1522crope100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522crope100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_ti500k_nmrr1522noise025e100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522noise025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        "amlt/smoothing/ft_moco_ti500k_nmrr1522onlynoise025e100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522onlynoise025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e200lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e200lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1521crop2noisee100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1521crop2noisee100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522crope100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522crope100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522noise025e100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522noise025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/ft_moco_ti500k_nmrr1522onlynoise025e100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1522onlynoise025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_train",
 
-        # # # normal_resnet152 MOCO pretrain on ti500k lr006, finetune on cifar10 lr001 e100, test
+        # # normal_resnet152 MOCO pretrain on ti500k lr006, finetune on cifar10 lr001 e100, test
         # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_ti500k_nmrr152cropn025e200lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr152cropn025e200lr006_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_moco_ti500k_nmrr1521crop2noisee100lr006_coslr001_bs128_n025_e100/finetune/moco_ti500k_nmrr1521crop2noisee100lr006_coslr001_bs128_n025_e100/certify_sigma0.25_test",
@@ -747,7 +754,7 @@ if __name__ == "__main__":
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/ft_moco_ti500k_nmrr152lr006_train", "ft_coslr001_bs128_n025_e100_train", 1.0, [
+        "../amlt/smoothing/analysis/plots/ft_r152_imgn32n025e100_test", "ft_r152_coslr001_bs128_n025_e100_test", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2].replace('ft_','').replace('coslr001_bs128_n025_e100','')) for ctf_file in ctf_files
         ])
     

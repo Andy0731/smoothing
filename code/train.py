@@ -172,7 +172,6 @@ def main(args):
 
     start_epoch = args.start_epoch if retry else 0
     for epoch in range(start_epoch, args.epochs):
-        lr = optimizer.param_groups[0]['lr']
         train_loader.sampler.set_epoch(epoch)
         train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler)
         if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
@@ -180,6 +179,7 @@ def main(args):
             test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
 
         if args.global_rank == 0:
+            lr = optimizer.param_groups[0]['lr']
             writer.add_scalar('train_loss', train_loss, epoch)
             writer.add_scalar('train_acc', train_acc, epoch)
             writer.add_scalar('lr', lr, epoch)
