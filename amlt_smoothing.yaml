@@ -288,19 +288,65 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/rep_n025_coslr001_bs128_e100.json
-- name: ft_r152_imgn32n025e100_coslr001_bs128_n025_e800
+# - name: ft_r152_imgn32n025e100_coslr001_bs128_n025_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e800.json
+# - name: ft_r152_imgn32n025e100_coslr001_bs128_n025_e1600
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e1600.json
+# - name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e800.json
+# - name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e1600
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e1600.json
+# - name: pt_r152_n0_coslr1_e100
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152_n0_coslr1_e100.json
+#   process_count_per_node: 8
+# - name: pt_r152_n0_coslr1_e200
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152_n0_coslr1_e200.json
+#   process_count_per_node: 8
+# - name: pt_r152_n0_coslr1_e400
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152_n0_coslr1_e400.json
+#   process_count_per_node: 8
+# - name: ft_moco_nmrr1522noise025e200_coslr001_bs128_n025_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_coslr001_bs128_n025_e100.json
+# - name: ft_moco_nmrr1522noise025e400_coslr001_bs128_n025_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e400_coslr001_bs128_n025_e100.json
+# - name: ft_moco_nmrr1522noise025e800_coslr001_bs128_n025_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e800_coslr001_bs128_n025_e100.json
+# - name: pt_r152_n0_coslr01_e100
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152_n0_coslr01_e100.json
+#   process_count_per_node: 8
+# - name: pt_r152_n0_coslr01_e200
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152_n0_coslr01_e200.json
+#   process_count_per_node: 8
+# - name: pt_r152_n0_coslr01_e400
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/r152_n0_coslr01_e400.json
+#   process_count_per_node: 8
+- name: ft_r152_imgn32n0e100_coslr001_bs128_n025_e100
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e800.json
-- name: ft_r152_imgn32n025e100_coslr001_bs128_n025_e1600
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e1600.json
-- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e800
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e800.json
-- name: ft_r152_imgn32n025e400_coslr001_bs128_n025_e1600
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e1600.json
+  - python train.py --config configs/finetune/r152_imgn32n0e100_coslr001_bs128_n025_e100.json
