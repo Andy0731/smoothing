@@ -13,7 +13,7 @@ from architectures import get_architecture
 from torch.optim import SGD, Optimizer
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate
+from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -283,6 +283,9 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
                 inputs_cln = inputs.clone().detach()
                 targets_cln = targets.clone().detach()
 
+            if hasattr(args, 'mixup') and args.mixup:
+                inputs, targets_a, targets_b, lam = mixup_data(inputs, targets, args.mixup_alpha)                
+
             # augment inputs with noise
             noise_sd = get_noise(epoch, args)
             args.cur_noise = noise_sd
@@ -295,7 +298,10 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         # compute output
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
             outputs = model(inputs)
-            loss = criterion(outputs, targets)
+            if hasattr(args, 'mixup') and args.mixup:
+                loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+            else:
+                loss = criterion(outputs, targets)
 
         # measure accuracy and record loss
         acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
