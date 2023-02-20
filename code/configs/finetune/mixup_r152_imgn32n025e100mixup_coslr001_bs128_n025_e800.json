@@ -15,7 +15,7 @@
     "test_freq": 10,
     "clean_image": 0,
     "natural_train": 0,
-    "resume": "amlt/smoothing/pt_mixup_imgn32_r152_n025_coslr01_e100/imagenet32/mixup_r152_n025_coslr01_e100/checkpoint.pth.tar",
+    "resume": "smoothing/pt_mixup_imgn32_r152_n025_coslr01_e100/imagenet32/mixup_r152_n025_coslr01_e100/checkpoint.pth.tar",
     "amp": 1,
     "mixup": 1,
     "mixup_alpha": 1.0,    

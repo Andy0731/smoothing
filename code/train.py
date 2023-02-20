@@ -153,30 +153,24 @@ def main(args):
 
         del ckpt
 
-        # model_sd = ckpt['state_dict']
-        # # model_sd = {k[len('module.'):]:v for k,v in model_sd.items()}
-        # new_model_sd = {}
-        # for k,v in model_sd.items():
-        #     if 'finetune' in args.outdir and ('fc' in k or 'linear' in k):
-        #         continue 
-        #     new_model_sd[k[len('module.'):]] = v
-        # model_sd = new_model_sd
-        # strict = False if 'finetune' in args.outdir else True        
-        # model.load_state_dict(model_sd, strict=strict)
-
     if not hasattr(args, 'warmup_epochs'):
         args.warmup_epochs = 5
 
     if args.ddp and args.global_rank == 0:
         print(args)
 
-    start_epoch = args.start_epoch if retry else 0
+    start_epoch = args.start_epoch if hasattr(args, 'start_epoch') else 0
     for epoch in range(start_epoch, args.epochs):
         train_loader.sampler.set_epoch(epoch)
         train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler)
-        if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
+        if has_testset and (epoch % args.test_freq == 0):
             test_loader.sampler.set_epoch(epoch)
             test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
+            # reduce over all gpus
+            test_acc_local = torch.tensor([test_acc]).cuda()
+            dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+            test_acc_local /= args.world_size
+            test_acc = test_acc_local
 
         if args.global_rank == 0:
             lr = optimizer.param_groups[0]['lr']
@@ -184,7 +178,7 @@ def main(args):
             writer.add_scalar('train_acc', train_acc, epoch)
             writer.add_scalar('lr', lr, epoch)
             writer.add_scalar('noise', args.cur_noise, epoch)
-            if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
+            if has_testset and (epoch % args.test_freq == 0):
                 writer.add_scalar('test_loss', test_loss, epoch)
                 writer.add_scalar('test_acc', test_acc, epoch)       
 
@@ -201,6 +195,18 @@ def main(args):
                 shutil.copyfile(ckpt_file, ckpt_file_cp)
             except OSError:
                 print("OSError when saving checkpoint in epoch ", epoch)
+    
+    if has_testset:
+        test_loader.sampler.set_epoch(args.epochs)
+        test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
+        test_acc_local = torch.tensor([test_acc]).cuda()
+        print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
+        dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+        test_acc_local /= args.world_size
+        print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
+        if args.global_rank == 0:        
+            writer.add_scalar('test_loss', test_loss, args.epochs)
+            writer.add_scalar('test_acc', test_acc_local, args.epochs)
 
     time_train_end = time.time()
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
@@ -412,7 +418,7 @@ if __name__ == "__main__":
     if args.dataset == 'cifar10':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
         if args.data == '/D_data/kaqiu/cifar10/': # local
-            args.smoothing_path = '../amlt'
+            args.smoothing_path = '../'
             args.local = 1
         else: # itp
             args.local = 0

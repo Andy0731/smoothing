@@ -1,8 +1,7 @@
 {
     "debug": 0,
-    "pretrain_data": "imagenet32",
     "dataset": "cifar10",
-    "arch": "normal_resnet152",
+    "arch": "normal_resnet152_gelu",
     "noise_sd": 0.25,
     "batch": 128,
     "workers": 2,
@@ -15,10 +14,7 @@
     "test_freq": 10,
     "clean_image": 0,
     "natural_train": 0,
-    "resume": "smoothing/pt_mixup_imgn32_r152_n025_coslr01_e100/imagenet32/mixup_r152_n025_coslr01_e100/checkpoint.pth.tar",
     "amp": 1,
-    "mixup": 1,
-    "mixup_alpha": 1.0,    
 
     "ddp": 1,
     "dist_url": "tcp://127.0.0.1:23456",
