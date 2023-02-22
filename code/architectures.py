@@ -14,7 +14,6 @@ from archs.normal_resnet import resnet152wide2 as normal_resnet152wide2
 from archs.normal_resnet_gelu import resnet152gelu as normal_resnet152_gelu
 from archs.normal_resnet_nost import resnet152nost as normal_resnet152_nost
 
-
 import torchvision.models as torchvision_models
 
 # resnet50 - the classic ResNet-50, sized for ImageNet
@@ -46,11 +45,16 @@ def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
         if ('cifar' in dataset) or ('ti500k' in dataset):
             model = eval(arch + '()')
             print('model: ', model)
+        elif dataset == 'imagenet22k':
+            model = arch + '(num_classes=21841)'
+            print('model: ', model)
+            model = eval(model)
+            # print(model)            
         elif 'imagenet' in dataset:
             model = arch + '(num_classes=1000)'
             print('model: ', model)
             model = eval(model)
-            print(model)
+            # print(model)
     elif arch == 'torchvision_resnet152': # conv1 7x7 with stride=2 and maxpooling before the 4 stages
         model = torchvision_models.resnet152(num_classes=10)
     normalize_layer = get_normalize_layer(dataset)

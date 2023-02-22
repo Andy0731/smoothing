@@ -59,7 +59,7 @@ def main(args):
 
     dataaug = args.dataaug if hasattr(args, 'dataaug') else None
     train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug)
-    has_testset = False if args.dataset == 'ti500k' else True
+    has_testset = False if args.dataset in ['ti500k', 'imagenet22k'] else True
     if has_testset:
         test_dataset = get_dataset(args.dataset, 'test', args.data)
     # pin_memory = (args.dataset == "imagenet")
@@ -213,7 +213,7 @@ def main(args):
     print('training time: ', time_train)
 
     # certify test set
-    if args.ddp and args.certify:
+    if has_testset and args.ddp and args.certify:
         certify_loader = DataLoader(test_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
         certify_loader.sampler.set_epoch(0)
@@ -221,7 +221,8 @@ def main(args):
         time_ctf_test_end = time.time()
         time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_train_end)
         print('certify test set time: ', time_ctf_test)
-
+    time_ctf_test_end = time.time()
+    
     # certify training set
     if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
         certify_loader = DataLoader(train_dataset, batch_size=1,
@@ -414,7 +415,7 @@ if __name__ == "__main__":
     cfg = json.load(open(os.path.join("configs", cfg_file)))
     args = AttrDict(cfg)
     args.output = os.environ.get('AMLT_OUTPUT_DIR', os.path.join('/D_data/kaqiu/randomized_smoothing/', args.dataset))
-    assert args.dataset in ['cifar10', 'imagenet', 'imagenet32', 'ti500k'], 'dataset must be cifar10 or imagenet or ti500k, but got {}'.format(args.dataset)
+    assert args.dataset in ['cifar10', 'imagenet', 'imagenet32', 'ti500k', 'imagenet22k'], 'dataset must be cifar10 or imagenet or ti500k, but got {}'.format(args.dataset)
     if args.dataset == 'cifar10':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
         if args.data == '/D_data/kaqiu/cifar10/': # local
@@ -445,7 +446,17 @@ if __name__ == "__main__":
             args.local = 1
         else: # itp
             args.smoothing_path = args.data
-            args.local = 0        
+            args.local = 0
+    elif args.dataset == 'imagenet22k':
+        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet22k/')
+        if args.data == '/D_data/kaqiu/imagenet22k/': # local
+            args.smoothing_path = '../amlt'
+            args.local = 1
+        else: # itp
+            args.smoothing_path = args.data
+            args.local = 0               
+    else:
+        raise ValueError
 
     if args.debug == 1:
         args.node_num = 1

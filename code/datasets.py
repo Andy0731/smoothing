@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 import pickle
 import numpy as np
 from PIL import Image
+from tsv import TSVInstance
 
 # set this environment variable to the location of your imagenet directory if you want to read ImageNet data.
 # make sure your val directory is preprocessed to look like the train directory, e.g. by running this script
@@ -26,15 +27,26 @@ def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = N
         return _imagenet32(split, datapath, dataaug)
     elif dataset == 'ti500k':
         return TiTop50KDataset(datapath)
+    elif dataset == 'imagenet22k':
+        tsv_file = os.path.join(datapath, split)
+        transform = transforms.Compose([
+            transforms.Resize((32,32)),
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor()
+        ])
+        return TSVInstance(tsv_file=tsv_file, transform=transform)
 
 
 def get_num_classes(dataset: str):
     """Return the number of classes in the dataset. """
+    if dataset == 'imagenet22k':
+        return 21841
     if "imagenet" in dataset:
         return 1000
-    elif dataset == "cifar10":
+    if dataset == "cifar10":
         return 10
-    elif dataset == "ti500k":
+    if dataset == "ti500k":
         return 10
 
 
@@ -47,6 +59,8 @@ def get_normalize_layer(dataset: str) -> torch.nn.Module:
     elif dataset == "imagenet32":
         return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
     elif dataset == "ti500k":
+        return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
+    elif dataset == "imagenet22k":
         return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
 
 
