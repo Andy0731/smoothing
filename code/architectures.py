@@ -13,6 +13,7 @@ from archs.normal_resnet import resnet300 as normal_resnet300
 from archs.normal_resnet import resnet152wide2 as normal_resnet152wide2
 from archs.normal_resnet_gelu import resnet152gelu as normal_resnet152_gelu
 from archs.normal_resnet_nost import resnet152nost as normal_resnet152_nost
+from archs.normal_resnet_avgn import resnet152avgn as normal_resnet152_avgn
 
 import torchvision.models as torchvision_models
 
@@ -24,7 +25,7 @@ ARCHITECTURES = ["resnet50", "cifar_resnet20", "cifar_resnet110",
                 "normal_resnet300", "normal_resnet152wide2"]
 
 
-def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
+def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
     :param arch: the architecture - should be in the ARCHITECTURES list above
@@ -43,8 +44,12 @@ def get_architecture(arch: str, dataset: str) -> torch.nn.Module:
         model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
     elif "normal_" in arch: # conv1 3x3
         if ('cifar' in dataset) or ('ti500k' in dataset):
-            model = eval(arch + '()')
+            if 'avgn' in arch:
+                model = arch + '(avgn_loc=avgn_loc, avgn_num=avgn_num)'
+            else:
+                model = arch + '()'
             print('model: ', model)
+            model = eval(model)
         elif dataset == 'imagenet22k':
             model = arch + '(num_classes=21841)'
             print('model: ', model)

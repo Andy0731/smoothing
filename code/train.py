@@ -79,7 +79,11 @@ def main(args):
             test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
 
-    model = get_architecture(args.arch, args.dataset)
+    if 'avgn' in args.arch:
+        assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num')
+        model = get_architecture(args.arch, args.dataset, args.avgn_loc, args.avgn_num)
+    else:
+        model = get_architecture(args.arch, args.dataset)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
     if args.ddp:
@@ -93,6 +97,7 @@ def main(args):
 
     # if finetune from checkpoint
     if hasattr(args, 'resume') and args.resume:
+
         if args.local == 1:
             args.resume = os.path.join(args.smoothing_path, args.resume)
         else:
@@ -214,6 +219,7 @@ def main(args):
 
     # certify test set
     if has_testset and args.ddp and args.certify:
+        print('begin to certify test set ...')
         certify_loader = DataLoader(test_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
         certify_loader.sampler.set_epoch(0)
@@ -225,6 +231,7 @@ def main(args):
     
     # certify training set
     if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
+        print('begin to certify training set ...')
         certify_loader = DataLoader(train_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
         certify_loader.sampler.set_epoch(0)
@@ -292,6 +299,9 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
 
             if hasattr(args, 'mixup') and args.mixup:
                 inputs, targets_a, targets_b, lam = mixup_data(inputs, targets, args.mixup_alpha)                
+
+            if hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num'):
+                inputs = inputs.repeat_interleave(args.avgn_num,dim=0)
 
             # augment inputs with noise
             noise_sd = get_noise(epoch, args)
@@ -368,6 +378,9 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
 
             inputs = inputs.cuda()
             targets = targets.cuda()
+
+            if hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num'):
+                inputs = inputs.repeat_interleave(args.avgn_num,dim=0)
 
             if hasattr(args, 'natural_test') and (not args.natural_test):
                 # augment inputs with noise
@@ -461,7 +474,7 @@ if __name__ == "__main__":
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(8, args.batch)
-        args.epochs = 100
+        args.epochs = 1
         args.skip = 5000
         args.skip_train = 100000
     

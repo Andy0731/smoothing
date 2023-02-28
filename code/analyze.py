@@ -302,14 +302,14 @@ if __name__ == "__main__":
 
         # ******************************
         # train from scratch on CIFAR10, normal_resnet152, n025 coslr01 bs128, vary ep, train 
-        # "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_train",
+        "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_train",
         # "amlt/smoothing/rep_n025_coslr01_bs128_e800/resnet152/rep_n025_coslr01_bs128_e800/certify_sigma0.25_train",
         # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
         # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
 
         # train from scratch on CIFAR10, normal_resnet152, n025 coslr01 bs128, vary ep, test
-        "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_test",
-        "amlt/smoothing/rep_n025_coslr01_bs128_e800/resnet152/rep_n025_coslr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/rep_n025_coslr01_bs128_e800/resnet152/rep_n025_coslr01_bs128_e800/certify_sigma0.25_test",
         # # "amlt/smoothing/r152_n025_lr01_bs128_e100/resnet152/n025_lr01_bs128_e100/certify_sigma0.25",
         # # "amlt/smoothing/r152_n025_lr01_bs128_e200/resnet152/n025_lr01_bs128_e200/certify_sigma0.25",
         # # "amlt/smoothing/r152_n025_lr01_bs128_e400/resnet152/n025_lr01_bs128_e400/certify_sigma0.25",
@@ -853,16 +853,92 @@ if __name__ == "__main__":
 
         # nost, normal_resnet152 remove stride, keep size [32,32] untill the last global avg pooling, train from scatch on cifar10 with n025 bs64, train
         # "amlt/smoothing/nost_n025_coslr01_bs64_e100/resnet152/nost_n025_coslr01_bs64_e100/certify_sigma0.25_train",
-        # "amlt/smoothing/nost_n025_coslr001_bs64_e100/resnet152/nost_n025_coslr001_bs64_e100/certify_sigma0.25_train",        
+        # "amlt/smoothing/nost_n025_coslr01_bs64_e800/resnet152/nost_n025_coslr01_bs64_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nost_n025_coslr01_bs64_e1600/resnet152/nost_n025_coslr01_bs64_e1600/certify_sigma0.25_train",
+        # "amlt/smoothing/nost_n025_coslr001_bs64_e100/resnet152/nost_n025_coslr001_bs64_e100/certify_sigma0.25_train",  
+        # "amlt/smoothing/nost_n025_coslr001_bs64_e800/resnet152/nost_n025_coslr001_bs64_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nost_n025_coslr001_bs64_e1600/resnet152/nost_n025_coslr001_bs64_e1600/certify_sigma0.25_train",      
 
         # nost, normal_resnet152 remove stride, keep size [32,32] untill the last global avg pooling, train from scatch on cifar10 with n025 bs64, test
-        "amlt/smoothing/nost_n025_coslr01_bs64_e100/resnet152/nost_n025_coslr01_bs64_e100/certify_sigma0.25_test",
-        "amlt/smoothing/nost_n025_coslr001_bs64_e100/resnet152/nost_n025_coslr001_bs64_e100/certify_sigma0.25_test",  
+        # "amlt/smoothing/nost_n025_coslr01_bs64_e100/resnet152/nost_n025_coslr01_bs64_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/nost_n025_coslr01_bs64_e800/resnet152/nost_n025_coslr01_bs64_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nost_n025_coslr01_bs64_e1600/resnet152/nost_n025_coslr01_bs64_e1600/certify_sigma0.25_test",
+        # "amlt/smoothing/nost_n025_coslr001_bs64_e100/resnet152/nost_n025_coslr001_bs64_e100/certify_sigma0.25_test",  
+        # "amlt/smoothing/nost_n025_coslr001_bs64_e800/resnet152/nost_n025_coslr001_bs64_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nost_n025_coslr001_bs64_e1600/resnet152/nost_n025_coslr001_bs64_e1600/certify_sigma0.25_test",
+
+        # imagenet22k, pretrain n025 e100, vary lr, train
+        # "amlt/smoothing/imgn22k_r152_n025_coslr1_bs1024_w4_e100/imagenet22k/imgn22k_r152_n025_coslr1_bs1024_w4_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/imgn22k_r152_n025_coslr01_bs1024_w4_e100/imagenet22k/imgn22k_r152_n025_coslr01_bs1024_w4_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/imgn22k_r152_n025_coslr001_bs1024_w4_e100/imagenet22k/imgn22k_r152_n025_coslr001_bs1024_w4_e100/certify_sigma0.25_train",
+
+        # # imagenet22k, pretrain n025 e100, vary lr, test
+        # "amlt/smoothing/imgn22k_r152_n025_coslr1_bs1024_w4_e100/imagenet22k/imgn22k_r152_n025_coslr1_bs1024_w4_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/imgn22k_r152_n025_coslr01_bs1024_w4_e100/imagenet22k/imgn22k_r152_n025_coslr01_bs1024_w4_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/imgn22k_r152_n025_coslr001_bs1024_w4_e100/imagenet22k/imgn22k_r152_n025_coslr001_bs1024_w4_e100/certify_sigma0.25_test",
+
+        # pretrain on imagenet22k n025 lr01 e100 bs1024x8 worker4, finetune on cifar10 n025 bs128 e100, vary lr, train
+        # "amlt/smoothing/r152_imgn22kn025lr01e100_coslr01_bs128_n025_e100/finetune/r152_imgn22kn025lr01e100_coslr01_bs128_n025_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_imgn22kn025lr01e100_coslr001_bs128_n025_e100/finetune/r152_imgn22kn025lr01e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+
+        # pretrain on imagenet22k n025 lr01 e100 bs1024x8 worker4, finetune on cifar10 n025 bs128 e100, vary lr, test
+        # "amlt/smoothing/r152_imgn22kn025lr01e100_coslr01_bs128_n025_e100/finetune/r152_imgn22kn025lr01e100_coslr01_bs128_n025_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_imgn22kn025lr01e100_coslr001_bs128_n025_e100/finetune/r152_imgn22kn025lr01e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+
+        # train from scratch on cifar10 n025 lr01 e100, certify with averaging noise, train
+        # "amlt/smoothing/avgn_onlyctf_affc2/resnet152/avgn_onlyctf_affc2/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_affc4/resnet152/avgn_onlyctf_affc4/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_affc8/resnet152/avgn_onlyctf_affc8/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_affc16/resnet152/avgn_onlyctf_affc16/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_affc32/resnet152/avgn_onlyctf_affc32/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_befc2/resnet152/avgn_onlyctf_befc2/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_befc4/resnet152/avgn_onlyctf_befc4/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_befc8/resnet152/avgn_onlyctf_befc8/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_befc16/resnet152/avgn_onlyctf_befc16/certify_sigma0.25_train",
+        # "amlt/smoothing/avgn_onlyctf_befc32/resnet152/avgn_onlyctf_befc32/certify_sigma0.25_train",
+
+        # train from scratch on cifar10 n025 lr01 e100, certify with averaging noise, test
+        # "amlt/smoothing/avgn_onlyctf_affc2/resnet152/avgn_onlyctf_affc2/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_affc4/resnet152/avgn_onlyctf_affc4/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_affc8/resnet152/avgn_onlyctf_affc8/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_affc16/resnet152/avgn_onlyctf_affc16/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_affc32/resnet152/avgn_onlyctf_affc32/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_befc2/resnet152/avgn_onlyctf_befc2/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_befc4/resnet152/avgn_onlyctf_befc4/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_befc8/resnet152/avgn_onlyctf_befc8/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_befc16/resnet152/avgn_onlyctf_befc16/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_onlyctf_befc32/resnet152/avgn_onlyctf_befc32/certify_sigma0.25_test",
+
+        # train with averaging k noise, certify without averaging noise, train
+        # "amlt/smoothing/avgn_n025_lr01_bs8_affc32/resnet152/avgn_n025_lr01_bs8_affc32/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs8_befc32/resnet152/avgn_n025_lr01_bs8_befc32/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs16_affc16/resnet152/avgn_n025_lr01_bs16_affc16/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs16_befc16/resnet152/avgn_n025_lr01_bs16_befc16/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs32_affc8/resnet152/avgn_n025_lr01_bs32_affc8/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs32_befc8/resnet152/avgn_n025_lr01_bs32_befc8/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs64_affc4/resnet152/avgn_n025_lr01_bs64_affc4/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs64_befc4/resnet152/avgn_n025_lr01_bs64_befc4/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs128_affc2/resnet152/avgn_n025_lr01_bs128_affc2/certify_sigma0.25_train",
+        "amlt/smoothing/avgn_n025_lr01_bs128_befc2/resnet152/avgn_n025_lr01_bs128_befc2/certify_sigma0.25_train",
+
+        # train with averaging k noise, certify without averaging noise, test
+        # # "amlt/smoothing/avgn_n025_lr01_bs8_affc32/resnet152/avgn_n025_lr01_bs8_affc32/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs8_befc32/resnet152/avgn_n025_lr01_bs8_befc32/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs16_affc16/resnet152/avgn_n025_lr01_bs16_affc16/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs16_befc16/resnet152/avgn_n025_lr01_bs16_befc16/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs32_affc8/resnet152/avgn_n025_lr01_bs32_affc8/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs32_befc8/resnet152/avgn_n025_lr01_bs32_befc8/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs64_affc4/resnet152/avgn_n025_lr01_bs64_affc4/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs64_befc4/resnet152/avgn_n025_lr01_bs64_befc4/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs128_affc2/resnet152/avgn_n025_lr01_bs128_affc2/certify_sigma0.25_test",
+        # "amlt/smoothing/avgn_n025_lr01_bs128_befc2/resnet152/avgn_n025_lr01_bs128_befc2/certify_sigma0.25_test",
+                     
+
 
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/nost_n025_bs64_test", "nost_n025_bs64_test", 1.0, [
+        "../amlt/smoothing/analysis/plots/avgn_n025_lr01_train", "avgn_n025_lr01_train", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     

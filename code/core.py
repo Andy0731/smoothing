@@ -11,7 +11,12 @@ class Smooth(object):
     # to abstain, Smooth returns this int
     ABSTAIN = -1
 
-    def __init__(self, base_classifier: torch.nn.Module, num_classes: int, sigma: float, use_amp: bool = False):
+    def __init__(self, base_classifier: torch.nn.Module, 
+        num_classes: int, 
+        sigma: float, 
+        use_amp: bool = False, 
+        avgn_loc: str = None, 
+        avgn_num: int =1):
         """
         :param base_classifier: maps from [batch x channel x height x width] to [batch x num_classes]
         :param num_classes:
@@ -21,6 +26,8 @@ class Smooth(object):
         self.num_classes = num_classes
         self.sigma = sigma
         self.use_amp = use_amp
+        self.avgn_loc = avgn_loc
+        self.avgn_num = avgn_num
 
     def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
@@ -92,6 +99,9 @@ class Smooth(object):
                 noise = torch.randn_like(batch, device='cuda') * self.sigma
                 with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=self.use_amp):
                     predictions = self.base_classifier(batch + noise).argmax(1)
+                    if self.avgn_loc:
+                        predictions = predictions.repeat_interleave(self.avgn_num, dim=0)
+
                 counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
             return counts
 
