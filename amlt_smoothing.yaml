@@ -28,6 +28,7 @@ environment:
   - pip install seaborn
   - pip install setGPU
   - pip install attrdict
+  - pip install einops
 
 code:
   local_dir: $CONFIG_DIR/code
@@ -473,46 +474,46 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/avgn_onlyctf_befc32.json
-- name: avgn_n025_lr01_bs8_befc32
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs8_befc32.json
-- name: avgn_n025_lr01_bs16_befc16
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs16_befc16.json
-- name: avgn_n025_lr01_bs32_befc8
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs32_befc8.json
-- name: avgn_n025_lr01_bs64_befc4
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs64_befc4.json
-- name: avgn_n025_lr01_bs128_befc2
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs128_befc2.json
-- name: avgn_n025_lr01_bs8_affc32
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs8_affc32.json
-- name: avgn_n025_lr01_bs16_affc16
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs16_affc16.json
-- name: avgn_n025_lr01_bs32_affc8
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs32_affc8.json
-- name: avgn_n025_lr01_bs64_affc4
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs64_affc4.json
-- name: avgn_n025_lr01_bs128_affc2
-  sku: G8-A100
-  command:
-  - python train.py --config configs/resnet152/avgn_n025_lr01_bs128_affc2.json
+# - name: avgn_n025_lr01_bs8_befc32
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs8_befc32.json
+# - name: avgn_n025_lr01_bs16_befc16
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs16_befc16.json
+# - name: avgn_n025_lr01_bs32_befc8
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs32_befc8.json
+# - name: avgn_n025_lr01_bs64_befc4
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs64_befc4.json
+# - name: avgn_n025_lr01_bs128_befc2
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs128_befc2.json
+# - name: avgn_n025_lr01_bs8_affc32
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs8_affc32.json
+# - name: avgn_n025_lr01_bs16_affc16
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs16_affc16.json
+# - name: avgn_n025_lr01_bs32_affc8
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs32_affc8.json
+# - name: avgn_n025_lr01_bs64_affc4
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs64_affc4.json
+# - name: avgn_n025_lr01_bs128_affc2
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgn_n025_lr01_bs128_affc2.json
 # - name: r152_imgn22kn025lr01e100_coslr001_bs128_n025_e100
 #   sku: G8-A100
 #   command:
@@ -559,3 +560,231 @@ jobs:
 #   command:
 #   - python train.py --config configs/imagenet22k/imgn22k_r152_n025_coslr01_bs1024_w4_e400.json
 #   process_count_per_node: 8
+# - name: vit_imgn32_n0_coslr003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr003_e100.json
+# - name: vit_imgn32_n0_coslr0003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr0003_e100.json
+# - name: vit_imgn32_n0_coslr00003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr00003_e100.json
+# - name: vit_imgn32_n0_coslr0003_e300
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr0003_e300.json
+# - name: vit_imgn32_n0_coslr0003_e200
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr0003_e200.json
+# - name: vit_imgn32_n0_coslr0003_e400
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr0003_e400.json
+# - name: vit_imgn32_n0_coslr0003_e800
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr0003_e800.json
+# - name: vit_imgn32_n0_coslr00003_e200
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr00003_e200.json
+# - name: vit_imgn32_n0_coslr00003_e400
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr00003_e400.json
+# - name: vit_imgn32_n0_coslr00003_e800
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr00003_e800.json
+# - name: vit_imgn32_n025_coslr003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr003_e100.json
+# - name: vit_imgn32_n025_coslr0003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr0003_e100.json
+# - name: vit_imgn32_n025_coslr00003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr00003_e100.json
+# - name: vit_imgn32_n025_coslr0003_e300
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr0003_e300.json
+# - name: vit_imgn32_n0_coslr000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr000003_e100.json
+# - name: vit_imgn32_n0_coslr0000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n0_coslr0000003_e100.json
+# - name: vit_imgn32_n025_coslr000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr000003_e100.json
+# - name: vit_imgn32_n025_coslr0000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr0000003_e100.json
+# - name: vit_imgn32_n025_coslr0003_e200
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr0003_e200.json
+# - name: vit_imgn32_n025_coslr0003_e400
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr0003_e400.json
+# - name: vit_imgn32_n025_coslr0003_e800
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr0003_e800.json
+# - name: vit_imgn32_n025_coslr00003_e200
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr00003_e200.json
+# - name: vit_imgn32_n025_coslr00003_e400
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_imgn32_n025_coslr00003_e400.json
+# - name: vit_imgn32_n025_coslr00003_e800
+#   sku: G8-A100
+#   command:
+  # - python train.py --config configs/vit/vit_imgn32_n025_coslr00003_e800.json
+# - name: vit_cf10_n0_coslr003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr003_e100.json
+# - name: vit_cf10_n0_coslr0003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr0003_e100.json
+# - name: vit_cf10_n0_coslr0003_e300
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr0003_e300.json
+# - name: vit_cf10_n0_coslr00003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr00003_e100.json
+# - name: vit_cf10_n0_coslr00003_e200
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr00003_e200.json
+# - name: vit_cf10_n0_coslr00003_e400
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr00003_e400.json
+# - name: vit_cf10_n0_coslr00003_e800
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr00003_e800.json
+# - name: vit_cf10_n0_coslr000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr000003_e100.json
+# - name: vit_cf10_n0_coslr0000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n0_coslr0000003_e100.json
+# - name: vit_cf10_n025_coslr003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr003_e100.json
+# - name: vit_cf10_n025_coslr0003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr0003_e100.json
+# - name: vit_cf10_n025_coslr00003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr00003_e100.json
+# - name: vit_cf10_n025_coslr0003_e300
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr0003_e300.json
+# - name: vit_cf10_n025_coslr000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr000003_e100.json
+# - name: vit_cf10_n025_coslr0000003_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr0000003_e100.json
+# - name: vit_cf10_n025_coslr00003_e200
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr00003_e200.json
+# - name: vit_cf10_n025_coslr00003_e400
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr00003_e400.json
+# - name: vit_cf10_n025_coslr00003_e800
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/vit/vit_cf10_n025_coslr00003_e800.json
+# - name: avgin2_onlyctf
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin2_onlyctf.json
+# - name: avgin4_onlyctf
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin4_onlyctf.json
+# - name: avgin8_onlyctf
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin8_onlyctf.json
+# - name: avgin16_onlyctf
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin16_onlyctf.json
+# - name: avgin32_onlyctf
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin32_onlyctf.json
+# - name: avgin2_n025_lr01_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin2_n025_lr01_e100.json
+# - name: avgin4_n025_lr01_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin4_n025_lr01_e100.json
+# - name: avgin8_n025_lr01_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin8_n025_lr01_e100.json
+# - name: avgin16_n025_lr01_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin16_n025_lr01_e100.json
+# - name: avgin32_n025_lr01_e100
+#   sku: G8-A100
+#   command:
+#   - python train.py --config configs/resnet152/avgin32_n025_lr01_e100.json
+- name: avgin2ctf_n025_lr01_e100
+  sku: G8-A100
+  command:
+  - python train.py --config configs/resnet152/avgin2ctf_n025_lr01_e100.json
+- name: avgin4ctf_n025_lr01_e100
+  sku: G8-A100
+  command:
+  - python train.py --config configs/resnet152/avgin4ctf_n025_lr01_e100.json
+- name: avgin8ctf_n025_lr01_e100
+  sku: G8-A100
+  command:
+  - python train.py --config configs/resnet152/avgin8ctf_n025_lr01_e100.json
+- name: avgin16ctf_n025_lr01_e100
+  sku: G8-A100
+  command:
+  - python train.py --config configs/resnet152/avgin16ctf_n025_lr01_e100.json
+- name: avgin32ctf_n025_lr01_e100
+  sku: G8-A100
+  command:
+  - python train.py --config configs/resnet152/avgin32ctf_n025_lr01_e100.json

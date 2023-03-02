@@ -92,3 +92,11 @@ def mixup_data(x, y, alpha=1.0, use_cuda=True):
 def mixup_criterion(criterion, pred, y_a, y_b, lam):
     return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
 
+def avg_input_noise(x, noise_sd, num):
+    b, c, h, w = x.shape
+    nx = x.repeat_interleave(num, dim=0) #bn,c,h,w
+    noise = torch.randn_like(nx, device='cuda') * noise_sd #bn,c,h,w
+    noise = noise.view(b, num, c, h, w) #b,n,c,h,w
+    noise = noise.mean(dim=1) #b,c,h,w
+    del nx
+    return noise

@@ -14,6 +14,7 @@ from archs.normal_resnet import resnet152wide2 as normal_resnet152wide2
 from archs.normal_resnet_gelu import resnet152gelu as normal_resnet152_gelu
 from archs.normal_resnet_nost import resnet152nost as normal_resnet152_nost
 from archs.normal_resnet_avgn import resnet152avgn as normal_resnet152_avgn
+from archs.vit import vit_b
 
 import torchvision.models as torchvision_models
 
@@ -48,19 +49,27 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
                 model = arch + '(avgn_loc=avgn_loc, avgn_num=avgn_num)'
             else:
                 model = arch + '()'
-            print('model: ', model)
-            model = eval(model)
         elif dataset == 'imagenet22k':
             model = arch + '(num_classes=21841)'
-            print('model: ', model)
-            model = eval(model)
-            # print(model)            
         elif 'imagenet' in dataset:
             model = arch + '(num_classes=1000)'
-            print('model: ', model)
-            model = eval(model)
-            # print(model)
+        print('model: ', model)
+        model = eval(model)
     elif arch == 'torchvision_resnet152': # conv1 7x7 with stride=2 and maxpooling before the 4 stages
         model = torchvision_models.resnet152(num_classes=10)
+    elif 'vit' in arch:
+        if 'cifar' in dataset:
+            model = arch + '(num_classes=10)'
+        elif dataset == 'imagenet32':
+            model = arch + '(num_classes=1000)'
+        elif dataset == 'imagenet22k':
+            model = arch + '(num_classes=21841)'
+        else:
+            raise ValueError
+        print('model: ', model)
+        model = eval(model)
+        print(model)
+    else:
+        raise ValueError
     normalize_layer = get_normalize_layer(dataset)
     return torch.nn.Sequential(normalize_layer, model)

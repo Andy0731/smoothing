@@ -10,10 +10,10 @@ from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 from datasets import get_dataset
 from architectures import get_architecture
-from torch.optim import SGD, Optimizer
+from torch.optim import SGD, Optimizer, AdamW
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion
+from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, avg_input_noise
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -90,7 +90,11 @@ def main(args):
         model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
 
     criterion = CrossEntropyLoss().cuda()
-    optimizer = SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
+
+    if 'vit' in args.arch:
+        optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    else:
+        optimizer = SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
     args.use_amp = True if (hasattr(args, 'amp') and args.amp) else False
     scaler = torch.cuda.amp.GradScaler(enabled=args.use_amp)
@@ -306,7 +310,11 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             # augment inputs with noise
             noise_sd = get_noise(epoch, args)
             args.cur_noise = noise_sd
-            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+            if hasattr(args, 'avgin_trn') and args.avgin_trn:
+                noise = avg_input_noise(inputs, noise_sd, args.avgin_num)
+            else:
+                noise = torch.randn_like(inputs, device='cuda') * noise_sd
+            inputs = inputs + noise
 
             if args.clean_image:
                 inputs = torch.cat((inputs_cln, inputs), dim=0)
@@ -382,9 +390,15 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             if hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num'):
                 inputs = inputs.repeat_interleave(args.avgn_num,dim=0)
 
-            if hasattr(args, 'natural_test') and (not args.natural_test):
-                # augment inputs with noise
-                inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+            # if hasattr(args, 'natural_test') and (not args.natural_test):
+            # augment inputs with noise
+            # inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+
+            if hasattr(args, 'avgin_trn') and args.avgin_trn:
+                noise = avg_input_noise(inputs, noise_sd, args.avgin_num)
+            else:
+                noise = torch.randn_like(inputs, device='cuda') * noise_sd
+            inputs = inputs + noise
 
             # compute output
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
@@ -432,7 +446,7 @@ if __name__ == "__main__":
     if args.dataset == 'cifar10':
         args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
         if args.data == '/D_data/kaqiu/cifar10/': # local
-            args.smoothing_path = '../'
+            args.smoothing_path = '../amlt'
             args.local = 1
         else: # itp
             args.local = 0

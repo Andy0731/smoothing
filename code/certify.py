@@ -25,7 +25,10 @@ def run_certify(args, base_classifier, loader, split='test'):
         smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num)
     else:    
     # create the smooothed classifier g
-        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
+        if hasattr(args, 'avgin_ctf') and args.avgin_ctf:
+            smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, avgin_ctf=args.avgin_ctf, avgin_num=args.avgin_num)
+        else:
+            smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
         if hasattr(args, 'avgn_ctf') and args.avgn_ctf == 0:
             smoothed_classifier.base_classifier.module[1].avgn_loc = None
 

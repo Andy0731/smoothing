@@ -3,6 +3,7 @@ from scipy.stats import norm, binom_test
 import numpy as np
 from math import ceil
 from statsmodels.stats.proportion import proportion_confint
+from train_utils import avg_input_noise
 
 
 class Smooth(object):
@@ -16,7 +17,10 @@ class Smooth(object):
         sigma: float, 
         use_amp: bool = False, 
         avgn_loc: str = None, 
-        avgn_num: int =1):
+        avgn_num: int = 1,
+        avgin_ctf: int = 0,
+        avgin_num: int = 1,
+        ):
         """
         :param base_classifier: maps from [batch x channel x height x width] to [batch x num_classes]
         :param num_classes:
@@ -28,6 +32,8 @@ class Smooth(object):
         self.use_amp = use_amp
         self.avgn_loc = avgn_loc
         self.avgn_num = avgn_num
+        self.avgin_ctf = avgin_ctf
+        self.avgin_num = avgin_num
 
     def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
@@ -95,8 +101,11 @@ class Smooth(object):
                 this_batch_size = min(batch_size, num)
                 num -= this_batch_size
 
-                batch = x.repeat((this_batch_size, 1, 1, 1))
-                noise = torch.randn_like(batch, device='cuda') * self.sigma
+                batch = x.repeat((this_batch_size, 1, 1, 1)) #b,c,h,w
+                if self.avgin_ctf:
+                    noise = avg_input_noise(batch, self.sigma, self.avgin_num)
+                else:
+                    noise = torch.randn_like(batch, device='cuda') * self.sigma
                 with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=self.use_amp):
                     predictions = self.base_classifier(batch + noise).argmax(1)
                     if self.avgn_loc:
