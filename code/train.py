@@ -13,7 +13,7 @@ from architectures import get_architecture
 from torch.optim import SGD, Optimizer, AdamW
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, avg_input_noise
+from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, add_fnoise
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -79,8 +79,8 @@ def main(args):
             test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
 
-    if 'avgn' in args.arch:
-        assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num')
+    if hasattr(args, 'favg') and args.favg:
+        assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
         model = get_architecture(args.arch, args.dataset, args.avgn_loc, args.avgn_num)
     else:
         model = get_architecture(args.arch, args.dataset)
@@ -191,7 +191,7 @@ def main(args):
                 writer.add_scalar('test_loss', test_loss, epoch)
                 writer.add_scalar('test_acc', test_acc, epoch)       
 
-            ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
+            # ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
             ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
             try:
                 torch.save({
@@ -200,8 +200,8 @@ def main(args):
                     'state_dict': model.state_dict(),
                     'optimizer': optimizer.state_dict(),
                     'scaler': scaler.state_dict(),
-                }, ckpt_file)
-                shutil.copyfile(ckpt_file, ckpt_file_cp)
+                }, ckpt_file_cp)
+                # shutil.copyfile(ckpt_file, ckpt_file_cp)
             except OSError:
                 print("OSError when saving checkpoint in epoch ", epoch)
     
@@ -304,17 +304,15 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             if hasattr(args, 'mixup') and args.mixup:
                 inputs, targets_a, targets_b, lam = mixup_data(inputs, targets, args.mixup_alpha)                
 
-            if hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num'):
-                inputs = inputs.repeat_interleave(args.avgn_num,dim=0)
-
             # augment inputs with noise
             noise_sd = get_noise(epoch, args)
             args.cur_noise = noise_sd
-            if hasattr(args, 'avgin_trn') and args.avgin_trn:
-                noise = avg_input_noise(inputs, noise_sd, args.avgin_num)
-            else:
-                noise = torch.randn_like(inputs, device='cuda') * noise_sd
-            inputs = inputs + noise
+
+            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+
+            # expand (x + gnoise) with k fnoise, 
+            if hasattr(args, 'favg') and args.favg:
+                inputs = add_fnoise(inputs, args.fnoise_sd, args.avgn_num) # (b,c,h,w) -> (bn,c,h,w)
 
             if args.clean_image:
                 inputs = torch.cat((inputs_cln, inputs), dim=0)
@@ -387,19 +385,12 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             inputs = inputs.cuda()
             targets = targets.cuda()
 
-            if hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num'):
-                inputs = inputs.repeat_interleave(args.avgn_num,dim=0)
+            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
 
-            # if hasattr(args, 'natural_test') and (not args.natural_test):
-            # augment inputs with noise
-            # inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
-
-            if hasattr(args, 'avgin_trn') and args.avgin_trn:
-                noise = avg_input_noise(inputs, noise_sd, args.avgin_num)
-            else:
-                noise = torch.randn_like(inputs, device='cuda') * noise_sd
-            inputs = inputs + noise
-
+            # expand (x + gnoise) with k fnoise, 
+            if hasattr(args, 'favg') and args.favg:
+                inputs = add_fnoise(inputs, args.fnoise_sd, args.avgn_num) # (b,c,h,w) -> (bn,c,h,w)
+                
             # compute output
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
                 outputs = model(inputs)

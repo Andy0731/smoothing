@@ -20,17 +20,12 @@ def run_certify(args, base_classifier, loader, split='test'):
     skip = args.skip if split == 'test' else args.skip_train
 
     use_amp = True if (hasattr(args, 'amp') and args.amp) else False
-    if hasattr(args, 'avgn_ctf') and args.avgn_ctf == 1:
-        assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num')
-        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num)
-    else:    
+    if hasattr(args, 'favg') and args.favg == 1:
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, favg=args.favg, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num, fnoise_sd=args.fnoise_sd)
+    else:
     # create the smooothed classifier g
-        if hasattr(args, 'avgin_ctf') and args.avgin_ctf:
-            smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, avgin_ctf=args.avgin_ctf, avgin_num=args.avgin_num)
-        else:
-            smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
-        if hasattr(args, 'avgn_ctf') and args.avgn_ctf == 0:
-            smoothed_classifier.base_classifier.module[1].avgn_loc = None
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
+
 
     # prepare output file
     ctf_name = os.path.join(args.outdir, 'certify_sigma{}_{}'.format(args.sigma, split) + '_rank{}'.format(args.global_rank))

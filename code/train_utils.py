@@ -100,3 +100,8 @@ def avg_input_noise(x, noise_sd, num):
     noise = noise.mean(dim=1) #b,c,h,w
     del nx
     return noise
+
+def add_fnoise(x, noise_sd, num):
+    nx = x.repeat_interleave(num, dim=0) #bn, c, h, w
+    noise = torch.randn_like(nx, device='cuda') * noise_sd
+    return nx + noise

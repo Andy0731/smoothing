@@ -3,7 +3,7 @@ from scipy.stats import norm, binom_test
 import numpy as np
 from math import ceil
 from statsmodels.stats.proportion import proportion_confint
-from train_utils import avg_input_noise
+from train_utils import add_fnoise
 
 
 class Smooth(object):
@@ -15,11 +15,11 @@ class Smooth(object):
     def __init__(self, base_classifier: torch.nn.Module, 
         num_classes: int, 
         sigma: float, 
-        use_amp: bool = False, 
+        use_amp: bool = False,
+        favg: int = 0,
         avgn_loc: str = None, 
         avgn_num: int = 1,
-        avgin_ctf: int = 0,
-        avgin_num: int = 1,
+        fnoise_sd: float = 0.0,
         ):
         """
         :param base_classifier: maps from [batch x channel x height x width] to [batch x num_classes]
@@ -30,10 +30,10 @@ class Smooth(object):
         self.num_classes = num_classes
         self.sigma = sigma
         self.use_amp = use_amp
+        self.favg = favg
         self.avgn_loc = avgn_loc
         self.avgn_num = avgn_num
-        self.avgin_ctf = avgin_ctf
-        self.avgin_num = avgin_num
+        self.fnoise_sd = fnoise_sd
 
     def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
@@ -102,14 +102,15 @@ class Smooth(object):
                 num -= this_batch_size
 
                 batch = x.repeat((this_batch_size, 1, 1, 1)) #b,c,h,w
-                if self.avgin_ctf:
-                    noise = avg_input_noise(batch, self.sigma, self.avgin_num)
-                else:
-                    noise = torch.randn_like(batch, device='cuda') * self.sigma
+                noise = torch.randn_like(batch, device='cuda') * self.sigma
+                batch += noise
+
+                # expand (x + gnoise) with k fnoise 
+                if self.favg:
+                    batch = add_fnoise(batch, self.fnoise_sd, self.avgn_num)
+
                 with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=self.use_amp):
-                    predictions = self.base_classifier(batch + noise).argmax(1)
-                    if self.avgn_loc:
-                        predictions = predictions.repeat_interleave(self.avgn_num, dim=0)
+                    predictions = self.base_classifier(batch).argmax(1)
 
                 counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
             return counts

@@ -302,13 +302,13 @@ if __name__ == "__main__":
 
         # ******************************
         # train from scratch on CIFAR10, normal_resnet152, n025 coslr01 bs128, vary ep, train 
-        # "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_train",
+        "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_train",
         # "amlt/smoothing/rep_n025_coslr01_bs128_e800/resnet152/rep_n025_coslr01_bs128_e800/certify_sigma0.25_train",
         # "amlt/smoothing/r152_n025_coslr01_bs128_e1600_m2/resnet152/n025_coslr01_bs128_e1600/certify_sigma0.25_train",
         # "amlt/smoothing/r152_n025_coslr01_bs128_e12800_m8/resnet152/n025_coslr01_bs128_e12800/certify_sigma0.25_train",
 
         # train from scratch on CIFAR10, normal_resnet152, n025 coslr01 bs128, vary ep, test
-        "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_test",
         # "amlt/smoothing/rep_n025_coslr01_bs128_e800/resnet152/rep_n025_coslr01_bs128_e800/certify_sigma0.25_test",
         # # "amlt/smoothing/r152_n025_lr01_bs128_e100/resnet152/n025_lr01_bs128_e100/certify_sigma0.25",
         # # "amlt/smoothing/r152_n025_lr01_bs128_e200/resnet152/n025_lr01_bs128_e200/certify_sigma0.25",
@@ -955,11 +955,11 @@ if __name__ == "__main__":
         # "amlt/smoothing/avgin32_n025_lr01_e100/resnet152/avgin32_n025_lr01_e100/certify_sigma0.25_train",
 
         # cifar10 r152, train with average input noise, normal certify, test
-        "amlt/smoothing/avgin2_n025_lr01_e100/resnet152/avgin2_n025_lr01_e100/certify_sigma0.25_test",
-        "amlt/smoothing/avgin4_n025_lr01_e100/resnet152/avgin4_n025_lr01_e100/certify_sigma0.25_test",
-        "amlt/smoothing/avgin8_n025_lr01_e100/resnet152/avgin8_n025_lr01_e100/certify_sigma0.25_test",
-        "amlt/smoothing/avgin16_n025_lr01_e100/resnet152/avgin16_n025_lr01_e100/certify_sigma0.25_test",
-        "amlt/smoothing/avgin32_n025_lr01_e100/resnet152/avgin32_n025_lr01_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/avgin2_n025_lr01_e100/resnet152/avgin2_n025_lr01_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/avgin4_n025_lr01_e100/resnet152/avgin4_n025_lr01_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/avgin8_n025_lr01_e100/resnet152/avgin8_n025_lr01_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/avgin16_n025_lr01_e100/resnet152/avgin16_n025_lr01_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/avgin32_n025_lr01_e100/resnet152/avgin32_n025_lr01_e100/certify_sigma0.25_test",
 
         # cifar10 r152, train with average input noise, certify with average input noise, train
         # "amlt/smoothing/avgin2ctf_n025_lr01_e100/resnet152/avgin2ctf_n025_lr01_e100/certify_sigma0.25_train",
@@ -967,6 +967,130 @@ if __name__ == "__main__":
         # "amlt/smoothing/avgin8ctf_n025_lr01_e100/resnet152/avgin8ctf_n025_lr01_e100/certify_sigma0.25_train",
         # "amlt/smoothing/avgin16ctf_n025_lr01_e100/resnet152/avgin16ctf_n025_lr01_e100/certify_sigma0.25_train",
         # "amlt/smoothing/avgin32ctf_n025_lr01_e100/resnet152/avgin32ctf_n025_lr01_e100/certify_sigma0.25_train",
+
+        # cifar10 r152, add extra noise for f, train
+        # "amlt/smoothing/fn1a4_gn025_lr01_bs128/resnet152/fn1a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn05a4_gn025_lr01_bs128/resnet152/fn05a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn01a4_gn025_lr01_bs128/resnet152/fn01a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn005a4_gn025_lr01_bs128/resnet152/fn005a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn001a4_gn025_lr01_bs128/resnet152/fn001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0005a4_gn025_lr01_bs128/resnet152/fn0005a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0001a4_gn025_lr01_bs128/resnet152/fn0001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn00001a4_gn025_lr01_bs128/resnet152/fn00001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+
+        # "amlt/smoothing/fn1a4_gn025_lr01_bs128/resnet152/fn1a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn05a4_gn025_lr01_bs128/resnet152/fn05a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn01a4_gn025_lr01_bs128/resnet152/fn01a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn005a4_gn025_lr01_bs128/resnet152/fn005a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn001a4_gn025_lr01_bs128/resnet152/fn001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0005a4_gn025_lr01_bs128/resnet152/fn0005a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0001a4_gn025_lr01_bs128/resnet152/fn0001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn00001a4_gn025_lr01_bs128/resnet152/fn00001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+
+        # "amlt/smoothing/fn1a8_gn025_lr01_bs128/resnet152/fn1a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn05a8_gn025_lr01_bs128/resnet152/fn05a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn01a8_gn025_lr01_bs128/resnet152/fn01a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn005a8_gn025_lr01_bs128/resnet152/fn005a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn001a8_gn025_lr01_bs128/resnet152/fn001a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0005a8_gn025_lr01_bs128/resnet152/fn0005a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0001a8_gn025_lr01_bs128/resnet152/fn0001a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn00001a8_gn025_lr01_bs128/resnet152/fn00001a8_gn025_lr01_bs128/certify_sigma0.25_train",
+
+        # "amlt/smoothing/fn1a16_gn025_lr01_bs64/resnet152/fn1a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn05a16_gn025_lr01_bs64/resnet152/fn05a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn01a16_gn025_lr01_bs64/resnet152/fn01a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn005a16_gn025_lr01_bs64/resnet152/fn005a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn001a16_gn025_lr01_bs64/resnet152/fn001a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0005a16_gn025_lr01_bs64/resnet152/fn0005a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0001a16_gn025_lr01_bs64/resnet152/fn0001a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn00001a16_gn025_lr01_bs64/resnet152/fn00001a16_gn025_lr01_bs64/certify_sigma0.25_train",
+
+        "amlt/smoothing/fn1a32_gn025_lr01_bs32/resnet152/fn1a32_gn025_lr01_bs32/certify_sigma0.25_train",
+        # "amlt/smoothing/fn05a32_gn025_lr01_bs32/resnet152/fn05a32_gn025_lr01_bs32/certify_sigma0.25_train",
+        "amlt/smoothing/fn01a32_gn025_lr01_bs32/resnet152/fn01a32_gn025_lr01_bs32/certify_sigma0.25_train",
+        "amlt/smoothing/fn005a32_gn025_lr01_bs32/resnet152/fn005a32_gn025_lr01_bs32/certify_sigma0.25_train",
+        "amlt/smoothing/fn001a32_gn025_lr01_bs32/resnet152/fn001a32_gn025_lr01_bs32/certify_sigma0.25_train",
+        "amlt/smoothing/fn0005a32_gn025_lr01_bs32/resnet152/fn0005a32_gn025_lr01_bs32/certify_sigma0.25_train",
+        "amlt/smoothing/fn0001a32_gn025_lr01_bs32/resnet152/fn0001a32_gn025_lr01_bs32/certify_sigma0.25_train",
+        "amlt/smoothing/fn00001a32_gn025_lr01_bs32/resnet152/fn00001a32_gn025_lr01_bs32/certify_sigma0.25_train",
+
+        # "amlt/smoothing/fn1a4_gn025_lr01_bs128/resnet152/fn1a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn01a4_gn025_lr01_bs128/resnet152/fn01a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn001a4_gn025_lr01_bs128/resnet152/fn001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0001a4_gn025_lr01_bs128/resnet152/fn0001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn00001a4_gn025_lr01_bs128/resnet152/fn00001a4_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn1a8_gn025_lr01_bs128/resnet152/fn1a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn01a8_gn025_lr01_bs128/resnet152/fn01a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn001a8_gn025_lr01_bs128/resnet152/fn001a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0001a8_gn025_lr01_bs128/resnet152/fn0001a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn00001a8_gn025_lr01_bs128/resnet152/fn00001a8_gn025_lr01_bs128/certify_sigma0.25_train",
+        # "amlt/smoothing/fn1a16_gn025_lr01_bs64/resnet152/fn1a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn01a16_gn025_lr01_bs64/resnet152/fn01a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn001a16_gn025_lr01_bs64/resnet152/fn001a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn0001a16_gn025_lr01_bs64/resnet152/fn0001a16_gn025_lr01_bs64/certify_sigma0.25_train",
+        # "amlt/smoothing/fn00001a16_gn025_lr01_bs64/resnet152/fn00001a16_gn025_lr01_bs64/certify_sigma0.25_train",
+
+        # cifar10 r152, add extra noise for f, test
+        # "amlt/smoothing/fn1a2_gn025_lr01_bs128/resnet152/fn1a2_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn05a2_gn025_lr01_bs128/resnet152/fn05a2_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a2_gn025_lr01_bs128/resnet152/fn01a2_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn005a2_gn025_lr01_bs128/resnet152/fn005a2_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a2_gn025_lr01_bs128/resnet152/fn001a2_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0005a2_gn025_lr01_bs128/resnet152/fn0005a2_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a2_gn025_lr01_bs128/resnet152/fn0001a2_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a2_gn025_lr01_bs128/resnet152/fn00001a2_gn025_lr01_bs128/certify_sigma0.25_test",
+
+        # "amlt/smoothing/fn1a4_gn025_lr01_bs128/resnet152/fn1a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn05a4_gn025_lr01_bs128/resnet152/fn05a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a4_gn025_lr01_bs128/resnet152/fn01a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn005a4_gn025_lr01_bs128/resnet152/fn005a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a4_gn025_lr01_bs128/resnet152/fn001a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0005a4_gn025_lr01_bs128/resnet152/fn0005a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a4_gn025_lr01_bs128/resnet152/fn0001a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a4_gn025_lr01_bs128/resnet152/fn00001a4_gn025_lr01_bs128/certify_sigma0.25_test",
+
+        # "amlt/smoothing/fn1a8_gn025_lr01_bs128/resnet152/fn1a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn05a8_gn025_lr01_bs128/resnet152/fn05a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a8_gn025_lr01_bs128/resnet152/fn01a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn005a8_gn025_lr01_bs128/resnet152/fn005a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a8_gn025_lr01_bs128/resnet152/fn001a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0005a8_gn025_lr01_bs128/resnet152/fn0005a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a8_gn025_lr01_bs128/resnet152/fn0001a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a8_gn025_lr01_bs128/resnet152/fn00001a8_gn025_lr01_bs128/certify_sigma0.25_test",
+
+        # "amlt/smoothing/fn1a16_gn025_lr01_bs64/resnet152/fn1a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn05a16_gn025_lr01_bs64/resnet152/fn05a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a16_gn025_lr01_bs64/resnet152/fn01a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn005a16_gn025_lr01_bs64/resnet152/fn005a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a16_gn025_lr01_bs64/resnet152/fn001a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0005a16_gn025_lr01_bs64/resnet152/fn0005a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a16_gn025_lr01_bs64/resnet152/fn0001a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a16_gn025_lr01_bs64/resnet152/fn00001a16_gn025_lr01_bs64/certify_sigma0.25_test",
+
+        # "amlt/smoothing/fn1a32_gn025_lr01_bs32/resnet152/fn1a32_gn025_lr01_bs32/certify_sigma0.25_test",
+        # # "amlt/smoothing/fn05a32_gn025_lr01_bs32/resnet152/fn05a32_gn025_lr01_bs32/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a32_gn025_lr01_bs32/resnet152/fn01a32_gn025_lr01_bs32/certify_sigma0.25_test",
+        # "amlt/smoothing/fn005a32_gn025_lr01_bs32/resnet152/fn005a32_gn025_lr01_bs32/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a32_gn025_lr01_bs32/resnet152/fn001a32_gn025_lr01_bs32/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0005a32_gn025_lr01_bs32/resnet152/fn0005a32_gn025_lr01_bs32/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a32_gn025_lr01_bs32/resnet152/fn0001a32_gn025_lr01_bs32/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a32_gn025_lr01_bs32/resnet152/fn00001a32_gn025_lr01_bs32/certify_sigma0.25_test",
+
+        # "amlt/smoothing/fn1a4_gn025_lr01_bs128/resnet152/fn1a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a4_gn025_lr01_bs128/resnet152/fn01a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a4_gn025_lr01_bs128/resnet152/fn001a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a4_gn025_lr01_bs128/resnet152/fn0001a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a4_gn025_lr01_bs128/resnet152/fn00001a4_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn1a8_gn025_lr01_bs128/resnet152/fn1a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a8_gn025_lr01_bs128/resnet152/fn01a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a8_gn025_lr01_bs128/resnet152/fn001a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a8_gn025_lr01_bs128/resnet152/fn0001a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a8_gn025_lr01_bs128/resnet152/fn00001a8_gn025_lr01_bs128/certify_sigma0.25_test",
+        # "amlt/smoothing/fn1a16_gn025_lr01_bs64/resnet152/fn1a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn01a16_gn025_lr01_bs64/resnet152/fn01a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn001a16_gn025_lr01_bs64/resnet152/fn001a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn0001a16_gn025_lr01_bs64/resnet152/fn0001a16_gn025_lr01_bs64/certify_sigma0.25_test",
+        # "amlt/smoothing/fn00001a16_gn025_lr01_bs64/resnet152/fn00001a16_gn025_lr01_bs64/certify_sigma0.25_test",
 
         # vit, cifar10 n025, train from scratch, train
         # "amlt/smoothing/vit_cf10_n025_coslr003_e100/vit/vit_cf10_n025_coslr003_e100/certify_sigma0.25_train",
@@ -1012,12 +1136,10 @@ if __name__ == "__main__":
         # "amlt/smoothing/vit_imgn32_n025_coslr0003_e300/vit/vit_imgn32_n025_coslr0003_e300/certify_sigma0.25_test",
         # "amlt/smoothing/vit_imgn32_n025_coslr0003_e400/vit/vit_imgn32_n025_coslr0003_e400/certify_sigma0.25_test",
 
-        # 
-
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/avgin_n025_lr01_e100_test", "avgin_n025_lr01_e100_test", 1.0, [
+        "../amlt/smoothing/analysis/plots/fnoise_a32_gn025_lr01_train", "fnoise_a32_gn025_lr01_train", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     
