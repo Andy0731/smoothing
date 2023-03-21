@@ -4,6 +4,8 @@ from datasets import get_num_classes
 from core import Smooth
 from time import time
 import datetime
+import torch
+import torch.distributed as dist
 
 
 def merge_ctf_files(ctf_filename, args):
@@ -15,7 +17,7 @@ def merge_ctf_files(ctf_filename, args):
     return
 
 
-def run_certify(args, base_classifier, loader, split='test'):
+def run_certify(args, base_classifier, loader, split='test', writer=None):
 
     skip = args.skip if split == 'test' else args.skip_train
 
@@ -33,6 +35,8 @@ def run_certify(args, base_classifier, loader, split='test'):
     ctf_file = open(ctf_name, 'w')
     if args.global_rank == 0:
         print("idx\tlabel\tpredict\tradius\tcorrect\ttime", file=ctf_file, flush=True)
+        imgs = []
+        radiuses = []
 
     # iterate through the dataset
     for i, (x, label) in enumerate(loader):
@@ -52,6 +56,25 @@ def run_certify(args, base_classifier, loader, split='test'):
         print("{}\t{}\t{}\t{:.3}\t{}\t{}".format(i + args.global_rank, label, prediction, radius, correct, time_elapsed))
         print("{}\t{}\t{}\t{:.3}\t{}\t{}".format(
             i + args.global_rank, label, prediction, radius, correct, time_elapsed), file=ctf_file, flush=True)
+        
+        # all_gather img and radius from all processes
+        x_list = [torch.zeros_like(x) for _ in range(args.world_size)]
+        dist.all_gather(tensor_list=x_list, tensor=x) # [(1,3,32,32) cuda, ..., (1,3,32,32) cuda]
+        valid_radius = radius if correct else 0.0
+        valid_radius = torch.tensor([valid_radius], dtype=torch.float64).round(decimals=2).cuda()
+        r_list = [torch.zeros_like(valid_radius) for _ in range(args.world_size)] # [(1,) cuda, ..., (1,) cuda]
+        dist.all_gather(tensor_list=r_list, tensor=valid_radius)
+        
+        # append result of current iteration into the whole list
+        if args.global_rank == 0:
+            imgs = imgs + x_list
+            radiuses = radiuses + r_list
+
+    if args.global_rank == 0:
+        imgs = torch.cat(imgs, dim=0)
+        radiuses = torch.cat(radiuses, dim=0).cpu().numpy()
+        writer.add_embedding(mat=imgs.view(imgs.shape[0], -1), metadata=radiuses, label_img=imgs, tag=split)
+            
 
     ctf_file.close()
 

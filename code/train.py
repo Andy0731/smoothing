@@ -13,7 +13,7 @@ from architectures import get_architecture
 from torch.optim import SGD, Optimizer, AdamW
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, add_fnoise
+from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, add_fnoise, exp_fnoise
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -87,7 +87,10 @@ def main(args):
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
     if args.ddp:
-        model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
+        if 'atp' in args.outdir:
+            model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank, find_unused_parameters=True)
+        else:
+            model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
 
     criterion = CrossEntropyLoss().cuda()
 
@@ -227,7 +230,7 @@ def main(args):
         certify_loader = DataLoader(test_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
         certify_loader.sampler.set_epoch(0)
-        certify_plot(args, model, certify_loader, 'test')
+        certify_plot(args, model, certify_loader, 'test', writer)
         time_ctf_test_end = time.time()
         time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_train_end)
         print('certify test set time: ', time_ctf_test)
@@ -239,14 +242,14 @@ def main(args):
         certify_loader = DataLoader(train_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
         certify_loader.sampler.set_epoch(0)
-        certify_plot(args, model, certify_loader, 'train')
+        certify_plot(args, model, certify_loader, 'train', writer)
         time_ctf_train_end = time.time()
         time_ctf_train = datetime.timedelta(seconds=time_ctf_train_end - time_ctf_test_end)
         print('certify training set time: ', time_ctf_train)
 
 
-def certify_plot(args, model, certify_loader, split):
-    run_certify(args, model, certify_loader, split)
+def certify_plot(args, model, certify_loader, split, writer):
+    run_certify(args, model, certify_loader, split, writer)
     close_flag = torch.ones(1).cuda()
     print('rank ', args.global_rank, ', close_flag ', close_flag)
     dist.all_reduce(close_flag, op=dist.ReduceOp.SUM)
@@ -313,6 +316,9 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:
                 inputs = add_fnoise(inputs, args.fnoise_sd, args.avgn_num) # (b,c,h,w) -> (bn,c,h,w)
+            elif hasattr(args, 'fexp') and args.fexp:
+                assert hasattr(args, 'exp_noise') and hasattr(args, 'exp_num')
+                inputs, targets = exp_fnoise(inputs, targets, args.exp_noise, args.exp_num)
 
             if args.clean_image:
                 inputs = torch.cat((inputs_cln, inputs), dim=0)
@@ -480,8 +486,8 @@ if __name__ == "__main__":
         args.node_num = 1
         args.batch = min(8, args.batch)
         args.epochs = 1
-        args.skip = 5000
-        args.skip_train = 100000
+        args.skip = 1000
+        args.skip_train = 10000
     
     args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
