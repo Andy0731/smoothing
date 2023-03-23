@@ -60,8 +60,9 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         # all_gather img and radius from all processes
         x_list = [torch.zeros_like(x) for _ in range(args.world_size)]
         dist.all_gather(tensor_list=x_list, tensor=x) # [(1,3,32,32) cuda, ..., (1,3,32,32) cuda]
-        valid_radius = radius if correct else 0.0
-        valid_radius = torch.tensor([valid_radius], dtype=torch.float64).round(decimals=2).cuda()
+        valid_radius = radius if correct else -1.0
+        valid_radius = round(valid_radius, 2)
+        valid_radius = torch.tensor([valid_radius], dtype=torch.float64).cuda()
         r_list = [torch.zeros_like(valid_radius) for _ in range(args.world_size)] # [(1,) cuda, ..., (1,) cuda]
         dist.all_gather(tensor_list=r_list, tensor=valid_radius)
         
