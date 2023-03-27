@@ -13,8 +13,8 @@ target:
 
   service: aml
   # name: V100-32G
-  name: V100-32G-sc  
-  # name: A100-80G
+  # name: V100-32G-sc  
+  name: A100-80G
 
 environment:
   # image: amlt-sing/pytorch-1.7.0-cuda11.0-cudnn8-devel
@@ -51,7 +51,7 @@ jobs:
 #   command:
 #   - python train.py --config configs/imagenet22k/imgn22k_r152_n025_coslr01_bs1024_w4_e200.json
 #   process_count_per_node: 8
-- name: tb_rep_n025_coslr01_bs128_e100
+- name: pca_rep_n025_coslr01_bs64_e100
   sku: G8-A100
   command:
-  - python train.py --config configs/resnet152/rep_n025_coslr01_bs128_e100.json
+  - python train.py --config configs/resnet152/pca_rep_n025_coslr01_bs64_e100.json

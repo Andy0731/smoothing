@@ -23,10 +23,10 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
 
     use_amp = True if (hasattr(args, 'amp') and args.amp) else False
     if hasattr(args, 'favg') and args.favg == 1:
-        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, favg=args.favg, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num, fnoise_sd=args.fnoise_sd)
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, favg=args.favg, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num, fnoise_sd=args.fnoise_sd, get_samples=args.get_samples)
     else:
     # create the smooothed classifier g
-        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, get_samples=args.get_samples)
 
 
     # prepare output file
@@ -37,9 +37,15 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         print("idx\tlabel\tpredict\tradius\tcorrect\ttime", file=ctf_file, flush=True)
         imgs = []
         radiuses = []
+        if args.get_samples:
+            nimgs = []
+            npres = []
 
     # iterate through the dataset
     for i, (x, label) in enumerate(loader):
+
+        if args.debug and i > 1:
+            break
 
         # only certify every args.skip examples, and stop after args.max examples
         if i % skip != 0:
@@ -48,7 +54,10 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         before_time = time()
         # certify the prediction of g around x
         x = x.cuda()
-        prediction, radius = smoothed_classifier.certify(x, args.N0, args.N, args.alpha, args.certify_bs)
+        if args.get_samples:
+            prediction, radius, nimg, npre = smoothed_classifier.certify(x, args.N0, args.N, args.alpha, args.certify_bs) # nimgs (128,3,32,32) cuda tensor, npres (128,) cuda tensor
+        else:
+            prediction, radius = smoothed_classifier.certify(x, args.N0, args.N, args.alpha, args.certify_bs)
         after_time = time()
         correct = int(prediction == label)
 
@@ -65,15 +74,27 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         valid_radius = torch.tensor([valid_radius], dtype=torch.float64).cuda()
         r_list = [torch.zeros_like(valid_radius) for _ in range(args.world_size)] # [(1,) cuda, ..., (1,) cuda]
         dist.all_gather(tensor_list=r_list, tensor=valid_radius)
+        if args.get_samples:
+            nimg_list = [torch.zeros_like(nimg) for _ in range(args.world_size)]
+            dist.all_gather(tensor_list=nimg_list, tensor=nimg) # [(128,3,32,32) cuda, ..., (128,3,32,32) cuda]
+            npre_list = [torch.zeros_like(npre) for _ in range(args.world_size)]
+            dist.all_gather(tensor_list=npre_list, tensor=npre) # [(128,) cuda, ..., (128,) cuda]
         
         # append result of current iteration into the whole list
         if args.global_rank == 0:
             imgs = imgs + x_list
             radiuses = radiuses + r_list
+            if args.get_samples:
+                nimgs = nimgs + nimg_list
+                npres = npres + npre_list
 
     if args.global_rank == 0:
-        imgs = torch.cat(imgs, dim=0)
-        radiuses = torch.cat(radiuses, dim=0).cpu().numpy()
+        if args.get_samples:
+            imgs = torch.cat((imgs + nimgs), dim=0)
+            radiuses = torch.cat((radiuses + npres), dim=0).cpu().numpy()
+        else:
+            imgs = torch.cat(imgs, dim=0)
+            radiuses = torch.cat(radiuses, dim=0).cpu().numpy()
         writer.add_embedding(mat=imgs.view(imgs.shape[0], -1), metadata=radiuses, label_img=imgs, tag=split)
             
 

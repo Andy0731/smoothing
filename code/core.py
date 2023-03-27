@@ -20,6 +20,7 @@ class Smooth(object):
         avgn_loc: str = None, 
         avgn_num: int = 1,
         fnoise_sd: float = 0.0,
+        get_samples = False
         ):
         """
         :param base_classifier: maps from [batch x channel x height x width] to [batch x num_classes]
@@ -34,6 +35,7 @@ class Smooth(object):
         self.avgn_loc = avgn_loc
         self.avgn_num = avgn_num
         self.fnoise_sd = fnoise_sd
+        self.get_samples = get_samples
 
     def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
@@ -50,19 +52,26 @@ class Smooth(object):
         """
         self.base_classifier.eval()
         # draw samples of f(x+ epsilon)
-        counts_selection = self._sample_noise(x, n0, batch_size)
+        counts_selection, _, _ = self._sample_noise(x, n0, batch_size)
         # use these samples to take a guess at the top class
         cAHat = counts_selection.argmax().item()
         # draw more samples of f(x + epsilon)
-        counts_estimation = self._sample_noise(x, n, batch_size)
+        counts_estimation, imgs, preds = self._sample_noise(x, n, batch_size)
         # use these samples to estimate a lower bound on pA
         nA = counts_estimation[cAHat].item()
         pABar = self._lower_confidence_bound(nA, n, alpha)
-        if pABar < 0.5:
-            return Smooth.ABSTAIN, 0.0
-        else:
-            radius = self.sigma * norm.ppf(pABar)
-            return cAHat, radius
+        if self.get_samples:
+            if pABar < 0.5:
+                return Smooth.ABSTAIN, 0.0, imgs, preds
+            else:
+                radius = self.sigma * norm.ppf(pABar)
+                return cAHat, radius, imgs, preds
+        else:                        
+            if pABar < 0.5:
+                return Smooth.ABSTAIN, 0.0
+            else:
+                radius = self.sigma * norm.ppf(pABar)
+                return cAHat, radius
 
     def predict(self, x: torch.tensor, n: int, alpha: float, batch_size: int) -> int:
         """ Monte Carlo algorithm for evaluating the prediction of g at x.  With probability at least 1 - alpha, the
@@ -113,7 +122,10 @@ class Smooth(object):
                     predictions = self.base_classifier(batch).argmax(1)
 
                 counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
-            return counts
+            if self.get_samples:
+                return counts, batch, predictions
+            else:
+                return counts
 
     def _count_arr(self, arr: np.ndarray, length: int) -> np.ndarray:
         counts = np.zeros(length, dtype=int)
