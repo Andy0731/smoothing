@@ -112,3 +112,8 @@ def exp_fnoise(inputs, targets, noise_sd, num):
     noise = torch.randn_like(inputs, device='cuda') * noise_sd
     inputs = inputs + noise
     return inputs, targets
+
+def add_fnoise_chn(x, noise_sd, num): # (b,3,h,w) -> (b,n3,h,w)
+    nx = x.repeat(1,num,1,1) #b,c,h,w -> b,nc,h,w
+    noise = torch.randn_like(nx, device='cuda') * noise_sd
+    return nx + noise    

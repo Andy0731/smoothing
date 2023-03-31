@@ -3,7 +3,7 @@ from scipy.stats import norm, binom_test
 import numpy as np
 from math import ceil
 from statsmodels.stats.proportion import proportion_confint
-from train_utils import add_fnoise
+from train_utils import add_fnoise, add_fnoise_chn
 
 
 class Smooth(object):
@@ -20,7 +20,9 @@ class Smooth(object):
         avgn_loc: str = None, 
         avgn_num: int = 1,
         fnoise_sd: float = 0.0,
-        get_samples = False
+        get_samples = False,
+        nconv: int = 0,
+        hug: bool = False
         ):
         """
         :param base_classifier: maps from [batch x channel x height x width] to [batch x num_classes]
@@ -36,6 +38,8 @@ class Smooth(object):
         self.avgn_num = avgn_num
         self.fnoise_sd = fnoise_sd
         self.get_samples = get_samples
+        self.nconv = nconv
+        self.hug = hug
 
     def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
@@ -52,11 +56,17 @@ class Smooth(object):
         """
         self.base_classifier.eval()
         # draw samples of f(x+ epsilon)
-        counts_selection, _, _ = self._sample_noise(x, n0, batch_size)
+        if self.get_samples:
+            counts_selection, _, _ = self._sample_noise(x, n0, batch_size)
+        else:
+            counts_selection = self._sample_noise(x, n0, batch_size)
         # use these samples to take a guess at the top class
         cAHat = counts_selection.argmax().item()
         # draw more samples of f(x + epsilon)
-        counts_estimation, imgs, preds = self._sample_noise(x, n, batch_size)
+        if self.get_samples:
+            counts_estimation, imgs, preds = self._sample_noise(x, n, batch_size)
+        else:
+            counts_estimation = self._sample_noise(x, n, batch_size)
         # use these samples to estimate a lower bound on pA
         nA = counts_estimation[cAHat].item()
         pABar = self._lower_confidence_bound(nA, n, alpha)
@@ -117,9 +127,14 @@ class Smooth(object):
                 # expand (x + gnoise) with k fnoise 
                 if self.favg:
                     batch = add_fnoise(batch, self.fnoise_sd, self.avgn_num)
+                elif self.nconv:
+                    batch = add_fnoise_chn(batch, self.fnoise_sd, self.avgn_num)
 
                 with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=self.use_amp):
-                    predictions = self.base_classifier(batch).argmax(1)
+                    outputs = self.base_classifier(batch)
+                    if self.hug:
+                        outputs = outputs.logits
+                    predictions = outputs.argmax(1)
 
                 counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
             if self.get_samples:

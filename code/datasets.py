@@ -17,12 +17,12 @@ IMAGENET_LOC_ENV = "IMAGENET_DIR"
 DATASETS = ["imagenet", "cifar10"]
 
 
-def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = None) -> Dataset:
+def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = None, img_size: int = None) -> Dataset:
     """Return the dataset as a PyTorch Dataset object"""
     if dataset == "imagenet":
         return _imagenet(split, datapath, dataaug)
     elif dataset == "cifar10":
-        return _cifar10(split, datapath, dataaug)
+        return _cifar10(split, datapath, dataaug, img_size)
     elif dataset == 'imagenet32':
         return _imagenet32(split, datapath, dataaug)
     elif dataset == 'ti500k':
@@ -62,6 +62,8 @@ def get_normalize_layer(dataset: str) -> torch.nn.Module:
         return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
     elif dataset == "imagenet22k":
         return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
+    elif dataset == "vitcf10":
+        return NormalizeLayer(_VITCF10_MEAN, _VITCF10_STDDEV)
 
 
 _IMAGENET_MEAN = [0.485, 0.456, 0.406]
@@ -70,8 +72,16 @@ _IMAGENET_STDDEV = [0.229, 0.224, 0.225]
 _CIFAR10_MEAN = [0.4914, 0.4822, 0.4465]
 _CIFAR10_STDDEV = [0.2023, 0.1994, 0.2010]
 
+_VITCF10_MEAN = [0.5, 0.5, 0.5]
+_VITCF10_STDDEV = [0.5, 0.5, 0.5]
 
-def _cifar10(split: str, datapath: str = None, dataaug: str = None) -> Dataset:
+def _cifar10(split: str, datapath: str = None, dataaug: str = None, img_size: int = None) -> Dataset:
+    if dataaug == 'vit224':
+        vit_transforms = transforms.Compose([
+            transforms.Resize(size=224),
+            transforms.ToTensor(),
+        ])
+
     if split == "train":
         if dataaug == 'moco_v3_aug':
             img_transforms = transforms.Compose([
@@ -90,16 +100,35 @@ def _cifar10(split: str, datapath: str = None, dataaug: str = None) -> Dataset:
                 transforms.RandomApply([transforms.GaussianBlur(kernel_size=(3, 7), sigma=(0.1, 2.0))], p=1.0),
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
-            ])            
+            ])
+        elif dataaug == 'vit224':
+            img_transforms = vit_transforms
         else:
-            img_transforms = transforms.Compose([
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor()
-        ])
+            if img_size:
+                img_transforms = transforms.Compose([
+                    transforms.Resize(size=img_size),
+                    transforms.RandomCrop(size=img_size, padding=img_size // 8),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor()
+            ])
+            else:                
+                img_transforms = transforms.Compose([
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor()
+            ])
         return datasets.CIFAR10(datapath if datapath else "./dataset_cache", train=True, download=True, transform=img_transforms)
     elif split == "test":
-        return datasets.CIFAR10(datapath if datapath else "./dataset_cache", train=False, download=True, transform=transforms.ToTensor())
+        if dataaug == 'vit224':
+            img_transforms = vit_transforms
+        elif img_size:
+            img_transforms = transforms.Compose([
+                transforms.Resize(size=img_size),
+                transforms.ToTensor()
+                ])            
+        else: 
+            img_transforms = transforms.ToTensor()
+        return datasets.CIFAR10(datapath if datapath else "./dataset_cache", train=False, download=True, transform=img_transforms)
 
 
 def _imagenet(split: str, datapath: str = None, dataaug: str = None) -> Dataset:
@@ -158,8 +187,9 @@ class NormalizeLayer(torch.nn.Module):
 
     def forward(self, input: torch.tensor):
         (batch_size, num_channels, height, width) = input.shape
-        means = self.means.repeat((batch_size, height, width, 1)).permute(0, 3, 1, 2)
-        sds = self.sds.repeat((batch_size, height, width, 1)).permute(0, 3, 1, 2)
+        exp_n = num_channels // 3
+        means = self.means.repeat((batch_size, height, width, exp_n)).permute(0, 3, 1, 2)
+        sds = self.sds.repeat((batch_size, height, width, exp_n)).permute(0, 3, 1, 2)
         return (input - means) / sds
 
 

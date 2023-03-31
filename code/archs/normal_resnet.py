@@ -101,7 +101,8 @@ class ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out, fake_relu=fake_relu)
-        out = F.avg_pool2d(out, 4)
+        # out = F.avg_pool2d(out, 4)
+        out = F.adaptive_avg_pool2d(out, 1)
         pre_out = out.view(out.size(0), -1)
         final = self.linear(pre_out)
         if with_latent:

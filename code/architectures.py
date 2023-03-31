@@ -14,6 +14,7 @@ from archs.normal_resnet import resnet152wide2 as normal_resnet152wide2
 from archs.normal_resnet_gelu import resnet152gelu as normal_resnet152_gelu
 from archs.normal_resnet_nost import resnet152nost as normal_resnet152_nost
 from archs.normal_resnet_avgn import resnet152avgn as normal_resnet152_avgn
+from archs.normal_resnet_nconv import resnet152nconv as normal_resnet152_nconv
 from archs.vit import vit_b
 
 import torchvision.models as torchvision_models
@@ -47,6 +48,8 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
         if ('cifar' in dataset) or ('ti500k' in dataset):
             if 'avgn' in arch:
                 model = arch + '(avgn_loc=avgn_loc, avgn_num=avgn_num)'
+            elif 'nconv' in arch:
+                model = arch + '(avgn_num=avgn_num)'
             else:
                 model = arch + '()'
         elif dataset == 'imagenet22k':

@@ -22,11 +22,17 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
     skip = args.skip if split == 'test' else args.skip_train
 
     use_amp = True if (hasattr(args, 'amp') and args.amp) else False
-    if hasattr(args, 'favg') and args.favg == 1:
+    if 'hug' in args.outdir:
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, hug=True)
+    elif hasattr(args, 'favg') and args.favg == 1:
         smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, favg=args.favg, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num, fnoise_sd=args.fnoise_sd, get_samples=args.get_samples)
+    elif hasattr(args, 'nconv') and args.nconv == 1:
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, avgn_num=args.avgn_num, fnoise_sd=args.fnoise_sd, nconv=args.nconv)
+    elif hasattr(args, 'get_sample') and args.get_sample:
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, get_samples=args.get_samples)
     else:
     # create the smooothed classifier g
-        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, get_samples=args.get_samples)
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
 
 
     # prepare output file
@@ -37,7 +43,7 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         print("idx\tlabel\tpredict\tradius\tcorrect\ttime", file=ctf_file, flush=True)
         imgs = []
         radiuses = []
-        if args.get_samples:
+        if hasattr(args, 'get_samples') and args.get_samples:
             nimgs = []
             npres = []
 
@@ -54,7 +60,7 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         before_time = time()
         # certify the prediction of g around x
         x = x.cuda()
-        if args.get_samples:
+        if hasattr(args, 'get_samples') and args.get_samples:
             prediction, radius, nimg, npre = smoothed_classifier.certify(x, args.N0, args.N, args.alpha, args.certify_bs) # nimgs (128,3,32,32) cuda tensor, npres (128,) cuda tensor
         else:
             prediction, radius = smoothed_classifier.certify(x, args.N0, args.N, args.alpha, args.certify_bs)
@@ -74,7 +80,7 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         valid_radius = torch.tensor([valid_radius], dtype=torch.float64).cuda()
         r_list = [torch.zeros_like(valid_radius) for _ in range(args.world_size)] # [(1,) cuda, ..., (1,) cuda]
         dist.all_gather(tensor_list=r_list, tensor=valid_radius)
-        if args.get_samples:
+        if hasattr(args, 'get_samples') and args.get_samples:
             nimg_list = [torch.zeros_like(nimg) for _ in range(args.world_size)]
             dist.all_gather(tensor_list=nimg_list, tensor=nimg) # [(128,3,32,32) cuda, ..., (128,3,32,32) cuda]
             npre_list = [torch.zeros_like(npre) for _ in range(args.world_size)]
@@ -84,18 +90,20 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
         if args.global_rank == 0:
             imgs = imgs + x_list
             radiuses = radiuses + r_list
-            if args.get_samples:
+            if hasattr(args, 'get_samples') and args.get_samples:
                 nimgs = nimgs + nimg_list
                 npres = npres + npre_list
 
     if args.global_rank == 0:
-        if args.get_samples:
+        if hasattr(args, 'get_samples') and args.get_samples:
             imgs = torch.cat((imgs + nimgs), dim=0)
             radiuses = torch.cat((radiuses + npres), dim=0).cpu().numpy()
         else:
             imgs = torch.cat(imgs, dim=0)
             radiuses = torch.cat(radiuses, dim=0).cpu().numpy()
-        writer.add_embedding(mat=imgs.view(imgs.shape[0], -1), metadata=radiuses, label_img=imgs, tag=split)
+        
+        if hasattr(args, 'pca') and args.pca:
+            writer.add_embedding(mat=imgs.view(imgs.shape[0], -1), metadata=radiuses, label_img=imgs, tag=split)
             
 
     ctf_file.close()

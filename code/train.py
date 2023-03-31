@@ -10,10 +10,10 @@ from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 from datasets import get_dataset
 from architectures import get_architecture
-from torch.optim import SGD, Optimizer, AdamW
+from torch.optim import SGD, Optimizer, AdamW, Adam
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, add_fnoise, exp_fnoise
+from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, add_fnoise, exp_fnoise, add_fnoise_chn
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -22,7 +22,7 @@ from torch.utils.tensorboard import SummaryWriter
 from certify import run_certify, merge_ctf_files
 from analyze import plot_curve
 from common import get_args
-import shutil
+from archs.hug_vit import get_hug_model
 
 
 def main_spawn(args):
@@ -58,10 +58,11 @@ def main(args):
     writer = SummaryWriter(args.outdir) if args.global_rank == 0 else None
 
     dataaug = args.dataaug if hasattr(args, 'dataaug') else None
-    train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug)
+    img_size = args.img_size if hasattr(args, 'img_size') else None
+    train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug, img_size)
     has_testset = False if args.dataset in ['ti500k', 'imagenet22k'] else True
     if has_testset:
-        test_dataset = get_dataset(args.dataset, 'test', args.data)
+        test_dataset = get_dataset(args.dataset, 'test', args.data, dataaug, img_size)
     # pin_memory = (args.dataset == "imagenet")
     pin_memory = True
     if args.ddp:
@@ -79,9 +80,14 @@ def main(args):
             test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
 
-    if hasattr(args, 'favg') and args.favg:
+    if 'hug' in args.outdir:
+        model = get_hug_model(args.arch)
+    elif hasattr(args, 'favg') and args.favg:
         assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
-        model = get_architecture(args.arch, args.dataset, args.avgn_loc, args.avgn_num)
+        model = get_architecture(args.arch, args.dataset, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num)
+    elif hasattr(args, 'nconv') and args.nconv:
+        assert hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
+        model = get_architecture(args.arch, args.dataset, avgn_num=args.avgn_num)
     else:
         model = get_architecture(args.arch, args.dataset)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
@@ -95,7 +101,10 @@ def main(args):
     criterion = CrossEntropyLoss().cuda()
 
     if 'vit' in args.arch:
-        optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+        if hasattr(args, 'optim') and args.optim == 'adam':
+            optimizer = Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08)
+        else:
+            optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay if hasattr(args, 'weight_decay') else 0.01)
     else:
         optimizer = SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
@@ -166,7 +175,9 @@ def main(args):
         del ckpt
 
     if not hasattr(args, 'warmup_epochs'):
-        args.warmup_epochs = 5
+        args.warmup_epochs = max(1, args.epochs // 10)
+    
+    args.test_freq = max(1, args.epochs // 10)
 
     if args.ddp and args.global_rank == 0:
         print(args)
@@ -316,6 +327,8 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:
                 inputs = add_fnoise(inputs, args.fnoise_sd, args.avgn_num) # (b,c,h,w) -> (bn,c,h,w)
+            elif hasattr(args, 'nconv') and args.nconv:
+                inputs = add_fnoise_chn(inputs, args.fnoise_sd, args.avgn_num) # (b,3,h,w) -> (b,n3,h,w)
             elif hasattr(args, 'fexp') and args.fexp:
                 assert hasattr(args, 'exp_noise') and hasattr(args, 'exp_num')
                 inputs, targets = exp_fnoise(inputs, targets, args.exp_noise, args.exp_num)
@@ -327,6 +340,8 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         # compute output
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
             outputs = model(inputs)
+            if 'hug' in args.outdir:
+                outputs = outputs.logits
             if hasattr(args, 'mixup') and args.mixup:
                 loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
             else:
@@ -396,10 +411,14 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:
                 inputs = add_fnoise(inputs, args.fnoise_sd, args.avgn_num) # (b,c,h,w) -> (bn,c,h,w)
-                
+            elif hasattr(args, 'nconv') and args.nconv:
+                inputs = add_fnoise_chn(inputs, args.fnoise_sd, args.avgn_num) # (b,3,h,w) -> (b,n3,h,w)
+
             # compute output
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
                 outputs = model(inputs)
+                if 'hug' in args.outdir:
+                    outputs = outputs.logits
                 loss = criterion(outputs, targets)
 
             # measure accuracy and record loss            
@@ -484,7 +503,7 @@ if __name__ == "__main__":
 
     if args.debug == 1:
         args.node_num = 1
-        args.batch = min(8, args.batch)
+        args.batch = min(2, args.batch)
         args.epochs = 1
         args.skip = 1000
         args.skip_train = 10000
