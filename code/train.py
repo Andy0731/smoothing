@@ -23,6 +23,7 @@ from certify import run_certify, merge_ctf_files
 from analyze import plot_curve
 from common import get_args
 from archs.hug_vit import get_hug_model
+import torchvision
 
 
 def main_spawn(args):
@@ -323,6 +324,8 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             args.cur_noise = noise_sd
 
             inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+            if hasattr(args, 'resize_after_noise'):
+                inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
 
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:
@@ -407,6 +410,9 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             targets = targets.cuda()
 
             inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+
+            if hasattr(args, 'resize_after_noise'):
+                inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
 
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:

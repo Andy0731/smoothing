@@ -81,6 +81,10 @@ def _cifar10(split: str, datapath: str = None, dataaug: str = None, img_size: in
             transforms.Resize(size=224),
             transforms.ToTensor(),
         ])
+    elif dataaug == 'vit32n':
+        vit_transforms = transforms.Compose([
+            transforms.ToTensor(),
+        ])        
 
     if split == "train":
         if dataaug == 'moco_v3_aug':
@@ -101,7 +105,7 @@ def _cifar10(split: str, datapath: str = None, dataaug: str = None, img_size: in
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
             ])
-        elif dataaug == 'vit224':
+        elif dataaug in ['vit224', 'vit32n']:
             img_transforms = vit_transforms
         else:
             if img_size:
@@ -119,7 +123,7 @@ def _cifar10(split: str, datapath: str = None, dataaug: str = None, img_size: in
             ])
         return datasets.CIFAR10(datapath if datapath else "./dataset_cache", train=True, download=True, transform=img_transforms)
     elif split == "test":
-        if dataaug == 'vit224':
+        if dataaug in ['vit224', 'vit32n']:
             img_transforms = vit_transforms
         elif img_size:
             img_transforms = transforms.Compose([

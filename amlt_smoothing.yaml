@@ -252,15 +252,47 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/bl224_n025_coslr001_bs128_e100.json
-- name: bl64_n025_coslr0001_bs128_e100
+# - name: bl64_n025_coslr0001_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/bl64_n025_coslr0001_bs128_e100.json
+# - name: bl128_n025_coslr0001_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/bl128_n025_coslr0001_bs128_e100.json
+# - name: bl224_n025_coslr0001_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/bl224_n025_coslr0001_bs128_e100.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_4_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_4_e100.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e100.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_5_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_5_e100.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_2_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_2_e100.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_3_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_3_e100.json
+# - name: vit_224_in21k_ft_cf10_adam1e_4_e100_ctf_32n_rs224
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e100_ctf_32n_rs224.json
+- name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100_ctf_224n
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/bl64_n025_coslr0001_bs128_e100.json
-- name: bl128_n025_coslr0001_bs128_e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/resnet152/bl128_n025_coslr0001_bs128_e100.json
-- name: bl224_n025_coslr0001_bs128_e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/resnet152/bl224_n025_coslr0001_bs128_e100.json
+  - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100_ctf_224n.json

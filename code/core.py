@@ -4,6 +4,7 @@ import numpy as np
 from math import ceil
 from statsmodels.stats.proportion import proportion_confint
 from train_utils import add_fnoise, add_fnoise_chn
+import torchvision
 
 
 class Smooth(object):
@@ -22,7 +23,8 @@ class Smooth(object):
         fnoise_sd: float = 0.0,
         get_samples = False,
         nconv: int = 0,
-        hug: bool = False
+        hug: bool = False,
+        resize_after_noise: int = 0,
         ):
         """
         :param base_classifier: maps from [batch x channel x height x width] to [batch x num_classes]
@@ -40,6 +42,7 @@ class Smooth(object):
         self.get_samples = get_samples
         self.nconv = nconv
         self.hug = hug
+        self.resize_after_noise = resize_after_noise
 
     def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
@@ -123,6 +126,9 @@ class Smooth(object):
                 batch = x.repeat((this_batch_size, 1, 1, 1)) #b,c,h,w
                 noise = torch.randn_like(batch, device='cuda') * self.sigma
                 batch += noise
+
+                if self.resize_after_noise:
+                    batch = torchvision.transforms.functional.resize(batch, self.resize_after_noise)
 
                 # expand (x + gnoise) with k fnoise 
                 if self.favg:
