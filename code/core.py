@@ -25,6 +25,8 @@ class Smooth(object):
         nconv: int = 0,
         hug: bool = False,
         resize_after_noise: int = 0,
+        diffusion_model = None,
+        args = None
         ):
         """
         :param base_classifier: maps from [batch x channel x height x width] to [batch x num_classes]
@@ -43,6 +45,8 @@ class Smooth(object):
         self.nconv = nconv
         self.hug = hug
         self.resize_after_noise = resize_after_noise
+        self.diffusion_model = diffusion_model
+        self.args = args
 
     def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
@@ -124,11 +128,19 @@ class Smooth(object):
                 num -= this_batch_size
 
                 batch = x.repeat((this_batch_size, 1, 1, 1)) #b,c,h,w
-                noise = torch.randn_like(batch, device='cuda') * self.sigma
-                batch += noise
 
-                if self.resize_after_noise:
-                    batch = torchvision.transforms.functional.resize(batch, self.resize_after_noise)
+                # noise = torch.randn_like(batch, device='cuda') * self.sigma
+                # batch += noise
+                # if self.resize_after_noise:
+                #     batch = torchvision.transforms.functional.resize(batch, self.resize_after_noise)
+
+                if hasattr(self.args, 'diffusion') and self.args.diffusion:
+                    batch = self.diffusion_model(batch, self.args.t)
+                else:
+                    batch = batch + torch.randn_like(batch, device='cuda') * self.sigma
+                if hasattr(self.args, 'resize_after_noise'):
+                    # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
+                    batch = torch.nn.functional.interpolate(batch, self.args.resize_after_noise, mode='bicubic')
 
                 # expand (x + gnoise) with k fnoise 
                 if self.favg:

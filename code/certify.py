@@ -17,7 +17,7 @@ def merge_ctf_files(ctf_filename, args):
     return
 
 
-def run_certify(args, base_classifier, loader, split='test', writer=None):
+def run_certify(args, base_classifier, loader, split='test', writer=None, diffusion_model=None):
 
     skip = args.skip if split == 'test' else args.skip_train
 
@@ -25,6 +25,9 @@ def run_certify(args, base_classifier, loader, split='test', writer=None):
     if 'hug' in args.outdir:
         resize_after_noise = args.resize_after_noise if hasattr(args, 'resize_after_noise') else 0
         smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, hug=True, resize_after_noise=resize_after_noise)
+    elif 'diffusion' in args.outdir:
+        resize_after_noise = args.resize_after_noise if hasattr(args, 'resize_after_noise') else 0
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, hug=True, resize_after_noise=resize_after_noise, diffusion_model=diffusion_model, args=args)
     elif hasattr(args, 'favg') and args.favg == 1:
         smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, favg=args.favg, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num, fnoise_sd=args.fnoise_sd, get_samples=args.get_samples)
     elif hasattr(args, 'nconv') and args.nconv == 1:

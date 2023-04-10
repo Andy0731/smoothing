@@ -30,6 +30,7 @@ environment:
   - pip install attrdict
   - pip install einops
   - pip install transformers
+  - pip install timm
 
 code:
   local_dir: $CONFIG_DIR/code
@@ -56,7 +57,43 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e100_ctf_32n_rs224.json
-- name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100_ctf_224n
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100_ctf_224n
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100_ctf_224n.json
+# - name: dif_vit_in21k_ft_cf10_adam1e_2_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_2_e100.json
+# - name: dif_vit_in21k_ft_cf10_adam1e_3_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_3_e100.json
+# - name: dif_vit_in21k_ft_cf10_adam1e_4_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e100.json
+# - name: dif_vit_in21k_ft_cf10_adam5e_3_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam5e_3_e100.json
+# - name: dif_vit_in21k_ft_cf10_adam5e_4_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam5e_4_e100.json
+# - name: dif_vit_in21k_ft_cf10_adam5e_5_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam5e_5_e100.json
+# - name: dif_vit_in21k_ft_cf10_ctf
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_ctf.json
+- name: dif_vit_in21k_ft_cf10_adam1e_4_e10
   sku: G8-V100
   command:
-  - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e100_ctf_224n.json
+  - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e10.json
+- name: dif_vit_in21k_ft_cf10_adam1e_4_e50
+  sku: G8-V100
+  command:
+  - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e50.json

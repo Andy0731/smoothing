@@ -22,8 +22,9 @@ from torch.utils.tensorboard import SummaryWriter
 from certify import run_certify, merge_ctf_files
 from analyze import plot_curve
 from common import get_args
-from archs.hug_vit import get_hug_model
+from archs.hug_vit import get_hug_model, get_hug_vit
 import torchvision
+from DRM import DiffusionModel, get_timestep
 
 
 def main_spawn(args):
@@ -81,8 +82,11 @@ def main(args):
             test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
 
+    # build model
     if 'hug' in args.outdir:
         model = get_hug_model(args.arch)
+    elif 'diffusion' in args.outdir:
+        model = get_hug_vit(args.arch)
     elif hasattr(args, 'favg') and args.favg:
         assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
         model = get_architecture(args.arch, args.dataset, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num)
@@ -99,8 +103,16 @@ def main(args):
         else:
             model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
 
+    # build diffusion model
+    if hasattr(args, 'diffusion') and args.diffusion:
+        diffusion_model_path = os.path.join(args.data, 'diffusion', args.diffusion_model)
+        diffusion_model = DiffusionModel(diffusion_model_path)
+        args.t = get_timestep(sigma=args.sigma, model=diffusion_model)
+
+    # loss function
     criterion = CrossEntropyLoss().cuda()
 
+    # optimizer
     if 'vit' in args.arch:
         if hasattr(args, 'optim') and args.optim == 'adam':
             optimizer = Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08)
@@ -186,10 +198,10 @@ def main(args):
     start_epoch = args.start_epoch if hasattr(args, 'start_epoch') else 0
     for epoch in range(start_epoch, args.epochs):
         train_loader.sampler.set_epoch(epoch)
-        train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler)
+        train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model)
         if has_testset and (epoch % args.test_freq == 0):
             test_loader.sampler.set_epoch(epoch)
-            test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
+            test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd, diffusion_model=diffusion_model)
             # reduce over all gpus
             test_acc_local = torch.tensor([test_acc]).cuda()
             dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -222,7 +234,7 @@ def main(args):
     
     if has_testset:
         test_loader.sampler.set_epoch(args.epochs)
-        test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd)
+        test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd, diffusion_model=diffusion_model)
         test_acc_local = torch.tensor([test_acc]).cuda()
         print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
         dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -242,7 +254,7 @@ def main(args):
         certify_loader = DataLoader(test_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
         certify_loader.sampler.set_epoch(0)
-        certify_plot(args, model, certify_loader, 'test', writer)
+        certify_plot(args, model, certify_loader, 'test', writer, diffusion_model=diffusion_model)
         time_ctf_test_end = time.time()
         time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_train_end)
         print('certify test set time: ', time_ctf_test)
@@ -254,14 +266,14 @@ def main(args):
         certify_loader = DataLoader(train_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
         certify_loader.sampler.set_epoch(0)
-        certify_plot(args, model, certify_loader, 'train', writer)
+        certify_plot(args, model, certify_loader, 'train', writer, diffusion_model=diffusion_model)
         time_ctf_train_end = time.time()
         time_ctf_train = datetime.timedelta(seconds=time_ctf_train_end - time_ctf_test_end)
         print('certify training set time: ', time_ctf_train)
 
 
-def certify_plot(args, model, certify_loader, split, writer):
-    run_certify(args, model, certify_loader, split, writer)
+def certify_plot(args, model, certify_loader, split, writer, diffusion_model=None):
+    run_certify(args, model, certify_loader, split, writer, diffusion_model=diffusion_model)
     close_flag = torch.ones(1).cuda()
     print('rank ', args.global_rank, ', close_flag ', close_flag)
     dist.all_reduce(close_flag, op=dist.ReduceOp.SUM)
@@ -285,7 +297,7 @@ def certify_plot(args, model, certify_loader, split, writer):
 #         cudnn.benchmark = True
     
     
-def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float, scaler=None):
+def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float, scaler=None, diffusion_model=None):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -323,9 +335,13 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             noise_sd = get_noise(epoch, args)
             args.cur_noise = noise_sd
 
-            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+            if hasattr(args, 'diffusion') and args.diffusion:
+                inputs = diffusion_model(inputs, args.t)
+            else:
+                inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
             if hasattr(args, 'resize_after_noise'):
-                inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
+                # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
+                inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
 
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:
@@ -343,7 +359,7 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         # compute output
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
             outputs = model(inputs)
-            if 'hug' in args.outdir:
+            if 'hug' in args.outdir or 'diffusion' in args.outdir:
                 outputs = outputs.logits
             if hasattr(args, 'mixup') and args.mixup:
                 loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
@@ -387,7 +403,7 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
     return (losses.avg, top1.avg)
 
 
-def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, noise_sd: float):
+def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, noise_sd: float, diffusion_model=None):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -409,10 +425,13 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             inputs = inputs.cuda()
             targets = targets.cuda()
 
-            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
-
+            if hasattr(args, 'diffusion') and args.diffusion:
+                inputs = diffusion_model(inputs, args.t)
+            else:
+                inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
             if hasattr(args, 'resize_after_noise'):
-                inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
+                # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
+                inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
 
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:
@@ -423,7 +442,7 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             # compute output
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
                 outputs = model(inputs)
-                if 'hug' in args.outdir:
+                if 'hug' in args.outdir or 'diffusion' in args.outdir:
                     outputs = outputs.logits
                 loss = criterion(outputs, targets)
 
