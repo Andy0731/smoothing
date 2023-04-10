@@ -89,11 +89,15 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_ctf.json
-- name: dif_vit_in21k_ft_cf10_adam1e_4_e10
+# - name: dif_vit_in21k_ft_cf10_adam1e_4_e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e10.json
+# - name: dif_vit_in21k_ft_cf10_adam1e_4_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e50.json
+- name: dif_vit_in21k_ft_cf10_ctf_full
   sku: G8-V100
   command:
-  - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e10.json
-- name: dif_vit_in21k_ft_cf10_adam1e_4_e50
-  sku: G8-V100
-  command:
-  - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e50.json
+  - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_ctf_full.json
