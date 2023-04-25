@@ -72,7 +72,7 @@ def main(args):
         train_loader = DataLoader(train_dataset, batch_size=args.batch,
             num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
         if has_testset:
-            test_sampler = torch.utils.data.distributed.DistributedSampler(test_dataset)
+            test_sampler = torch.utils.data.distributed.DistributedSampler(test_dataset, shuffle=False)
             test_loader = DataLoader(test_dataset, batch_size=args.batch,
                 num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)        
     else:
@@ -104,6 +104,7 @@ def main(args):
             model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
 
     # build diffusion model
+    diffusion_model = None
     if hasattr(args, 'diffusion') and args.diffusion:
         diffusion_model_path = os.path.join(args.data, 'diffusion', args.diffusion_model)
         diffusion_model = DiffusionModel(diffusion_model_path)
@@ -200,7 +201,6 @@ def main(args):
         train_loader.sampler.set_epoch(epoch)
         train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model)
         if has_testset and (epoch % args.test_freq == 0):
-            test_loader.sampler.set_epoch(epoch)
             test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd, diffusion_model=diffusion_model)
             # reduce over all gpus
             test_acc_local = torch.tensor([test_acc]).cuda()
@@ -233,7 +233,6 @@ def main(args):
                 print("OSError when saving checkpoint in epoch ", epoch)
     
     if has_testset:
-        test_loader.sampler.set_epoch(args.epochs)
         test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd, diffusion_model=diffusion_model)
         test_acc_local = torch.tensor([test_acc]).cuda()
         print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
@@ -253,7 +252,6 @@ def main(args):
         print('begin to certify test set ...')
         certify_loader = DataLoader(test_dataset, batch_size=1,
             num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
-        certify_loader.sampler.set_epoch(0)
         certify_plot(args, model, certify_loader, 'test', writer, diffusion_model=diffusion_model)
         time_ctf_test_end = time.time()
         time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_train_end)

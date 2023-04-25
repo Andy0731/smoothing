@@ -97,7 +97,35 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e50.json
-- name: dif_vit_in21k_ft_cf10_ctf_full
+# - name: dif_vit_in21k_ft_cf10_ctf_full
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_ctf_full.json
+# - name: vit_224_in21k_ft_cf10_ctf
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_ctf.json
+# - name: vit_224_in21k_ft_cf10_adam1e_4_e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e1.json
+# - name: vit_224_in21k_ft_cf10_adam1e_4_e2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e2.json
+# - name: vit_224_in21k_ft_cf10_adam1e_4_e3
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e3.json
+# - name: vit_224_in21k_ft_cf10_adam1e_4_e4
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e4.json
+# - name: vit_224_in21k_ft_cf10_adam1e_4_e5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e5.json
+- name: r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf
   sku: G8-V100
   command:
-  - python train.py --config configs/diffusion/dif_vit_in21k_ft_cf10_ctf_full.json
+  - python train.py --config configs/resnet152/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf.json

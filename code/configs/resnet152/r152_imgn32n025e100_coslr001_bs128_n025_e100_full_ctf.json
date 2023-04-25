@@ -1,0 +1,32 @@
+{
+    "debug": 0,
+    "dataset": "cifar10",
+    "arch": "normal_resnet152",
+    "noise_sd": 0.25,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 100,
+    "start_epoch": 100,
+    "lr": 0.01,
+    "gamma": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "test_freq": 10,
+    "clean_image": 0,
+    "natural_train": 0,
+    "resume": "smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/checkpoint.pth.tar",
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 1,
+    "sigma": 0.25,
+    "skip": 1,
+    "certify_bs": 1024,
+    "N0": 100,
+    "N": 100000,
+    "alpha": 0.001
+}

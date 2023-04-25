@@ -72,9 +72,9 @@ def run_certify(args, base_classifier, loader, split='test', writer=None, diffus
         correct = int(prediction == label)
 
         time_elapsed = str(datetime.timedelta(seconds=(after_time - before_time)))
-        print("{}\t{}\t{}\t{:.3}\t{}\t{}".format(i + args.global_rank, label, prediction, radius, correct, time_elapsed))
+        print("{}\t{}\t{}\t{:.3}\t{}\t{}".format(i * args.world_size + args.global_rank, label, prediction, radius, correct, time_elapsed))
         print("{}\t{}\t{}\t{:.3}\t{}\t{}".format(
-            i + args.global_rank, label, prediction, radius, correct, time_elapsed), file=ctf_file, flush=True)
+            i * args.world_size + args.global_rank, label, prediction, radius, correct, time_elapsed), file=ctf_file, flush=True)
         
         # all_gather img and radius from all processes
         x_list = [torch.zeros_like(x) for _ in range(args.world_size)]
