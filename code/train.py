@@ -23,7 +23,6 @@ from certify import run_certify, merge_ctf_files
 from analyze import plot_curve
 from common import get_args
 from archs.hug_vit import get_hug_model, get_hug_vit
-import torchvision
 from DRM import DiffusionModel, get_timestep
 
 
@@ -68,7 +67,7 @@ def main(args):
     # pin_memory = (args.dataset == "imagenet")
     pin_memory = True
     if args.ddp:
-        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset, shuffle=True)
         train_loader = DataLoader(train_dataset, batch_size=args.batch,
             num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
         if has_testset:
@@ -386,7 +385,7 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
 
         if i % args.print_freq == 0:
             print('Epoch: [{0}][{1}/{2}]\t'
-                  'lr: {lr:.3f}\t'
+                  'lr: {lr:.5f}\t'
                   'GPU: {gpu}\t'
                 #   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                 #   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
@@ -482,54 +481,25 @@ if __name__ == "__main__":
     args = AttrDict(cfg)
     args.output = os.environ.get('AMLT_OUTPUT_DIR', os.path.join('/D_data/kaqiu/randomized_smoothing/', args.dataset))
     assert args.dataset in ['cifar10', 'imagenet', 'imagenet32', 'ti500k', 'imagenet22k'], 'dataset must be cifar10 or imagenet or ti500k, but got {}'.format(args.dataset)
-    if args.dataset == 'cifar10':
-        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/cifar10/')
-        if args.data == '/D_data/kaqiu/cifar10/': # local
-            args.smoothing_path = '../amlt'
-            args.local = 1
-        else: # itp
-            args.local = 0
-            if hasattr(args, 'pretrain_data'):
-                print('args.data: ', args.data)
-                args.smoothing_path = args.data.replace('cifar', args.pretrain_data)
-                print('args.smoothing_path: ', args.smoothing_path)
-            else:
-                args.smoothing_path = args.data
-    elif args.dataset == 'imagenet':
-        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet/')
-    elif args.dataset == 'imagenet32':
-        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet32/')
-        if args.data == '/D_data/kaqiu/imagenet32/': # local
-            args.smoothing_path = '../amlt'
-            args.local = 1
-        else: # itp
-            args.smoothing_path = args.data
-            args.local = 0
-    elif args.dataset == 'ti500k':
-        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/ti500k/')
-        if args.data == '/D_data/kaqiu/ti500k/': # local
-            args.smoothing_path = '../amlt'
-            args.local = 1
-        else: # itp
-            args.smoothing_path = args.data
-            args.local = 0
-    elif args.dataset == 'imagenet22k':
-        args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/imagenet22k/')
-        if args.data == '/D_data/kaqiu/imagenet22k/': # local
-            args.smoothing_path = '../amlt'
-            args.local = 1
-        else: # itp
-            args.smoothing_path = args.data
-            args.local = 0               
-    else:
-        raise ValueError
+    args.data = os.environ.get('AMLT_DATA_DIR', os.path.join('/D_data/kaqiu', args.dataset))
+
+    if '/D_data/kaqiu' in args.data: # local
+        args.local = 1
+        args.smoothing_path = '../amlt'
+    else: # itp
+        args.local = 0
+        args.smoothing_path = args.data
+
+    if args.dataset == 'cifar10' and args.local == 0 and hasattr(args, 'pretrain_data'):
+        args.smoothing_path = args.data.replace('cifar', args.pretrain_data)
+        print('args.smoothing_path: ', args.smoothing_path)
 
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(2, args.batch)
         args.epochs = 1
-        args.skip = 1000
-        args.skip_train = 10000
+        args.skip = 10000
+        args.skip_train = 200000
     
     args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))

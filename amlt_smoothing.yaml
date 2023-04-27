@@ -12,8 +12,8 @@ target:
   # name: msrresrchvc
 
   service: aml
-  # name: V100-32G
-  name: V100-32G-sc  
+  name: V100-32G
+  # name: V100-32G-sc  
   # name: A100-80G
 
 environment:
@@ -36,10 +36,10 @@ code:
   local_dir: $CONFIG_DIR/code
 
 data:
-  # local_dir: /D_data/kaqiu/imagenet/
-  # remote_dir: imagenet/
-  local_dir: /D_data/kaqiu/cifar10/
-  remote_dir: cifar/
+  local_dir: /D_data/kaqiu/imagenet/
+  remote_dir: imagenet/
+  # local_dir: /D_data/kaqiu/cifar10/
+  # remote_dir: cifar/
   # local_dir: /D_data/kaqiu/imagenet32/
   # remote_dir: imagenet32/
   # local_dir: /D_data/kaqiu/ti500k
@@ -125,7 +125,79 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/hug/vit_224_in21k_ft_cf10_adam1e_4_e5.json
-- name: r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf
+# - name: r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf.json
+# - name: in_r152_n025_lr1_bs16_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr1_bs16_e100.json
+# - name: in_r152_n025_lr01_bs16_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr01_bs16_e100.json
+# - name: in_r152_n025_lr001_bs16_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr001_bs16_e100.json
+# - name: in_r152_n025_lr0001_bs16_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr0001_bs16_e100.json
+# - name: in_r152_n025_lr00001_bs16_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr00001_bs16_e100.json
+# - name: in_r152_n025_lr1_bs32_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr1_bs32_e100.json
+# - name: in_r152_n025_lr01_bs32_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr01_bs32_e100.json
+# - name: in_r152_n025_lr001_bs32_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr001_bs32_e100.json
+# - name: in_r152_n025_lr0001_bs32_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr0001_bs32_e100.json
+# - name: in_r152_n025_lr00001_bs32_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr00001_bs32_e100.json
+# - name: r152_n025_lr1_bs64_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr1_bs64_e100.json
+# - name: r152_n025_lr1_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr1_bs128_e100.json
+# - name: r152_n025_lr1_bs256_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr1_bs256_e100.json
+# - name: r152_n025_lr1_bs512_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr1_bs512_e100.json
+- name: r152_n025_lr01_bs256_e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf.json
+  - python train.py --config configs/imagenet/r152_n025_lr01_bs256_e100.json
+- name: r152_n025_lr001_bs256_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/imagenet/r152_n025_lr001_bs256_e100.json
+- name: r152_n025_lr0001_bs256_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/imagenet/r152_n025_lr0001_bs256_e100.json
+- name: r152_n025_lr00001_bs256_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/imagenet/r152_n025_lr00001_bs256_e100.json

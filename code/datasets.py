@@ -20,7 +20,7 @@ DATASETS = ["imagenet", "cifar10"]
 def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = None, img_size: int = None) -> Dataset:
     """Return the dataset as a PyTorch Dataset object"""
     if dataset == "imagenet":
-        return _imagenet(split, datapath, dataaug)
+        return _imagenet(split, datapath, dataaug, img_size)
     elif dataset == "cifar10":
         return _cifar10(split, datapath, dataaug, img_size)
     elif dataset == 'imagenet32':
@@ -135,13 +135,10 @@ def _cifar10(split: str, datapath: str = None, dataaug: str = None, img_size: in
         return datasets.CIFAR10(datapath if datapath else "./dataset_cache", train=False, download=True, transform=img_transforms)
 
 
-def _imagenet(split: str, datapath: str = None, dataaug: str = None) -> Dataset:
-    # if not IMAGENET_LOC_ENV in os.environ:
-    #     raise RuntimeError("environment variable for ImageNet directory not set")
+def _imagenet(split: str, datapath: str = None, dataaug: str = None, img_size: int = None) -> Dataset:
     if dataaug:
         print('Error! Custom data augmentation on ImageNet has not been implemented!')
 
-    # dir = os.environ[IMAGENET_LOC_ENV]
     if split == "train":
         subdir = os.path.join(datapath, "train")
         transform = transforms.Compose([

@@ -1,0 +1,32 @@
+{
+    "debug": 0,
+    "dataset": "imagenet",
+    "arch": "torchvision_resnet152",
+    "noise_sd": 0.25,
+    "batch": 32,
+    "workers": 2,
+    "epochs": 100,
+    "lr": 0.001,
+    "gamma": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "clean_image": 0,
+    "natural_train": 0,
+    "amp": 1,
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 1,
+    "cert_train": 1,
+    "sigma": 0.25,
+    "skip": 25,
+    "skip_train": 500,
+    "certify_bs": 32,
+    "N0": 100,
+    "N": 1000,
+    "alpha": 0.001
+}

@@ -575,7 +575,7 @@ if __name__ == "__main__":
         # "amlt/smoothing/ft_r152_imgn32n025e400_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100/certify_sigma0.25_train",
 
         # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, finetune on cifar10 coslr001 bs128 n025 e100, test
-        "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_r152_imgn32n025e200_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100/certify_sigma0.25_test",
         # "amlt/smoothing/ft_r152_imgn32n025e400_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100/certify_sigma0.25_test",
 
@@ -1573,13 +1573,16 @@ if __name__ == "__main__":
         # "amlt/smoothing/dif_vit_in21k_ft_cf10_adam1e_4_e50/diffusion/dif_vit_in21k_ft_cf10_adam1e_4_e50/certify_sigma0.25_test",
 
         # certify CIFAR10 full test set
-        "amlt/smoothing/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf/resnet152/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf/certify_sigma0.25_test", 
+        # "amlt/smoothing/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf/resnet152/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf/certify_sigma0.25_test", 
 
+        # imagenet1k, size224, train from scratch with n025
+        "amlt/smoothing/in_r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_train",
+        "amlt/smoothing/in_r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_test",
 
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf_test", "r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf_test", 1.0, [
+        "../amlt/smoothing/analysis/plots/in_r152_n025_lr1_bs256_e100", "in_r152_n025_lr1_bs256_e100", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     

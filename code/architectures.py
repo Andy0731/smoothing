@@ -38,6 +38,9 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
     if arch == "resnet50" and dataset == "imagenet":
         model = resnet50()
         cudnn.benchmark = True
+    elif arch == 'torchvision_resnet152' and dataset == 'imagenet':
+        model = torchvision_models.resnet152(num_classes=1000)
+        cudnn.benchmark = True
     elif arch == "cifar_resnet20":
         model = resnet_cifar(depth=20, num_classes=10 if 'cifar' in dataset else 1000)
     elif arch == "cifar_resnet110":

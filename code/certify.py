@@ -20,6 +20,7 @@ def merge_ctf_files(ctf_filename, args):
 def run_certify(args, base_classifier, loader, split='test', writer=None, diffusion_model=None):
 
     skip = args.skip if split == 'test' else args.skip_train
+    args.certify_bs = args.certify_bs if hasattr(args, 'certify_bs') else args.batch * 2
 
     use_amp = True if (hasattr(args, 'amp') and args.amp) else False
     if 'hug' in args.outdir:
