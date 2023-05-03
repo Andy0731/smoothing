@@ -185,19 +185,31 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/imagenet/r152_n025_lr1_bs512_e100.json
-- name: r152_n025_lr01_bs256_e100
+# - name: r152_n025_lr01_bs256_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr01_bs256_e100.json
+# - name: r152_n025_lr001_bs256_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr001_bs256_e100.json
+# - name: r152_n025_lr0001_bs256_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr0001_bs256_e100.json
+# - name: r152_n025_lr00001_bs256_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet/r152_n025_lr00001_bs256_e100.json
+- name: r152_n025_lr01_bs256_e200
   sku: G8-V100
   command:
-  - python train.py --config configs/imagenet/r152_n025_lr01_bs256_e100.json
-- name: r152_n025_lr001_bs256_e100
+  - python train.py --config configs/imagenet/r152_n025_lr01_bs256_e200.json
+- name: r152_n025_lr01_bs256_e400
   sku: G8-V100
   command:
-  - python train.py --config configs/imagenet/r152_n025_lr001_bs256_e100.json
-- name: r152_n025_lr0001_bs256_e100
+  - python train.py --config configs/imagenet/r152_n025_lr01_bs256_e400.json
+- name: r152_n025_lr01_bs256_e800
   sku: G8-V100
   command:
-  - python train.py --config configs/imagenet/r152_n025_lr0001_bs256_e100.json
-- name: r152_n025_lr00001_bs256_e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/imagenet/r152_n025_lr00001_bs256_e100.json
+  - python train.py --config configs/imagenet/r152_n025_lr01_bs256_e800.json

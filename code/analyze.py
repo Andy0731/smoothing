@@ -1576,13 +1576,26 @@ if __name__ == "__main__":
         # "amlt/smoothing/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf/resnet152/r152_imgn32n025e100_coslr001_bs128_n025_e100_full_ctf/certify_sigma0.25_test", 
 
         # imagenet1k, size224, train from scratch with n025
-        "amlt/smoothing/in_r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_train",
-        "amlt/smoothing/in_r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr1_bs64_e100/imagenet/r152_n025_lr1_bs64_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_lr1_bs128_e100/imagenet/r152_n025_lr1_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_lr01_bs256_e100/imagenet/r152_n025_lr01_bs256_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_lr001_bs256_e100/imagenet/r152_n025_lr001_bs256_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_lr0001_bs256_e100/imagenet/r152_n025_lr0001_bs256_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/r152_n025_lr00001_bs256_e100/imagenet/r152_n025_lr00001_bs256_e100/certify_sigma0.25_train",
+
+        "amlt/smoothing/r152_n025_lr1_bs64_e100/imagenet/r152_n025_lr1_bs64_e100/certify_sigma0.25_test",
+        "amlt/smoothing/r152_n025_lr1_bs128_e100/imagenet/r152_n025_lr1_bs128_e100/certify_sigma0.25_test",
+        "amlt/smoothing/r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_test",
+        "amlt/smoothing/r152_n025_lr01_bs256_e100/imagenet/r152_n025_lr01_bs256_e100/certify_sigma0.25_test",
+        "amlt/smoothing/r152_n025_lr001_bs256_e100/imagenet/r152_n025_lr001_bs256_e100/certify_sigma0.25_test",
+        "amlt/smoothing/r152_n025_lr0001_bs256_e100/imagenet/r152_n025_lr0001_bs256_e100/certify_sigma0.25_test",
+        "amlt/smoothing/r152_n025_lr00001_bs256_e100/imagenet/r152_n025_lr00001_bs256_e100/certify_sigma0.25_test",
 
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/in_r152_n025_lr1_bs256_e100", "in_r152_n025_lr1_bs256_e100", 1.0, [
+        "../amlt/smoothing/analysis/plots/in_r152_n025_e100_test", "in_r152_n025_e100_test", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     
