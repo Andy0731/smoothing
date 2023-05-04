@@ -58,6 +58,8 @@ def get_noise(epoch, args):
             return (epoch // (args.noise_ep // step)) * (args.noise_sd / step)
         else:
             return args.noise_sd
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'random':
+        return np.random.uniform(0, args.noise_sd * 1.2)
     else:
         return args.noise_sd
 

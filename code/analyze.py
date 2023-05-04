@@ -570,8 +570,8 @@ if __name__ == "__main__":
 
         # *******************************
         # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, finetune on cifar10 coslr001 bs128 n025 e100, train
-        # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
-        # "amlt/smoothing/ft_r152_imgn32n025e200_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        "amlt/smoothing/ft_r152_imgn32n025e200_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100/certify_sigma0.25_train",
         # "amlt/smoothing/ft_r152_imgn32n025e400_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100/certify_sigma0.25_train",
 
         # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, finetune on cifar10 coslr001 bs128 n025 e100, test
@@ -1584,18 +1584,51 @@ if __name__ == "__main__":
         # "amlt/smoothing/r152_n025_lr0001_bs256_e100/imagenet/r152_n025_lr0001_bs256_e100/certify_sigma0.25_train",
         # "amlt/smoothing/r152_n025_lr00001_bs256_e100/imagenet/r152_n025_lr00001_bs256_e100/certify_sigma0.25_train",
 
-        "amlt/smoothing/r152_n025_lr1_bs64_e100/imagenet/r152_n025_lr1_bs64_e100/certify_sigma0.25_test",
-        "amlt/smoothing/r152_n025_lr1_bs128_e100/imagenet/r152_n025_lr1_bs128_e100/certify_sigma0.25_test",
-        "amlt/smoothing/r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_test",
-        "amlt/smoothing/r152_n025_lr01_bs256_e100/imagenet/r152_n025_lr01_bs256_e100/certify_sigma0.25_test",
-        "amlt/smoothing/r152_n025_lr001_bs256_e100/imagenet/r152_n025_lr001_bs256_e100/certify_sigma0.25_test",
-        "amlt/smoothing/r152_n025_lr0001_bs256_e100/imagenet/r152_n025_lr0001_bs256_e100/certify_sigma0.25_test",
-        "amlt/smoothing/r152_n025_lr00001_bs256_e100/imagenet/r152_n025_lr00001_bs256_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr1_bs64_e100/imagenet/r152_n025_lr1_bs64_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr1_bs128_e100/imagenet/r152_n025_lr1_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr1_bs256_e100/imagenet/r152_n025_lr1_bs256_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr01_bs256_e100/imagenet/r152_n025_lr01_bs256_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr001_bs256_e100/imagenet/r152_n025_lr001_bs256_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr0001_bs256_e100/imagenet/r152_n025_lr0001_bs256_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/r152_n025_lr00001_bs256_e100/imagenet/r152_n025_lr00001_bs256_e100/certify_sigma0.25_test",
+
+        # random noise sd 025, CIFAR10 train from scratch
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e100/resnet152/rnsd025_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/rnsd025_r152_lr001_bs128_e100/resnet152/rnsd025_r152_lr001_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/rnsd025_r152_lr0001_bs128_e100/resnet152/rnsd025_r152_lr0001_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e400/resnet152/rnsd025_r152_lr01_bs128_e400/certify_sigma0.25_train",
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e800/resnet152/rnsd025_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e1600/resnet152/rnsd025_r152_lr01_bs128_e1600/certify_sigma0.25_train",
+
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e100/resnet152/rnsd025_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/rnsd025_r152_lr001_bs128_e100/resnet152/rnsd025_r152_lr001_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/rnsd025_r152_lr0001_bs128_e100/resnet152/rnsd025_r152_lr0001_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e400/resnet152/rnsd025_r152_lr01_bs128_e400/certify_sigma0.25_test",
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e800/resnet152/rnsd025_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/rnsd025_r152_lr01_bs128_e1600/resnet152/rnsd025_r152_lr01_bs128_e1600/certify_sigma0.25_test",     
+
+        # random noise sd 025, pretrain on ImageNet32
+        # "amlt/smoothing/in32_rnsd025_imgn32_lr1_e100/imagenet32/rnsd025_imgn32_lr1_e100/certify_sigma0.25_train",
+        # # "amlt/smoothing/in32_rnsd025_imgn32_lr01_e100/imagenet32/rnsd025_imgn32_lr01_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/in32_rnsd025_imgn32_lr1_e200/imagenet32/rnsd025_imgn32_lr1_e200/certify_sigma0.25_train",
+
+        # "amlt/smoothing/in32_rnsd025_imgn32_lr1_e100/imagenet32/rnsd025_imgn32_lr1_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/in32_rnsd025_imgn32_lr01_e100/imagenet32/rnsd025_imgn32_lr01_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/in32_rnsd025_imgn32_lr1_e200/imagenet32/rnsd025_imgn32_lr1_e200/certify_sigma0.25_test",
+
+        # random noise sd 025, pretrain on ImageNet32, finetune on CIFAR10
+        # "amlt/smoothing/rnsd025in32lr1e100_lr001_bs128_rn025_e40/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e40/certify_sigma0.25_train",
+        "amlt/smoothing/rnsd025in32lr1e100_lr001_bs128_rn025_e100/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e100/certify_sigma0.25_train",
+        "amlt/smoothing/rnsd025in32lr1e200_lr001_bs128_rn025_e100/finetune/rnsd025in32lr1e200_lr001_bs128_rn025_e100/certify_sigma0.25_train",
+
+        # # "amlt/smoothing/rnsd025in32lr1e100_lr001_bs128_rn025_e40/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e40/certify_sigma0.25_test",
+        # "amlt/smoothing/rnsd025in32lr1e100_lr001_bs128_rn025_e100/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/rnsd025in32lr1e200_lr001_bs128_rn025_e100/finetune/rnsd025in32lr1e200_lr001_bs128_rn025_e100/certify_sigma0.25_test",        
 
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/in_r152_n025_e100_test", "in_r152_n025_e100_test", 1.0, [
+        "../amlt/smoothing/analysis/plots/rnsd025_in32lr1e100_lr001rn025e40_train", "rnsd025_in32lr1e100_lr001rn025e40_train", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     
