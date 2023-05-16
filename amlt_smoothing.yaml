@@ -294,15 +294,55 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/finetune/rnsd025in32lr01e100_lr001_bs128_rn025_e100.json
-- name: rnsd025in32lr1e100_lr001_bs128_rn025_e200
+# - name: rnsd025in32lr1e100_lr001_bs128_rn025_e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e200.json
+# - name: rnsd025in32lr1e100_lr001_bs128_rn025_e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e400.json
+# - name: rnsd025in32lr1e100_lr001_bs128_rn025_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e800.json
+# - name: rrnsd025_r152_lr01_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rrnsd025_r152_lr01_bs128_e100.json
+# - name: rrnsd025_r152_lr01_bs128_e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rrnsd025_r152_lr01_bs128_e200.json
+# - name: rrnsd025_r152_lr01_bs128_e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rrnsd025_r152_lr01_bs128_e400.json
+# - name: rrnsd025_r152_lr01_bs128_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rrnsd025_r152_lr01_bs128_e800.json
+# - name: rnsd1_r152_lr01_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rnsd1_r152_lr01_bs128_e100.json
+# - name: rnsd1_r152_lr01_bs128_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rnsd1_r152_lr01_bs128_e800.json
+# - name: rnsd1_r152_lr01_bs128_e1600
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rnsd1_r152_lr01_bs128_e1600.json
+# - name: rnsd05_r152_lr01_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rnsd05_r152_lr01_bs128_e100.json
+# - name: rnsd05_r152_lr01_bs128_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rnsd05_r152_lr01_bs128_e800.json
+- name: rnsd05_r152_lr01_bs128_e1600
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e200.json
-- name: rnsd025in32lr1e100_lr001_bs128_rn025_e400
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e400.json
-- name: rnsd025in32lr1e100_lr001_bs128_rn025_e800
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/rnsd025in32lr1e100_lr001_bs128_rn025_e800.json
+  - python train.py --config configs/resnet152/rnsd05_r152_lr01_bs128_e1600.json

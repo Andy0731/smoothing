@@ -59,7 +59,10 @@ def get_noise(epoch, args):
         else:
             return args.noise_sd
     elif hasattr(args, 'noise_mode') and args.noise_mode == 'random':
-        return np.random.uniform(0, args.noise_sd * 1.2)
+        random_scale = args.random_scale if hasattr(args, 'random_scale') else 1.2
+        return np.random.uniform(0, args.noise_sd * random_scale)
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'random_range':
+        return np.random.uniform(args.noise_sd * args.r_range_min, args.noise_sd * args.r_range_max)
     else:
         return args.noise_sd
 
