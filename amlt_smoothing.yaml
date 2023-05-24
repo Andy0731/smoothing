@@ -386,15 +386,39 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet200/baseline_r200_n025_lr01_e1600.json
-- name: dif_an_r152_n025_lr01_e100
+# - name: dif_an_r152_n025_lr01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/dif_an_r152_n025_lr01_e100.json
+# - name: dif_an_r152_n025_lr01_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/dif_an_r152_n025_lr01_e800.json
+# - name: dif_an_r152_n025_lr01_e1600
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/dif_an_r152_n025_lr01_e1600.json
+- name: baseline_r152_n05_lr1_e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/dif_an_r152_n025_lr01_e100.json
-- name: dif_an_r152_n025_lr01_e800
+  - python train.py --config configs/resnet152/baseline_r152_n05_lr1_e100.json
+- name: baseline_r152_n05_lr01_e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/dif_an_r152_n025_lr01_e800.json
-- name: dif_an_r152_n025_lr01_e1600
+  - python train.py --config configs/resnet152/baseline_r152_n05_lr01_e100.json
+- name: baseline_r152_n05_lr001_e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/dif_an_r152_n025_lr01_e1600.json
+  - python train.py --config configs/resnet152/baseline_r152_n05_lr001_e100.json
+- name: baseline_r152_n1_lr1_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/baseline_r152_n1_lr1_e100.json
+- name: baseline_r152_n1_lr01_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/baseline_r152_n1_lr01_e100.json
+- name: baseline_r152_n1_lr001_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/baseline_r152_n1_lr001_e100.json
