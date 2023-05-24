@@ -9,6 +9,7 @@ from archs.normal_resnet import resnet34 as normal_resnet34
 from archs.normal_resnet import resnet50 as normal_resnet50
 from archs.normal_resnet import resnet101 as normal_resnet101
 from archs.normal_resnet import resnet152 as normal_resnet152
+from archs.normal_resnet import resnet200 as normal_resnet200
 from archs.normal_resnet import resnet300 as normal_resnet300
 from archs.normal_resnet import resnet152wide2 as normal_resnet152wide2
 from archs.normal_resnet_gelu import resnet152gelu as normal_resnet152_gelu
@@ -23,8 +24,9 @@ import torchvision.models as torchvision_models
 # cifar_resnet20 - a 20-layer residual network sized for CIFAR
 # cifar_resnet110 - a 110-layer residual network sized for CIFAR
 ARCHITECTURES = ["resnet50", "cifar_resnet20", "cifar_resnet110", 
-                "normal_resnet18", "normal_resnet18wide", "normal_resnet34", "normal_resnet50", "normal_resnet101", "normal_resnet152",
-                "normal_resnet300", "normal_resnet152wide2"]
+                "normal_resnet18", "normal_resnet18wide", "normal_resnet34", 
+                "normal_resnet50", "normal_resnet101", "normal_resnet152",
+                "normal_resnet200", "normal_resnet300", "normal_resnet152wide2"]
 
 
 def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1) -> torch.nn.Module:

@@ -13,7 +13,7 @@ from architectures import get_architecture
 from torch.optim import SGD, Optimizer, AdamW, Adam
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, add_fnoise, exp_fnoise, add_fnoise_chn
+from train_utils import AverageMeter, accuracy, get_noise, adjust_learning_rate, mixup_data, mixup_criterion, add_fnoise, exp_fnoise, add_fnoise_chn, l2_dist
 from attrdict import AttrDict
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -333,7 +333,8 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             args.cur_noise = noise_sd
 
             if hasattr(args, 'diffusion') and args.diffusion:
-                inputs = diffusion_model(inputs, args.t)
+                acc_noise = args.accurate_noise if hasattr(args, 'accurate_noise') else 0
+                inputs = diffusion_model(inputs, args.t, acc_noise, noise_sd)
             else:
                 inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
             if hasattr(args, 'resize_after_noise'):
@@ -500,6 +501,8 @@ if __name__ == "__main__":
         args.epochs = 1
         args.skip = 10000
         args.skip_train = 200000
+        args.N = 128
+        args.certify_bs = 128
     
     args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))

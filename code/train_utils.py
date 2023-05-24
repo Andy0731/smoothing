@@ -122,3 +122,13 @@ def add_fnoise_chn(x, noise_sd, num): # (b,3,h,w) -> (b,n3,h,w)
     nx = x.repeat(1,num,1,1) #b,c,h,w -> b,nc,h,w
     noise = torch.randn_like(nx, device='cuda') * noise_sd
     return nx + noise    
+
+def l2_dist(x, y): # (b,c,h,w) (b,c,h,w)
+    n = y - x # (b,c,h,w)
+    n = n.view(n.shape[0], -1) # (b,c*h*w)
+    print('l2 norm of diffusion noise: ')
+    print(torch.norm(n, dim=1)) # (b,)
+    print('l2 norm of 0.5 noise: ')
+    n025 = torch.randn_like(x, device='cuda') * 0.5
+    n025 = n025.view(n025.shape[0], -1)
+    print(torch.norm(n025, dim=1))

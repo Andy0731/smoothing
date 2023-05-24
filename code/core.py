@@ -48,7 +48,7 @@ class Smooth(object):
         self.diffusion_model = diffusion_model
         self.args = args
 
-    def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
+    def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> tuple:
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
         With probability at least 1 - alpha, the class returned by this method will equal g(x), and g's prediction will
         robust within a L2 ball of radius R around x.
@@ -135,7 +135,8 @@ class Smooth(object):
                 #     batch = torchvision.transforms.functional.resize(batch, self.resize_after_noise)
 
                 if hasattr(self.args, 'diffusion') and self.args.diffusion:
-                    batch = self.diffusion_model(batch, self.args.t)
+                    acc_noise = self.args.accurate_noise if hasattr(self.args, 'accurate_noise') else 0
+                    batch = self.diffusion_model(batch, self.args.t, acc_noise, self.args.noise_sd)
                 else:
                     batch = batch + torch.randn_like(batch, device='cuda') * self.sigma
                 if hasattr(self.args, 'resize_after_noise'):

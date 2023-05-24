@@ -3,6 +3,7 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 import torchvision.transforms.functional as F
 import sys
+from train_utils import l2_dist
 
 
 from improved_diffusion.script_util import (
@@ -73,10 +74,27 @@ class DiffusionModel(nn.Module):
         self.model = model 
         self.diffusion = diffusion 
 
-    def forward(self, x, t):
-        x_in = x * 2 -1
-        imgs = self.denoise(x_in, t)
-        return imgs
+    def forward(self, x, t, acc_noise=0, noise_sd=0.25):
+        if acc_noise > 0:
+            noise = torch.randn_like(x) * noise_sd
+            x_in = x + noise
+            imgs = self.acc_denoise(x_in, t)
+            return imgs
+        else:
+            x_in = x * 2 -1
+            imgs = self.denoise(x_in, t)
+            return imgs
+        
+    def acc_denoise(self, x_start, t):
+        x_start = x_start * 2 - 1
+        t_batch = torch.tensor([t] * len(x_start)).cuda()
+        out = self.diffusion.p_sample(
+            self.model,
+            x_start,
+            t_batch,
+            clip_denoised=True
+        )['pred_xstart']
+        return out
 
     def denoise(self, x_start, t, multistep=False):
         t_batch = torch.tensor([t] * len(x_start)).cuda()

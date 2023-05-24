@@ -29,6 +29,9 @@ def run_certify(args, base_classifier, loader, split='test', writer=None, diffus
     elif 'diffusion' in args.outdir:
         resize_after_noise = args.resize_after_noise if hasattr(args, 'resize_after_noise') else 0
         smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, hug=True, resize_after_noise=resize_after_noise, diffusion_model=diffusion_model, args=args)
+    elif hasattr(args, 'diffusion') and args.diffusion:
+        resize_after_noise = args.resize_after_noise if hasattr(args, 'resize_after_noise') else 0
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, resize_after_noise=resize_after_noise, diffusion_model=diffusion_model, args=args)
     elif hasattr(args, 'favg') and args.favg == 1:
         smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, favg=args.favg, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num, fnoise_sd=args.fnoise_sd, get_samples=args.get_samples)
     elif hasattr(args, 'nconv') and args.nconv == 1:
@@ -37,7 +40,7 @@ def run_certify(args, base_classifier, loader, split='test', writer=None, diffus
         smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, get_samples=args.get_samples)
     else:
     # create the smooothed classifier g
-        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp)
+        smoothed_classifier = Smooth(base_classifier, get_num_classes(args.dataset), args.sigma, use_amp, args=args)
 
 
     # prepare output file
