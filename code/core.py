@@ -150,7 +150,11 @@ class Smooth(object):
                     batch = add_fnoise_chn(batch, self.fnoise_sd, self.avgn_num)
 
                 with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=self.use_amp):
-                    outputs = self.base_classifier(batch)
+                    if hasattr(self.args, 'noise_sd_embed') and self.args.noise_sd_embed:
+                        outputs = self.base_classifier(batch, self.args.sigma)
+                    else:
+                        outputs = self.base_classifier(batch)
+                    
                     if self.hug:
                         outputs = outputs.logits
                     predictions = outputs.argmax(1)

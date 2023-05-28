@@ -92,6 +92,8 @@ def main(args):
     elif hasattr(args, 'nconv') and args.nconv:
         assert hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
         model = get_architecture(args.arch, args.dataset, avgn_num=args.avgn_num)
+    elif hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
+        model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer)
     else:
         model = get_architecture(args.arch, args.dataset)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
@@ -246,27 +248,35 @@ def main(args):
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
     print('training time: ', time_train)
 
-    # certify test set
-    if has_testset and args.ddp and args.certify:
-        print('begin to certify test set ...')
-        certify_loader = DataLoader(test_dataset, batch_size=1,
-            num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
-        certify_plot(args, model, certify_loader, 'test', writer, diffusion_model=diffusion_model)
+
+    simgas = [args.sigma]
+    if hasattr(args, 'multiple_sigma'):
+        simgas = [float(sigma) for sigma in args.multiple_sigma.split(',')]
+    for sigma in simgas:
+        args.sigma = sigma
+        # certify test set
+        if has_testset and args.ddp and args.certify:
+            print('begin to certify {} test set ...'.format(args.sigma))
+            certify_loader = DataLoader(test_dataset, batch_size=1,
+                num_workers=args.workers, pin_memory=pin_memory, sampler=test_sampler)
+            certify_plot(args, model, certify_loader, 'test', writer, diffusion_model=diffusion_model)
+            time_ctf_test_end = time.time()
+            time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_train_end)
+            print('certify test set time: ', time_ctf_test)
         time_ctf_test_end = time.time()
-        time_ctf_test = datetime.timedelta(seconds=time_ctf_test_end - time_train_end)
-        print('certify test set time: ', time_ctf_test)
-    time_ctf_test_end = time.time()
-    
-    # certify training set
-    if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
-        print('begin to certify training set ...')
-        certify_loader = DataLoader(train_dataset, batch_size=1,
-            num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
-        certify_loader.sampler.set_epoch(0)
-        certify_plot(args, model, certify_loader, 'train', writer, diffusion_model=diffusion_model)
-        time_ctf_train_end = time.time()
-        time_ctf_train = datetime.timedelta(seconds=time_ctf_train_end - time_ctf_test_end)
-        print('certify training set time: ', time_ctf_train)
+
+    for sigma in simgas:
+        args.sigma = sigma        
+        # certify training set
+        if args.ddp and hasattr(args, 'cert_train') and args.cert_train:
+            print('begin to certify {} training set ...'.format(args.sigma))
+            certify_loader = DataLoader(train_dataset, batch_size=1,
+                num_workers=args.workers, pin_memory=pin_memory, sampler=train_sampler)
+            certify_loader.sampler.set_epoch(0)
+            certify_plot(args, model, certify_loader, 'train', writer, diffusion_model=diffusion_model)
+            time_ctf_train_end = time.time()
+            time_ctf_train = datetime.timedelta(seconds=time_ctf_train_end - time_ctf_test_end)
+            print('certify training set time: ', time_ctf_train)
 
 
 def certify_plot(args, model, certify_loader, split, writer, diffusion_model=None):
@@ -356,7 +366,11 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
 
         # compute output
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
-            outputs = model(inputs)
+            if hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
+                # print(model)
+                outputs = model(inputs, noise_sd)
+            else:
+                outputs = model(inputs)
             if 'hug' in args.outdir or 'diffusion' in args.outdir:
                 outputs = outputs.logits
             if hasattr(args, 'mixup') and args.mixup:
@@ -439,7 +453,10 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
 
             # compute output
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
-                outputs = model(inputs)
+                if hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
+                    outputs = model(inputs, noise_sd)
+                else:
+                    outputs = model(inputs)
                 if 'hug' in args.outdir or 'diffusion' in args.outdir:
                     outputs = outputs.logits
                 loss = criterion(outputs, targets)

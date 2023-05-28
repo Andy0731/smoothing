@@ -16,9 +16,12 @@ from archs.normal_resnet_gelu import resnet152gelu as normal_resnet152_gelu
 from archs.normal_resnet_nost import resnet152nost as normal_resnet152_nost
 from archs.normal_resnet_avgn import resnet152avgn as normal_resnet152_avgn
 from archs.normal_resnet_nconv import resnet152nconv as normal_resnet152_nconv
+from archs.normal_resnet_nemb import resnet152nemb as normal_resnet152_nemb, TimestepEmbedSequential
+from archs.normal_resnet_nemb_blk import resnetblkemd152 as normal_resnet152_nembblk
 from archs.vit import vit_b
 
 import torchvision.models as torchvision_models
+import torch.nn as nn
 
 # resnet50 - the classic ResNet-50, sized for ImageNet
 # cifar_resnet20 - a 20-layer residual network sized for CIFAR
@@ -29,7 +32,7 @@ ARCHITECTURES = ["resnet50", "cifar_resnet20", "cifar_resnet110",
                 "normal_resnet200", "normal_resnet300", "normal_resnet152wide2"]
 
 
-def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1) -> torch.nn.Module:
+def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1, nemb_layer: str = None) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
     :param arch: the architecture - should be in the ARCHITECTURES list above
@@ -55,6 +58,8 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
                 model = arch + '(avgn_loc=avgn_loc, avgn_num=avgn_num)'
             elif 'nconv' in arch:
                 model = arch + '(avgn_num=avgn_num)'
+            elif 'nemb' in arch:
+                model = arch + '(nemb_layer=nemb_layer)'
             else:
                 model = arch + '()'
         elif dataset == 'imagenet22k':
@@ -63,6 +68,7 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
             model = arch + '(num_classes=1000)'
         print('model: ', model)
         model = eval(model)
+        # print(model)
     elif arch == 'torchvision_resnet152': # conv1 7x7 with stride=2 and maxpooling before the 4 stages
         model = torchvision_models.resnet152(num_classes=10)
     elif 'vit' in arch:
@@ -80,4 +86,7 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
     else:
         raise ValueError
     normalize_layer = get_normalize_layer(dataset)
+
+    if nemb_layer is not None:
+        return TimestepEmbedSequential(normalize_layer, model)
     return torch.nn.Sequential(normalize_layer, model)

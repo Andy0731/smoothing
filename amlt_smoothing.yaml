@@ -430,19 +430,75 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/baseline_r152_n1_lr01_e800.json
-- name: baseline_r152_n1_lr01_e100_cp1
+# - name: baseline_r152_n1_lr01_e100_cp1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n1_lr01_e100_cp1.json
+# - name: baseline_r152_n1_lr01_e100_cp2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n1_lr01_e100_cp2.json
+# - name: baseline_r152_n05_lr01_e100_cp1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n05_lr01_e100_cp1.json
+# - name: baseline_r152_n05_lr01_e100_cp2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n05_lr01_e100_cp2.json
+# - name: nemb_frs_rnsd1_r152_lr1_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_frs_rnsd1_r152_lr1_bs128_e100.json
+# - name: nemb_frs_rnsd1_r152_lr01_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_frs_rnsd1_r152_lr01_bs128_e100.json
+# - name: nemb_frs_rnsd1_r152_lr001_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_frs_rnsd1_r152_lr001_bs128_e100.json
+# - name: nemb_all_rnsd1_r152_lr1_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_all_rnsd1_r152_lr1_bs128_e100.json
+# - name: nemb_all_rnsd1_r152_lr01_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_all_rnsd1_r152_lr01_bs128_e100.json
+# - name: nemb_all_rnsd1_r152_lr001_bs128_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_all_rnsd1_r152_lr001_bs128_e100.json
+# - name: nemb_frs_rnsd1_r152_lr01_bs128_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_frs_rnsd1_r152_lr01_bs128_e800.json
+# - name: nemb_frs_rnsd1_r152_lr01_bs128_e1600
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_frs_rnsd1_r152_lr01_bs128_e1600.json
+# - name: nemb_all_rnsd1_r152_lr01_bs128_e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_all_rnsd1_r152_lr01_bs128_e800.json
+# - name: nemb_all_rnsd1_r152_lr01_bs128_e1600
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/nemb/nemb_all_rnsd1_r152_lr01_bs128_e1600.json
+# - name: rnsd1_r152_lr01_bs128_e100_multiple_sigma_ctf
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/rnsd1_r152_lr01_bs128_e100.json
+# - name: baseline_r152_n1_lr01_e100_multi_ctf
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n1_lr01_e100_multi_ctf.json
+# - name: baseline_r152_n05_lr01_e100_multi_ctf
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n05_lr01_e100_multi_ctf.json
+- name: baseline_r152_n025_lr01_e100_rerun
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/baseline_r152_n1_lr01_e100_cp1.json
-- name: baseline_r152_n1_lr01_e100_cp2
-  sku: G8-V100
-  command:
-  - python train.py --config configs/resnet152/baseline_r152_n1_lr01_e100_cp2.json
-- name: baseline_r152_n05_lr01_e100_cp1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/resnet152/baseline_r152_n05_lr01_e100_cp1.json
-- name: baseline_r152_n05_lr01_e100_cp2
-  sku: G8-V100
-  command:
-  - python train.py --config configs/resnet152/baseline_r152_n05_lr01_e100_cp2.json
+  - python train.py --config configs/resnet152/baseline_r152_n025_lr01_e100_rerun.json
