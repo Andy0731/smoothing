@@ -46,8 +46,22 @@ def log(filename: str, text: str):
     f.write(text+"\n")
     f.close()
 
-def get_noise(epoch, args):
-    if hasattr(args, 'noise_mode') and args.noise_mode == 'linear':
+def get_noise(epoch, args, cur_bs=None):
+    if hasattr(args, 'noise_mode') and args.noise_mode == 'li_inc':
+        return args.noise_sd * float(epoch + 1) / float(args.epochs)
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'li_dec':
+        return args.noise_sd * (2 - float(epoch + 1) / float(args.epochs))
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'li_inc_rand':
+        low = args.noise_sd * float(epoch + 1) / float(args.epochs)
+        return np.random.uniform(low, args.noise_sd)
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'li_dec_rand':
+        high = args.noise_sd * (2 - float(epoch + 1) / float(args.epochs))
+        return np.random.uniform(args.noise_sd, high)
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'li_range_rand':
+        low = args.noise_sd * float(epoch + 1) / float(args.epochs)
+        high = args.noise_sd * (2 - float(epoch + 1) / float(args.epochs))
+        return np.random.uniform(low, high)
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'linear':
         if epoch < args.noise_ep:
             return args.noise_sd * float(epoch) / float(args.noise_ep)
         else:
@@ -61,6 +75,9 @@ def get_noise(epoch, args):
     elif hasattr(args, 'noise_mode') and args.noise_mode == 'random':
         random_scale = args.random_scale if hasattr(args, 'random_scale') else 1.2
         return np.random.uniform(0, args.noise_sd * random_scale)
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random':
+        random_scale = args.random_scale if hasattr(args, 'random_scale') else 1.2
+        return np.random.uniform(0, args.noise_sd * random_scale, size=(cur_bs))        
     elif hasattr(args, 'noise_mode') and args.noise_mode == 'random_range':
         return np.random.uniform(args.noise_sd * args.r_range_min, args.noise_sd * args.r_range_max)
     else:

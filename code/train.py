@@ -24,6 +24,7 @@ from analyze import plot_curve
 from common import get_args
 from archs.hug_vit import get_hug_model, get_hug_vit
 from DRM import DiffusionModel, get_timestep
+import numpy as np
 
 
 def main_spawn(args):
@@ -93,7 +94,9 @@ def main(args):
         assert hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
         model = get_architecture(args.arch, args.dataset, avgn_num=args.avgn_num)
     elif hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
-        model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer)
+        emb_scl = args.emb_scl if hasattr(args, 'emb_scl') else 1000
+        emb_dim = args.emb_dim if hasattr(args, 'emb_dim') else 32
+        model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)
     else:
         model = get_architecture(args.arch, args.dataset)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
@@ -339,14 +342,20 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
                 inputs, targets_a, targets_b, lam = mixup_data(inputs, targets, args.mixup_alpha)                
 
             # augment inputs with noise
-            noise_sd = get_noise(epoch, args)
-            args.cur_noise = noise_sd
+            noise_sd = get_noise(epoch, args, inputs.size(0))
+            if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,)
+                args.cur_noise = noise_sd[0]
+            else: 
+                args.cur_noise = noise_sd
 
             if hasattr(args, 'diffusion') and args.diffusion:
                 acc_noise = args.accurate_noise if hasattr(args, 'accurate_noise') else 0
                 inputs = diffusion_model(inputs, args.t, acc_noise, noise_sd)
             else:
-                inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+                if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,):
+                    inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
+                else:
+                    inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
             if hasattr(args, 'resize_after_noise'):
                 # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
                 inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
@@ -367,7 +376,6 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         # compute output
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
             if hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
-                # print(model)
                 outputs = model(inputs, noise_sd)
             else:
                 outputs = model(inputs)
@@ -515,7 +523,7 @@ if __name__ == "__main__":
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(2, args.batch)
-        args.epochs = 1
+        args.epochs = 10
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128

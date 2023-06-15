@@ -32,7 +32,7 @@ ARCHITECTURES = ["resnet50", "cifar_resnet20", "cifar_resnet110",
                 "normal_resnet200", "normal_resnet300", "normal_resnet152wide2"]
 
 
-def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1, nemb_layer: str = None) -> torch.nn.Module:
+def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1, nemb_layer: str = None, emb_scl=None, emb_dim=None) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
     :param arch: the architecture - should be in the ARCHITECTURES list above
@@ -59,7 +59,7 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
             elif 'nconv' in arch:
                 model = arch + '(avgn_num=avgn_num)'
             elif 'nemb' in arch:
-                model = arch + '(nemb_layer=nemb_layer)'
+                model = arch + '(nemb_layer=nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)'
             else:
                 model = arch + '()'
         elif dataset == 'imagenet22k':

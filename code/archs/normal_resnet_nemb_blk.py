@@ -33,22 +33,28 @@ class BottleneckEmb(Bottleneck, TimestepBlock):
         out = self.bn3(self.conv3(out))
         out += self.shortcut(x)
         return F.relu(out)
-    
+
 
 class ResNetBlkEmb(ResNetNemb):
-    def __init__(self, block, num_blocks, num_classes=10, feat_scale=1, wm=1, nemb_layer='all'):
-        super().__init__(block, num_blocks, num_classes=num_classes, feat_scale=feat_scale, wm=wm, nemb_layer=nemb_layer)
+    def __init__(self, block, num_blocks, num_classes=10, feat_scale=1, wm=1, nemb_layer='all', emb_scl=None, emb_dim=32):
+        super().__init__(block, num_blocks, num_classes=num_classes, feat_scale=feat_scale, wm=wm, nemb_layer=nemb_layer, emb_dim=emb_dim)
         all_layers = [self.layer1, self.layer2, self.layer3, self.layer4]
         all_blocks = []
         for layer in all_layers:
             for block in layer:
                 all_blocks.append(block)
         self.all_blocks = TimestepEmbedSequential(*all_blocks)
+        self.emb_scl = emb_scl
+        self.emb_dim = emb_dim
 
     def forward(self, x, noise_sd):
         # noise_sd embed
-        bt_noise_sd = torch.ones(x.size(0)).to(x.device) * noise_sd # (N)
-        bt_noise_sd = torch.floor(bt_noise_sd * 1000) # (N)
+        if isinstance(noise_sd, float):
+            bt_noise_sd = torch.ones(x.size(0)).to(x.device) * noise_sd # (N)
+        else:
+            bt_noise_sd = torch.ones(x.size(0)).to(x.device) * torch.from_numpy(noise_sd).to(x.dtype).to(x.device) # (N)
+        if not self.emb_scl == 1:
+            bt_noise_sd = torch.floor(bt_noise_sd * self.emb_scl) # (N)
         nemd = self.noise_sd_embed(bt_noise_sd, self.emb_dim) # (N, 32)
         nemd = self.emb_mlp(nemd) # (N, 64)
 

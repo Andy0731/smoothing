@@ -40,10 +40,10 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
 
 
 class ResNetNemb(ResNet, TimestepBlock):
-    def __init__(self, block, num_blocks, num_classes=10, feat_scale=1, wm=1, nemb_layer='frs'):
+    def __init__(self, block, num_blocks, num_classes=10, feat_scale=1, wm=1, nemb_layer='frs', emb_dim=32):
         super().__init__(block, num_blocks, num_classes=num_classes, feat_scale=feat_scale, wm=wm)
         self.noise_sd_embed = timestep_embedding
-        self.emb_dim = 32
+        self.emb_dim = emb_dim
         self.model_dim = 64
         self.emb_mlp = nn.Sequential(
             nn.Linear(self.emb_dim, self.model_dim),

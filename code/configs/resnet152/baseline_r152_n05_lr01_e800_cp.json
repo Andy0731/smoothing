@@ -22,7 +22,6 @@
     "certify": 1,
     "cert_train": 1,
     "sigma": 0.5,
-    "multiple_sigma": "0.25,0.5,1.0",
     "skip": 20,
     "skip_train": 100,
     "certify_bs": 1024,

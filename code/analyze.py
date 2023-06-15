@@ -1697,26 +1697,15 @@ if __name__ == "__main__":
         # "amlt/smoothing/dif_an_r152_n025_lr01_e800/resnet152/dif_an_r152_n025_lr01_e800/certify_sigma0.25_test",   
 
 
-        # baseline, r152 n05, train from scratch on CIFAR10
-        # "amlt/smoothing/baseline_r152_n05_lr1_e100/resnet152/baseline_r152_n05_lr1_e100/certify_sigma0.5_train",
-        # "amlt/smoothing/baseline_r152_n05_lr01_e100/resnet152/baseline_r152_n05_lr01_e100/certify_sigma0.5_train",
-        # "amlt/smoothing/baseline_r152_n05_lr001_e100/resnet152/baseline_r152_n05_lr001_e100/certify_sigma0.5_train",
-
-        # "amlt/smoothing/baseline_r152_n05_lr1_e100/resnet152/baseline_r152_n05_lr1_e100/certify_sigma0.5_test",
-        # "amlt/smoothing/baseline_r152_n05_lr01_e100/resnet152/baseline_r152_n05_lr01_e100/certify_sigma0.5_test",
-        # "amlt/smoothing/baseline_r152_n05_lr001_e100/resnet152/baseline_r152_n05_lr001_e100/certify_sigma0.5_test",
-
-        # "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_train",
-        # "amlt/smoothing/rep_r152_n025_coslr01_bs128_e100/resnet152/rep_n025_coslr01_bs128_e100/certify_sigma0.25_test",
 
         # baseline, r152 n025, train from scratch on CIFAR10, multiple certify
         # "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma0.25_train",
         # "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma0.5_train",
         # "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma1.0_train",
 
-        "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma0.25_test",
-        "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma0.5_test",
-        "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma1.0_test",
+        # "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma0.25_test",
+        # "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma0.5_test",
+        # "amlt/smoothing/baseline_r152_n025_lr01_e100_rerun/resnet152/baseline_r152_n025_lr01_e100_rerun/certify_sigma1.0_test",
 
         # "amlt/smoothing/baseline_r152_n05_lr01_e100_multi_ctf/resnet152/baseline_r152_n05_lr01_e100_multi_ctf/certify_sigma0.25_train",
         # "amlt/smoothing/baseline_r152_n05_lr01_e100/resnet152/baseline_r152_n05_lr01_e100/certify_sigma0.5_train",
@@ -1733,15 +1722,6 @@ if __name__ == "__main__":
         # "amlt/smoothing/baseline_r152_n1_lr01_e100_multi_ctf/resnet152/baseline_r152_n1_lr01_e100_multi_ctf/certify_sigma0.25_test",
         # "amlt/smoothing/baseline_r152_n1_lr01_e100_multi_ctf/resnet152/baseline_r152_n1_lr01_e100_multi_ctf/certify_sigma0.5_test",
         # "amlt/smoothing/baseline_r152_n1_lr01_e100/resnet152/baseline_r152_n1_lr01_e100/certify_sigma1.0_test",
-
-        # # baseline, r152 n1, train from scratch on CIFAR10
-        # "amlt/smoothing/baseline_r152_n1_lr1_e100/resnet152/baseline_r152_n1_lr1_e100/certify_sigma1.0_train",
-        # "amlt/smoothing/baseline_r152_n1_lr01_e100/resnet152/baseline_r152_n1_lr01_e100/certify_sigma1.0_train",
-        # "amlt/smoothing/baseline_r152_n1_lr001_e100/resnet152/baseline_r152_n1_lr001_e100/certify_sigma1.0_train",
-
-        # "amlt/smoothing/baseline_r152_n1_lr1_e100/resnet152/baseline_r152_n1_lr1_e100/certify_sigma1.0_test",
-        # "amlt/smoothing/baseline_r152_n1_lr01_e100/resnet152/baseline_r152_n1_lr01_e100/certify_sigma1.0_test",
-        # "amlt/smoothing/baseline_r152_n1_lr001_e100/resnet152/baseline_r152_n1_lr001_e100/certify_sigma1.0_test",
 
 
         # noise_sd embeding on first conv, noise_sd [0,1.0], train from scratch on CIFAR10
@@ -1803,10 +1783,279 @@ if __name__ == "__main__":
         # "amlt/smoothing/rnsd1_r152_lr01_bs128_e100/resnet152/rnsd1_r152_lr01_bs128_e100/certify_sigma0.25_test",
         # "amlt/smoothing/rnsd1_r152_lr01_bs128_e100_multiple_sigma_ctf/resnet152/rnsd1_r152_lr01_bs128_e100/certify_sigma0.5_test",
         # "amlt/smoothing/rnsd1_r152_lr01_bs128_e100_multiple_sigma_ctf/resnet152/rnsd1_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+
+        # noise_sd embed, scale noise_sd for embedding, train from scratch on CIFAR10
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s1_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s10_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_s100_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+
+        # noise_sd embed, vary embeding dimension, train from scratch on CIFAR10
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e100/certify_sigma1.0_test",        
+
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d64_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_d128_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+
+        # noise_sd embed, vary noise_sd in a batch, train from scratch on CIFAR10
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e100/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/nemb_all_rnsd1_br_r152_lr01_bs128_e800/nemb/nemb_all_rnsd1_br_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+
+
+        # control noise_sd in specific way, train from scratch on CIFAR10
+        # "amlt/smoothing/cnsd1_ld_r152_lr01_bs128_e100/resnet152/cnsd1_ld_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd1_ld_r152_lr01_bs128_e100/resnet152/cnsd1_ld_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd1_ld_r152_lr01_bs128_e100/resnet152/cnsd1_ld_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd1_ld_r152_lr01_bs128_e100/resnet152/cnsd1_ld_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd1_ld_r152_lr01_bs128_e100/resnet152/cnsd1_ld_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd1_ld_r152_lr01_bs128_e100/resnet152/cnsd1_ld_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd1_ldr_r152_lr01_bs128_e100/resnet152/cnsd1_ldr_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd1_ldr_r152_lr01_bs128_e100/resnet152/cnsd1_ldr_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd1_ldr_r152_lr01_bs128_e100/resnet152/cnsd1_ldr_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd1_ldr_r152_lr01_bs128_e100/resnet152/cnsd1_ldr_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd1_ldr_r152_lr01_bs128_e100/resnet152/cnsd1_ldr_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd1_ldr_r152_lr01_bs128_e100/resnet152/cnsd1_ldr_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd1_li_r152_lr01_bs128_e100/resnet152/cnsd1_li_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd1_li_r152_lr01_bs128_e100/resnet152/cnsd1_li_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd1_li_r152_lr01_bs128_e100/resnet152/cnsd1_li_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd1_li_r152_lr01_bs128_e100/resnet152/cnsd1_li_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd1_li_r152_lr01_bs128_e100/resnet152/cnsd1_li_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd1_li_r152_lr01_bs128_e100/resnet152/cnsd1_li_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd1_lir_r152_lr01_bs128_e100/resnet152/cnsd1_lir_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd1_lir_r152_lr01_bs128_e100/resnet152/cnsd1_lir_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd1_lir_r152_lr01_bs128_e100/resnet152/cnsd1_lir_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd1_lir_r152_lr01_bs128_e100/resnet152/cnsd1_lir_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd1_lir_r152_lr01_bs128_e100/resnet152/cnsd1_lir_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd1_lir_r152_lr01_bs128_e100/resnet152/cnsd1_lir_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd1_lrr_r152_lr01_bs128_e100/resnet152/cnsd1_lrr_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd1_lrr_r152_lr01_bs128_e100/resnet152/cnsd1_lrr_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd1_lrr_r152_lr01_bs128_e100/resnet152/cnsd1_lrr_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd1_lrr_r152_lr01_bs128_e100/resnet152/cnsd1_lrr_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd1_lrr_r152_lr01_bs128_e100/resnet152/cnsd1_lrr_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd1_lrr_r152_lr01_bs128_e100/resnet152/cnsd1_lrr_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+
+        # "amlt/smoothing/cnsd05_ld_r152_lr01_bs128_e100/resnet152/cnsd05_ld_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd05_ld_r152_lr01_bs128_e100/resnet152/cnsd05_ld_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd05_ld_r152_lr01_bs128_e100/resnet152/cnsd05_ld_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd05_ld_r152_lr01_bs128_e100/resnet152/cnsd05_ld_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd05_ld_r152_lr01_bs128_e100/resnet152/cnsd05_ld_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd05_ld_r152_lr01_bs128_e100/resnet152/cnsd05_ld_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd05_ldr_r152_lr01_bs128_e100/resnet152/cnsd05_ldr_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd05_ldr_r152_lr01_bs128_e100/resnet152/cnsd05_ldr_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd05_ldr_r152_lr01_bs128_e100/resnet152/cnsd05_ldr_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd05_ldr_r152_lr01_bs128_e100/resnet152/cnsd05_ldr_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd05_ldr_r152_lr01_bs128_e100/resnet152/cnsd05_ldr_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd05_ldr_r152_lr01_bs128_e100/resnet152/cnsd05_ldr_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd05_li_r152_lr01_bs128_e100/resnet152/cnsd05_li_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd05_li_r152_lr01_bs128_e100/resnet152/cnsd05_li_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd05_li_r152_lr01_bs128_e100/resnet152/cnsd05_li_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd05_li_r152_lr01_bs128_e100/resnet152/cnsd05_li_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd05_li_r152_lr01_bs128_e100/resnet152/cnsd05_li_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd05_li_r152_lr01_bs128_e100/resnet152/cnsd05_li_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd05_lir_r152_lr01_bs128_e100/resnet152/cnsd05_lir_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd05_lir_r152_lr01_bs128_e100/resnet152/cnsd05_lir_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd05_lir_r152_lr01_bs128_e100/resnet152/cnsd05_lir_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd05_lir_r152_lr01_bs128_e100/resnet152/cnsd05_lir_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd05_lir_r152_lr01_bs128_e100/resnet152/cnsd05_lir_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd05_lir_r152_lr01_bs128_e100/resnet152/cnsd05_lir_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd05_lrr_r152_lr01_bs128_e100/resnet152/cnsd05_lrr_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd05_lrr_r152_lr01_bs128_e100/resnet152/cnsd05_lrr_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd05_lrr_r152_lr01_bs128_e100/resnet152/cnsd05_lrr_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd05_lrr_r152_lr01_bs128_e100/resnet152/cnsd05_lrr_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd05_lrr_r152_lr01_bs128_e100/resnet152/cnsd05_lrr_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd05_lrr_r152_lr01_bs128_e100/resnet152/cnsd05_lrr_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e100/resnet152/cnsd025_ld_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e100/resnet152/cnsd025_ld_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e100/resnet152/cnsd025_ld_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e100/resnet152/cnsd025_ld_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e100/resnet152/cnsd025_ld_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e100/resnet152/cnsd025_ld_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e100/resnet152/cnsd025_ldr_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e100/resnet152/cnsd025_ldr_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e100/resnet152/cnsd025_ldr_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e100/resnet152/cnsd025_ldr_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e100/resnet152/cnsd025_ldr_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e100/resnet152/cnsd025_ldr_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e100/resnet152/cnsd025_li_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e100/resnet152/cnsd025_li_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e100/resnet152/cnsd025_li_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e100/resnet152/cnsd025_li_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e100/resnet152/cnsd025_li_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e100/resnet152/cnsd025_li_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e100/resnet152/cnsd025_lir_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e100/resnet152/cnsd025_lir_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e100/resnet152/cnsd025_lir_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e100/resnet152/cnsd025_lir_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e100/resnet152/cnsd025_lir_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e100/resnet152/cnsd025_lir_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e100/resnet152/cnsd025_lrr_r152_lr01_bs128_e100/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e100/resnet152/cnsd025_lrr_r152_lr01_bs128_e100/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e100/resnet152/cnsd025_lrr_r152_lr01_bs128_e100/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e100/resnet152/cnsd025_lrr_r152_lr01_bs128_e100/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e100/resnet152/cnsd025_lrr_r152_lr01_bs128_e100/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e100/resnet152/cnsd025_lrr_r152_lr01_bs128_e100/certify_sigma1.0_test",
+
+
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e800/resnet152/cnsd025_ld_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e800/resnet152/cnsd025_ld_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e800/resnet152/cnsd025_ld_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e800/resnet152/cnsd025_ld_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e800/resnet152/cnsd025_ld_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_ld_r152_lr01_bs128_e800/resnet152/cnsd025_ld_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e800/resnet152/cnsd025_ldr_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e800/resnet152/cnsd025_ldr_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e800/resnet152/cnsd025_ldr_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e800/resnet152/cnsd025_ldr_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e800/resnet152/cnsd025_ldr_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_ldr_r152_lr01_bs128_e800/resnet152/cnsd025_ldr_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e800/resnet152/cnsd025_li_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e800/resnet152/cnsd025_li_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e800/resnet152/cnsd025_li_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e800/resnet152/cnsd025_li_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e800/resnet152/cnsd025_li_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_li_r152_lr01_bs128_e800/resnet152/cnsd025_li_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e800/resnet152/cnsd025_lir_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e800/resnet152/cnsd025_lir_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e800/resnet152/cnsd025_lir_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e800/resnet152/cnsd025_lir_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e800/resnet152/cnsd025_lir_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_lir_r152_lr01_bs128_e800/resnet152/cnsd025_lir_r152_lr01_bs128_e800/certify_sigma1.0_test",
+
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma0.25_train",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma0.5_train",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma1.0_train",
+
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma0.25_test",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma0.5_test",
+        # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma1.0_test", 
+
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/baseline_r152_n025_lr01_e100_multi_ctf_test", "baseline_r152_n025_lr01_e100_multi_ctf_test", 3.0, [
+        "../amlt/smoothing/analysis/plots/baseline_train_ctf_same_noise_test", "baseline_train_ctf_same_noise_test", 3.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     
