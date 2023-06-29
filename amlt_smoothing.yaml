@@ -238,6 +238,18 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e1.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr01_e2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e2.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr01_e3
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e3.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr01_e4
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e4.json
 # - name: tsf_r152_imgn32n025lr1e100_n0lr01_e5
 #   sku: G8-V100
 #   command:
@@ -254,23 +266,95 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e100.json
-- name: tsf_r152_imgn32n025lr1e100_n0lr001_e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e1.json
-- name: tsf_r152_imgn32n025lr1e100_n0lr001_e5
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e5.json
-- name: tsf_r152_imgn32n025lr1e100_n0lr001_e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e10.json
-- name: tsf_r152_imgn32n025lr1e100_n0lr001_e50
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e50.json
-- name: tsf_r152_imgn32n025lr1e100_n0lr001_e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e100.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e1.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e2.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e3
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e3.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e4
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e4.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e5.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e10.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e50.json
+# - name: tsf_r152_imgn32n025lr1e100_n0lr001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e100.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e1.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e2.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e3
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e3.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e4
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e4.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e5.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e10.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam1e_3_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam1e_3_e50.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e1.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e2.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e3
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e3.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e4
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e4.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e5.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e10.json
+# - name: vit_32n_rs224_in21k_ft_cf10_adam5e_4_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_adam5e_4_e50.json
+# - name: vit_32n_rs224_in21k_ft_cf10_ctf
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_ctf.json

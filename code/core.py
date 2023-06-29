@@ -140,8 +140,9 @@ class Smooth(object):
                 else:
                     batch = batch + torch.randn_like(batch, device='cuda') * self.sigma
                 if hasattr(self.args, 'resize_after_noise'):
-                    # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
                     batch = torch.nn.functional.interpolate(batch, self.args.resize_after_noise, mode='bicubic')
+                elif self.resize_after_noise:
+                    batch = torch.nn.functional.interpolate(batch, self.resize_after_noise, mode='bicubic')                
 
                 # expand (x + gnoise) with k fnoise 
                 if self.favg:
