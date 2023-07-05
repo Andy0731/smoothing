@@ -35,6 +35,27 @@ def accuracy(output, target, topk=(1,)):
             correct_k = correct[:k].reshape(-1).float().sum(0, keepdim=True)
             res.append(correct_k.mul_(100.0 / batch_size))
         return res
+    
+# compute the accuracy for each class
+def accuracy_per_class(output, target, num_classes=10):
+    with torch.no_grad():
+        # output = output.cpu()
+        # target = target.cpu()
+        _, pred = output.topk(1, 1, True, True)
+        pred = pred.t()
+        correct = pred.eq(target.view(1, -1))
+        res = []
+        cls_num = []
+        for i in range(num_classes):
+            correct_k = correct[:, target == i].reshape(-1).float().sum(0, keepdim=True)
+            # append 0 if there is no sample in this class
+            cls_num.append((target == i).sum().item())
+            if (target == i).sum() == 0:
+                res.append(0.0)
+                continue
+            # divide by the number of samples in each class
+            res.append((correct_k.mul_(100.0 / (target == i).sum())).item())
+        return res, cls_num, pred
 
 def init_logfile(filename: str, text: str):
     f = open(filename, 'w')

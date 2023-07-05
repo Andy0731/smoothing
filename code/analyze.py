@@ -570,7 +570,7 @@ if __name__ == "__main__":
 
         # *******************************
         # # r152 pretrain on imagenet32 with noise_sd 0.25, vary epochs, finetune on cifar10 coslr001 bs128 n025 e100, train
-        # "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
+        "amlt/smoothing/ft_r152_imgn32n025e100_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e100_coslr001_bs128_n025_e100/certify_sigma0.25_train",
         # "amlt/smoothing/ft_r152_imgn32n025e200_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e200_coslr001_bs128_n025_e100/certify_sigma0.25_train",
         # "amlt/smoothing/ft_r152_imgn32n025e400_coslr001_bs128_n025_e100/finetune/r152_imgn32n025e400_coslr001_bs128_n025_e100/certify_sigma0.25_train",
 
@@ -2052,10 +2052,55 @@ if __name__ == "__main__":
         # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma0.5_test",
         # "amlt/smoothing/cnsd025_lrr_r152_lr01_bs128_e800/resnet152/cnsd025_lrr_r152_lr01_bs128_e800/certify_sigma1.0_test", 
 
+
+
+        # transferability, pretrain on iamgenet32 with n025 lr1 e100, finetune on CIFAR10 without noise
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e1/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e1/certify_sigma0.25_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e2/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e2/certify_sigma0.25_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e3/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e3/certify_sigma0.25_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e4/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e4/certify_sigma0.25_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e5/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e5/certify_sigma0.25_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e10/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e10/certify_sigma0.25_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e50/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e50/certify_sigma0.25_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e100/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e100/certify_sigma0.25_train",
+
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e1/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e1/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e2/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e2/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e3/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e3/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e4/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e4/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e5/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e5/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e10/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e10/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e50/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e50/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e100/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e100/certify_sigma0.25_test",
+
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e1/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e1/certify_sigma0.25_train",
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e2/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e2/certify_sigma0.25_train",
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e3/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e3/certify_sigma0.25_train",
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e4/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e4/certify_sigma0.25_train",
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e5/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e5/certify_sigma0.25_train",
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e10/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e10/certify_sigma0.25_train",
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e50/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e50/certify_sigma0.25_train",
+        "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e100/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e100/certify_sigma0.25_train",
+
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e1/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e1/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e2/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e2/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e3/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e3/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e4/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e4/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e5/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e5/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e10/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e10/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e50/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e50/certify_sigma0.25_test",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr001_e100/finetune/tsf_r152_imgn32n025lr1e100_n0lr001_e100/certify_sigma0.25_test",
+
+
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e1/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e1/certify_sigma0.5_train",
+        # "amlt/smoothing/tsf_r152_imgn32n025lr1e100_n0lr01_e1/finetune/tsf_r152_imgn32n025lr1e100_n0lr01_e1/certify_sigma1.0_train",
+
+
+
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/baseline_train_ctf_same_noise_test", "baseline_train_ctf_same_noise_test", 3.0, [
+        "../amlt/smoothing/analysis/plots/tsf_r152_imgn32n025lr1e100_n0lr001_train", "tsf_r152_imgn32n025lr1e100_n0lr001_train", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     

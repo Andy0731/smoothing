@@ -12,8 +12,8 @@ target:
   # name: msrresrchvc
 
   service: aml
-  name: V100-32G
-  # name: V100-32G-sc  
+  # name: V100-32G
+  name: V100-32G-sc  
   # name: A100-80G
   # name: ussc40rscl
 
@@ -358,3 +358,79 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/hug/vit_32n_rs224_in21k_ft_cf10_ctf.json
+# - name: cc0189_r152_n025_lr01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc0189_r152_n025_lr01_e100.json
+# - name: cc56789_r152_n1_lr01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n1_lr01_e100.json
+# - name: cc56789_r152_n05_lr01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n05_lr01_e100.json
+# - name: cc56789_r152_n025_lr01_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr01_e50.json
+# - name: cc56789_r152_n025_lr1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr1_e100.json
+# - name: cc56789_r152_n025_lr01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr01_e100.json
+# - name: cc56789_r152_n025_lr001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr001_e100.json
+# - name: cc0189_r152_n025_lr01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc0189_r152_n025_lr01_e100_test_mixcn.json
+# - name: cc56789_r152_n1_lr01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n1_lr01_e100_test_mixcn.json
+# - name: cc56789_r152_n05_lr01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n05_lr01_e100_test_mixcn.json
+# - name: cc56789_r152_n025_lr01_e50_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr01_e50_test_mixcn.json
+# - name: cc56789_r152_n025_lr1_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr1_e100_test_mixcn.json
+# - name: cc56789_r152_n025_lr01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr01_e100_test_mixcn.json
+# - name: cc56789_r152_n025_lr001_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_r152_n025_lr001_e100_test_mixcn.json
+- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e1
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e1.json
+- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e5
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e5.json
+- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e10
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e10.json
+- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e50
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e50.json
+- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e100.json

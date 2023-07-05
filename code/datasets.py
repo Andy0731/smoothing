@@ -185,6 +185,8 @@ class NormalizeLayer(torch.nn.Module):
         super(NormalizeLayer, self).__init__()
         self.means = torch.tensor(means).cuda()
         self.sds = torch.tensor(sds).cuda()
+        self.means.requires_grad_(requires_grad=False)
+        self.sds.requires_grad_(requires_grad=False)
 
     def forward(self, input: torch.tensor):
         (batch_size, num_channels, height, width) = input.shape
