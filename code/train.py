@@ -6,7 +6,8 @@ import argparse
 import json
 import os
 import torch
-from torch.nn import CrossEntropyLoss
+from torch.nn import CrossEntropyLoss, KLDivLoss
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from datasets import get_dataset
 from architectures import get_architecture
@@ -25,6 +26,7 @@ from common import get_args
 from archs.hug_vit import get_hug_model, get_hug_vit
 from DRM import DiffusionModel, get_timestep
 import numpy as np
+import torchvision
 
 
 
@@ -210,9 +212,18 @@ def main(args):
     start_epoch = args.start_epoch if hasattr(args, 'start_epoch') else 0
     for epoch in range(start_epoch, args.epochs):
         train_loader.sampler.set_epoch(epoch)
-        train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model)
-        if has_testset and (epoch % args.test_freq == 0):
-            test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd, diffusion_model=diffusion_model)
+        if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+            train_loss, train_acc, kl_div, clean_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model, writer=writer)
+        else:
+            train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model)
+        if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
+            test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
+            if hasattr(args, 'test_mode'):
+                for mode in args.test_mode:
+                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
+            else:
+                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
+    
             # reduce over all gpus
             test_acc_local = torch.tensor([test_acc]).cuda()
             dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -227,7 +238,11 @@ def main(args):
             writer.add_scalar('noise', args.cur_noise, epoch)
             if has_testset and (epoch % args.test_freq == 0):
                 writer.add_scalar('test_loss', test_loss, epoch)
-                writer.add_scalar('test_acc', test_acc, epoch)       
+                writer.add_scalar('test_acc', test_acc, epoch)
+            if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+                writer.add_scalar('kl_div', kl_div, epoch)
+                writer.add_scalar('clean_loss', clean_loss, epoch)
+       
 
             # ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
             ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
@@ -244,7 +259,7 @@ def main(args):
                 print("OSError when saving checkpoint in epoch ", epoch)
     
     if has_testset:
-        test_loss, test_acc = test(args, test_loader, model, criterion, args.noise_sd, diffusion_model=diffusion_model)
+        test_loss, test_acc = test(args, test_loader, model, criterion, test_noise_sd, diffusion_model=diffusion_model)
         test_acc_local = torch.tensor([test_acc]).cuda()
         print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
         dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -314,7 +329,16 @@ def certify_plot(args, model, certify_loader, split, writer, diffusion_model=Non
 #         cudnn.benchmark = True
     
     
-def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float, scaler=None, diffusion_model=None):
+def train(args: AttrDict, 
+          loader: DataLoader, 
+          model: torch.nn.Module, 
+          criterion, 
+          optimizer: Optimizer, 
+          epoch: int, 
+          noise_sd: float, 
+          scaler=None, 
+          diffusion_model=None,
+          writer=None):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -322,7 +346,7 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
     top5 = AverageMeter()
     end = time.time()
     # use AverageMeter to record the accuracy for each class
-    if hasattr(args, 'clean_class'):
+    if hasattr(args, 'acc_per_class') and args.acc_per_class:
         class_acc = [AverageMeter() for _ in range(10)]
 
     # switch to train mode
@@ -337,14 +361,20 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         optimizer.zero_grad()
 
         #print weights of the last layer
-        print('conv1 weight', model.module[1].conv1.weight[0,0,:,:])
-        print('fc weight', model.module[1].linear.weight)
+        # print('conv1 weight', model.module[1].conv1.weight[0,0,:,:])
+        # print('fc weight', model.module[1].linear.weight)
         if args.debug and i > 0:
             break
 
         inputs = inputs.cuda()
         targets = targets.cuda()
         args.cur_noise = noise_sd
+        print('targets from data ', targets)
+
+        # log the input images of the first batch using tensorboard writer
+        if writer is not None and i == 0:
+            img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+            writer.add_image('input_images', img_grid, epoch)
 
         if not args.natural_train:
             if args.clean_image:
@@ -367,16 +397,35 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
             else:
                 if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,):
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
+                elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+                    clean_classes = args.clean_class.split(',')
+                    clean_classes = [int(x) if x else None for x in clean_classes]
+                    targets_np = targets.cpu().numpy()
+                    noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
+                    noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
+                    noise_idx = torch.nonzero(noise_mask).squeeze()
+                    noise_inputs = inputs[noise_idx].clone().detach()
+                    # print('noise_idx', noise_idx, ' noise_inputs', noise_inputs.shape)
+                    # if args.global_rank == 0 and i == 0:
+                    #     print('targets', targets)
+                    #     print('noise_idx', noise_idx)
+                    #     print('before, inputs', inputs[:,0,16,16])
+                    #     print('before, noise_inputs', noise_inputs[:,0,16,16])
+                    noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
+                    # if args.global_rank == 0 and i == 0:
+                    #     print('after, inputs', inputs[:,0,16,16])
+                    #     print('after, noise_inputs', noise_inputs[:,0,16,16])
+
+                    # log the input images of the first batch using tensorboard writer
+                    if writer is not None and i == 0:
+                        img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+                        writer.add_image('input_images_after_noise_mask', img_grid, epoch)
+
                 elif hasattr(args, 'clean_class'):
                     clean_classes = args.clean_class.split(',')
-                    # list of str to list of int
                     clean_classes = [int(x) for x in clean_classes]
-                    # print('clean_classes: ', clean_classes)
-                    # tensor to numpy
                     targets_np = targets.cpu().numpy()
-                    # print('targets_np: ', targets_np)
                     noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
-                    # print('noise_mask: ', noise_mask)
                     noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_mask.reshape(-1,1,1,1)
                 else:
@@ -402,12 +451,30 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
             if hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
                 outputs = model(inputs, noise_sd)
+            if hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+                outputs = model(inputs)
+                # log the input images of the first batch using tensorboard writer
+                if writer is not None and i == 0:
+                    img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+                    writer.add_image('input_images_feed_to_model', img_grid, epoch)
+                noise_outputs = model(noise_inputs)
             else:
                 outputs = model(inputs)
+
             if 'hug' in args.outdir or 'diffusion' in args.outdir:
                 outputs = outputs.logits
             if hasattr(args, 'mixup') and args.mixup:
                 loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+            elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+                clean_loss = criterion(outputs, targets)
+                print('targets cal loss ', targets)
+                if hasattr(args, 'no_kl_loss') and args.no_kl_loss:
+                    kl_div = torch.tensor(0.0).to(clean_loss.device)
+                    loss = clean_loss + args.kl_weight * kl_div
+                else:
+                # get the kl divergence between the noisy outputs and clean outputs with noise_idx
+                    kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(noise_outputs, dim=1), F.softmax(outputs[noise_idx], dim=1))
+                    loss = clean_loss + args.kl_weight * kl_div
             else:
                 loss = criterion(outputs, targets)
 
@@ -417,18 +484,12 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         top1.update(acc1.item(), inputs.size(0))
         top5.update(acc5.item(), inputs.size(0))
 
-        if hasattr(args, 'clean_class'):
+        if hasattr(args, 'acc_per_class') and args.acc_per_class:
             acc_cls, num_cls, pred = accuracy_per_class(outputs, targets, num_classes=10)
-            # print('targets: ', targets)
-            # print('outputs top1: ', outputs.topk(1, dim=1)[1].squeeze())
-            # print('outputs: ', outputs)
-            # print('acc1: ', acc1)
-            # print('acc_cls: ', acc_cls)
             for cls_ in range(len(acc_cls)):
                 if num_cls[cls_] == 0:
                     continue
                 class_acc[cls_].update(acc_cls[cls_], num_cls[cls_])
-                # print('class ', i, ' acc: ', class_acc[i].avg)
 
 
         # compute gradient and do SGD step
@@ -445,27 +506,31 @@ def train(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion,
         batch_time.update(time.time() - end)
         end = time.time()
 
-        if i % args.print_freq == 0:
-            print('Epoch: [{0}][{1}/{2}]\t'
-                  'lr: {lr:.5f}\t'
-                  'GPU: {gpu}\t'
-                #   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                #   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                  'Noise: {noise:.3f}\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                  'Acc@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                  'Acc@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                epoch, i, len(loader), batch_time=batch_time,
-                data_time=data_time, loss=losses, top1=top1, top5=top5, 
-                gpu=args.global_rank, lr=optimizer.param_groups[0]['lr'], noise=args.cur_noise))
-            if hasattr(args, 'clean_class'):
-                for cls_ in range(len(class_acc)):
-                    print('class ', cls_, ' acc: ', class_acc[cls_].avg)
+    if args.global_rank == 0:
+        print('Epoch: [{0}][{1}/{2}]\t'
+                'lr: {lr:.5f}\t'
+                'GPU: {gpu}\t'
+            #   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+            #   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
+                'Noise: {noise:.3f}\t'
+                'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                'Acc@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+                'Acc@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+            epoch, i+1, len(loader), batch_time=batch_time,
+            data_time=data_time, loss=losses, top1=top1, top5=top5, 
+            gpu=args.global_rank, lr=optimizer.param_groups[0]['lr'], noise=args.cur_noise))
+        if hasattr(args, 'acc_per_class') and args.acc_per_class:
+            for cls_ in range(len(class_acc)):
+                print('class ', cls_, ' acc: ', class_acc[cls_].avg)
+        if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+            print('kl_div: ', kl_div.item(), ' clean_loss: ', clean_loss.item(), ' loss: ', loss.item())
 
+    if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+        return (losses.avg, top1.avg, kl_div.item(), clean_loss.item())
     return (losses.avg, top1.avg)
 
 
-def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, noise_sd: float, diffusion_model=None):
+def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd: float, diffusion_model=None, test_mode='all_noise'):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -474,7 +539,7 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
     end = time.time()
 
     # use AverageMeter to record the accuracy for each class
-    if hasattr(args, 'clean_class'):
+    if hasattr(args, 'acc_per_class') and args.acc_per_class:
         class_acc = [AverageMeter() for _ in range(10)]
 
     # switch to eval mode
@@ -493,20 +558,27 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
 
             if hasattr(args, 'diffusion') and args.diffusion:
                 inputs = diffusion_model(inputs, args.t)
-            elif hasattr(args, 'clean_class'):
+            elif hasattr(args, 'clean_class') and test_mode == 'mixcn':
                 clean_classes = args.clean_class.split(',')
-                # list of str to list of int
-                clean_classes = [int(x) for x in clean_classes]
-                # print('clean_classes: ', clean_classes)
-                # tensor to numpy
+                clean_classes = [int(x) if x else None for x in clean_classes]
                 targets_np = targets.cpu().numpy()
-                # print('targets_np: ', targets_np)
                 noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
-                # print('noise_mask: ', noise_mask)
                 noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
+                # if args.global_rank == 0 and i == 0:
+                #     print('test on mixcn')
+                #     print('targets', targets)
+                #     print('noise_mask', noise_mask)
+                #     print('before, inputs', inputs[:,0,16,16])
                 inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_mask.reshape(-1,1,1,1)
-            else:
+                # if args.global_rank == 0 and i == 0:
+                #     print('after, inputs', inputs[:,0,16,16])
+            elif test_mode == 'all_noise':
+                # if args.global_rank == 0 and i == 0:
+                #     print('test on all noise')
+                #     print('before, inputs', inputs[:,0,16,16])
                 inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+                # if args.global_rank == 0 and i == 0:
+                #     print('after, inputs', inputs[:,0,16,16])
             if hasattr(args, 'resize_after_noise'):
                 # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
                 inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
@@ -536,7 +608,7 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             batch_time.update(time.time() - end)
             end = time.time()
 
-            if hasattr(args, 'clean_class'):
+            if hasattr(args, 'acc_per_class') and args.acc_per_class:
                 acc_cls, num_cls, pred = accuracy_per_class(outputs, targets, num_classes=10)
                 # print('target ', targets)
                 # print('pred   ', pred)
@@ -547,20 +619,18 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
                     class_acc[cls_].update(acc_cls[cls_], num_cls[cls_])
                     # print('class ', cls_, ' acc: ', class_acc[cls_].avg)
 
-            if i % args.print_freq == 0:
-                print('Test: [{0}/{1}]\t'
-                      'GPU {gpu}\t'
-                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                      'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                      'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                      'Acc@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                      'Acc@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                    i, len(loader), batch_time=batch_time,
-                    data_time=data_time, loss=losses, top1=top1, top5=top5, gpu=args.global_rank))
-                
-                if hasattr(args, 'clean_class'):
-                    for cls_ in range(len(class_acc)):
-                        print('class ', cls_, ' acc: ', class_acc[cls_].avg)
+        if args.global_rank == 0:
+            print('Test: [{epoch}]\t'
+                    '{test_mode}\t'
+                    'GPU {gpu}\t'
+                    'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                    'Acc@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+                    'Acc@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+                epoch=epoch, loss=losses, top1=top1, top5=top5, gpu=args.global_rank, test_mode=test_mode))
+            
+            if hasattr(args, 'acc_per_class') and args.acc_per_class:
+                for cls_ in range(len(class_acc)):
+                    print('class ', cls_, ' acc: ', class_acc[cls_].avg)
 
         return (losses.avg, top1.avg)
 
@@ -596,11 +666,13 @@ if __name__ == "__main__":
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(16, args.batch)
-        args.epochs = 10
+        args.epochs = 2
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128
         args.certify_bs = 128
+
+    args.acc_per_class = 1 if not hasattr(args, 'acc_per_class') else args.acc_per_class
     
     args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))

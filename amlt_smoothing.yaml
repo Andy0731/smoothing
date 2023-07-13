@@ -414,23 +414,271 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/cc56789_r152_n025_lr001_e100_test_mixcn.json
-- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e1.json
-- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e5
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e5.json
-- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e10.json
-- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e50
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e50.json
-- name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e100.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e1.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e5.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e10.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e50.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr001_e100.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr01_e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr01_e1.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr01_e5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr01_e5.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr01_e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr01_e10.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr01_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr01_e50.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr01_e100.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e1.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e5.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e10.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e50.json
+# - name: tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/tsf_tln_r152_imgn32n025lr1e100_n0lr0001_e100.json
+# - name: cc_scr_r152_n025_lr01_kl01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr01_kl01_e100_test_mixcn.json
+# - name: cc_scr_r152_n025_lr01_kl1_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr01_kl1_e100_test_mixcn.json
+# - name: cc_scr_r152_n025_lr01_kl10_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr01_kl10_e100_test_mixcn.json
+# - name: cc_scr_r152_n025_lr01_kl100_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr01_kl100_e100_test_mixcn.json
+# - name: cc_scr_r152_n025_lr001_kl01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr001_kl01_e100_test_mixcn.json
+# - name: cc_scr_r152_n025_lr001_kl1_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr001_kl1_e100_test_mixcn.json
+# - name: cc_scr_r152_n025_lr001_kl10_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr001_kl10_e100_test_mixcn.json
+# - name: cc_scr_r152_n025_lr001_kl100_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr001_kl100_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr01_kl01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr01_kl01_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr01_kl1_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr01_kl1_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr01_kl10_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr01_kl10_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr01_kl100_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr01_kl100_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr001_kl01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr001_kl01_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr001_kl1_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr001_kl1_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr001_kl10_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr001_kl10_e100_test_mixcn.json
+# - name: cc_scr_in32n025_r152_n025_lr001_kl100_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cc_scr_in32n025_r152_n025_lr001_kl100_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr01_kl01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl01_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr01_kl1_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl1_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr01_kl10_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl10_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr01_kl100_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl100_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr001_kl01_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr001_kl01_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr001_kl1_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr001_kl1_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr001_kl10_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr001_kl10_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr001_kl100_e100_test_mixcn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr001_kl100_e100_test_mixcn.json
+# - name: cc56789_scr_r152_n025_lr01_kl1_e100_test_mixcn_debug
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl1_e100_test_mixcn_debug.json
+# - name: cc56789_scr_r152_n025_lr01_kl10_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl10_e100_test_mixcn_alln_allc.json
+# - name: cc56789_scr_r152_n025_lr01_kl0_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_mixcn_alln_allc.json
+# - name: cc56789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc56789_scr_r152_n025_lr01_kl01_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl01_e100_test_mixcn_alln_allc.json
+# - name: cc56789_scr_r152_n025_lr01_kl001_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl001_e100_test_mixcn_alln_allc.json
+# - name: cc56789_scr_r152_n025_lr01_kl0001_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0001_e100_test_mixcn_alln_allc.json
+# - name: cc56789_scr_r152_n025_lr01_kl00001_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl00001_e100_test_mixcn_alln_allc.json
+# - name: cc9_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc9_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc89_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc89_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc6789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc6789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc3456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc3456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc23456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc23456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc123456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc123456789_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc0189_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc0189_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: cc_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc_scr_r152_n025_lr01_kl1_e100_test_mixcn_alln_allc.json
+# - name: in32_cc_scr_r152_n025_lr1_kl1_e100_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_cc_scr_r152_n025_lr1_kl1_e100_mixcn_alln_allc.json
+# - name: in32_cc_scr_r152_n025_lr1_kl01_e100_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_cc_scr_r152_n025_lr1_kl01_e100_mixcn_alln_allc.json
+# - name: in32_cc_scr_r152_n025_lr1_kl10_e100_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_cc_scr_r152_n025_lr1_kl10_e100_mixcn_alln_allc.json
+# - name: in32_cc_scr_r152_n025_lr01_kl1_e100_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_cc_scr_r152_n025_lr01_kl1_e100_mixcn_alln_allc.json
+# - name: in32_cc_scr_r152_n025_lr01_kl01_e100_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_cc_scr_r152_n025_lr01_kl01_e100_mixcn_alln_allc.json
+# - name: in32_cc_scr_r152_n025_lr01_kl10_e100_mixcn_alln_allc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_cc_scr_r152_n025_lr01_kl10_e100_mixcn_alln_allc.json
+# - name: cc56789_scr_r152_n025_lr01_kl0_e100_test_debug
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_debug.json
+# - name: baseline_r152_n0_lr01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n0_lr01_e100.json
+# - name: baseline_r152_n0_lr01_e100_apc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/baseline_r152_n0_lr01_e100_apc.json
+# - name: cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl.json
