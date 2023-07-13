@@ -86,22 +86,7 @@ def main(args):
                                 num_workers=args.workers, pin_memory=pin_memory)
 
     # build model
-    if 'hug' in args.outdir:
-        model = get_hug_model(args.arch)
-    elif 'diffusion' in args.outdir:
-        model = get_hug_vit(args.arch)
-    elif hasattr(args, 'favg') and args.favg:
-        assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
-        model = get_architecture(args.arch, args.dataset, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num)
-    elif hasattr(args, 'nconv') and args.nconv:
-        assert hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
-        model = get_architecture(args.arch, args.dataset, avgn_num=args.avgn_num)
-    elif hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
-        emb_scl = args.emb_scl if hasattr(args, 'emb_scl') else 1000
-        emb_dim = args.emb_dim if hasattr(args, 'emb_dim') else 32
-        model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)
-    else:
-        model = get_architecture(args.arch, args.dataset)
+    model = get_architecture(args.arch, args.dataset)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
     if args.ddp:
@@ -112,22 +97,12 @@ def main(args):
 
     # build diffusion model
     diffusion_model = None
-    if hasattr(args, 'diffusion') and args.diffusion:
-        diffusion_model_path = os.path.join(args.data, 'diffusion', args.diffusion_model)
-        diffusion_model = DiffusionModel(diffusion_model_path)
-        args.t = get_timestep(sigma=args.sigma, model=diffusion_model)
 
     # loss function
     criterion = CrossEntropyLoss().cuda()
 
-    # optimizer
-    if 'vit' in args.arch:
-        if hasattr(args, 'optim') and args.optim == 'adam':
-            optimizer = Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08)
-        else:
-            optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay if hasattr(args, 'weight_decay') else 0.01)
     # freeze all layers except the train_layer
-    elif hasattr(args, 'train_layer') and args.train_layer == 'linear':
+    if hasattr(args, 'train_layer') and args.train_layer == 'linear':
         for name, param in model.named_parameters():
             if not 'linear' in name:
                 param.requires_grad = False
@@ -213,16 +188,17 @@ def main(args):
     for epoch in range(start_epoch, args.epochs):
         train_loader.sampler.set_epoch(epoch)
         if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
-            train_loss, train_acc, kl_div, clean_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model, writer=writer)
+            train_loss, train_acc, kl_div, clean_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, writer=writer)
         else:
-            train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model)
+            train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler)
+        
         if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
             test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
             if hasattr(args, 'test_mode'):
                 for mode in args.test_mode:
-                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
+                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, test_mode=mode)
             else:
-                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
+                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd)
     
             # reduce over all gpus
             test_acc_local = torch.tensor([test_acc]).cuda()
@@ -257,9 +233,11 @@ def main(args):
                 # shutil.copyfile(ckpt_file, ckpt_file_cp)
             except OSError:
                 print("OSError when saving checkpoint in epoch ", epoch)
+
+                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd)
     
     if has_testset:
-        test_loss, test_acc = test(args, test_loader, model, criterion, test_noise_sd, diffusion_model=diffusion_model)
+        test_loss, test_acc = test(args, test_loader, model, criterion, args.epochs, test_noise_sd, diffusion_model=diffusion_model)
         test_acc_local = torch.tensor([test_acc]).cuda()
         print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
         dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -316,19 +294,6 @@ def certify_plot(args, model, certify_loader, split, writer, diffusion_model=Non
         plot_curve(ctf_filename)
 
 
-# def init_seeds(seed=0, cuda_deterministic=True):
-#     random.seed(seed)
-#     np.random.seed(seed)
-#     torch.manual_seed(seed)
-#     # Speed-reproducibility tradeoff https://pytorch.org/docs/stable/notes/randomness.html
-#     if cuda_deterministic:  # slower, more reproducible
-#         cudnn.deterministic = True
-#         cudnn.benchmark = False
-#     else:  # faster, less reproducible
-#         cudnn.deterministic = False
-#         cudnn.benchmark = True
-    
-    
 def train(args: AttrDict, 
           loader: DataLoader, 
           model: torch.nn.Module, 
@@ -360,123 +325,113 @@ def train(args: AttrDict,
 
         optimizer.zero_grad()
 
-        #print weights of the last layer
-        # print('conv1 weight', model.module[1].conv1.weight[0,0,:,:])
-        # print('fc weight', model.module[1].linear.weight)
         if args.debug and i > 0:
             break
 
         inputs = inputs.cuda()
         targets = targets.cuda()
         args.cur_noise = noise_sd
-        print('targets from data ', targets)
+        # print('targets from data ', targets)
 
         # log the input images of the first batch using tensorboard writer
         if writer is not None and i == 0:
             img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
-            writer.add_image('input_images', img_grid, epoch)
+            writer.add_image('input_images', img_grid, epoch)       
 
-        if not args.natural_train:
-            if args.clean_image:
-                inputs_cln = inputs.clone().detach()
-                targets_cln = targets.clone().detach()
+        # augment inputs with noise
+        noise_sd = get_noise(epoch, args, inputs.size(0))
+        if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,)
+            args.cur_noise = noise_sd[0]
+        else: 
+            args.cur_noise = noise_sd
 
-            if hasattr(args, 'mixup') and args.mixup:
-                inputs, targets_a, targets_b, lam = mixup_data(inputs, targets, args.mixup_alpha)                
-
-            # augment inputs with noise
-            noise_sd = get_noise(epoch, args, inputs.size(0))
-            if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,)
-                args.cur_noise = noise_sd[0]
-            else: 
-                args.cur_noise = noise_sd
-
-            if hasattr(args, 'diffusion') and args.diffusion:
-                acc_noise = args.accurate_noise if hasattr(args, 'accurate_noise') else 0
-                inputs = diffusion_model(inputs, args.t, acc_noise, noise_sd)
+        if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,):
+            inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
+        elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+            if hasattr(args, 'debug_sep') and args.debug_sep == 2: # clean 90, noise 10
+                noise_inputs = inputs.clone().detach()
+            elif hasattr(args, 'debug_sep') and (args.debug_sep == 3 or args.debug_sep == 5): # sep3: clean 70, noise 30; sep5: clean 90, noise 10
+                noise_inputs = inputs.clone().detach()
+                noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
+            elif hasattr(args, 'debug_sep') and args.debug_sep == 4: # sep4: clean 18, noise 18
+                noise_inputs = torch.randn_like(inputs, device='cuda') * noise_sd
             else:
-                if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,):
-                    inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
-                elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
-                    clean_classes = args.clean_class.split(',')
-                    clean_classes = [int(x) if x else None for x in clean_classes]
-                    targets_np = targets.cpu().numpy()
-                    noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
-                    noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
-                    noise_idx = torch.nonzero(noise_mask).squeeze()
-                    noise_inputs = inputs[noise_idx].clone().detach()
-                    # print('noise_idx', noise_idx, ' noise_inputs', noise_inputs.shape)
-                    # if args.global_rank == 0 and i == 0:
-                    #     print('targets', targets)
-                    #     print('noise_idx', noise_idx)
-                    #     print('before, inputs', inputs[:,0,16,16])
-                    #     print('before, noise_inputs', noise_inputs[:,0,16,16])
-                    noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
-                    # if args.global_rank == 0 and i == 0:
-                    #     print('after, inputs', inputs[:,0,16,16])
-                    #     print('after, noise_inputs', noise_inputs[:,0,16,16])
+                clean_classes = args.clean_class.split(',')
+                clean_classes = [int(x) if x else None for x in clean_classes]
+                targets_np = targets.cpu().numpy()
+                noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
+                noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
+                noise_idx = torch.nonzero(noise_mask).squeeze()
+                noise_inputs = inputs.clone().detach()[noise_idx]
+                # print('noise_idx', noise_idx, ' noise_inputs', noise_inputs.shape)
+                # if args.global_rank == 0 and i == 0:
+                #     print('targets', targets)
+                #     print('noise_idx', noise_idx)
+                #     print('before, inputs', inputs[:,0,16,16])
+                #     print('before, noise_inputs', noise_inputs[:,0,16,16])
+                # noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
+                noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * args.debug_noise_sd
+                # if args.global_rank == 0 and i == 0:
+                #     print('after, inputs', inputs[:,0,16,16])
+                #     print('after, noise_inputs', noise_inputs[:,0,16,16])
 
-                    # log the input images of the first batch using tensorboard writer
-                    if writer is not None and i == 0:
-                        img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
-                        writer.add_image('input_images_after_noise_mask', img_grid, epoch)
+            # log the input images of the first batch using tensorboard writer
+            if writer is not None and i == 0:
+                img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+                writer.add_image('input_images_after_noise_mask', img_grid, epoch)
+                noise_img_grid = torchvision.utils.make_grid(noise_inputs[:16], nrow=4)
+                writer.add_image('noise_images', noise_img_grid, epoch)
+        elif hasattr(args, 'clean_class'):
+            clean_classes = args.clean_class.split(',')
+            clean_classes = [int(x) for x in clean_classes]
+            targets_np = targets.cpu().numpy()
+            noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
+            noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
+            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_mask.reshape(-1,1,1,1)
+            if writer is not None and i == 0:
+                img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+                writer.add_image('input_images_after_noise_mask', img_grid, epoch)
+        else:
+            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+            if writer is not None and i == 0:
+                img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+                writer.add_image('input_images_after_noise_mask', img_grid, epoch)            
 
-                elif hasattr(args, 'clean_class'):
-                    clean_classes = args.clean_class.split(',')
-                    clean_classes = [int(x) for x in clean_classes]
-                    targets_np = targets.cpu().numpy()
-                    noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
-                    noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
-                    inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_mask.reshape(-1,1,1,1)
-                else:
-                    inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
-            if hasattr(args, 'resize_after_noise'):
-                # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
-                inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
-
-            # expand (x + gnoise) with k fnoise, 
-            if hasattr(args, 'favg') and args.favg:
-                inputs = add_fnoise(inputs, args.fnoise_sd, args.avgn_num) # (b,c,h,w) -> (bn,c,h,w)
-            elif hasattr(args, 'nconv') and args.nconv:
-                inputs = add_fnoise_chn(inputs, args.fnoise_sd, args.avgn_num) # (b,3,h,w) -> (b,n3,h,w)
-            elif hasattr(args, 'fexp') and args.fexp:
-                assert hasattr(args, 'exp_noise') and hasattr(args, 'exp_num')
-                inputs, targets = exp_fnoise(inputs, targets, args.exp_noise, args.exp_num)
-
-            if args.clean_image:
-                inputs = torch.cat((inputs_cln, inputs), dim=0)
-                targets = torch.cat((targets_cln, targets), dim=0)
+        if hasattr(args, 'resize_after_noise'):
+            inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
 
         # compute output
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
-            if hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
-                outputs = model(inputs, noise_sd)
             if hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
                 outputs = model(inputs)
+                if hasattr(args, 'debug_sep') and args.debug_sep == 5:
+                    pass
+                else:
+                    noise_outputs = model(noise_inputs)
+                clean_loss = criterion(outputs, targets)
+
+                # print('targets cal loss ', targets)
+                if hasattr(args, 'no_kl_loss') and args.no_kl_loss:
+                    kl_div = torch.tensor(0.0).to(clean_loss.device)
+                else:
+                # get the kl divergence between the noisy outputs and clean outputs with noise_idx
+                    kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(noise_outputs, dim=1), F.softmax(outputs[noise_idx], dim=1))
+                loss = clean_loss + args.kl_weight * kl_div
+
                 # log the input images of the first batch using tensorboard writer
                 if writer is not None and i == 0:
                     img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
                     writer.add_image('input_images_feed_to_model', img_grid, epoch)
-                noise_outputs = model(noise_inputs)
+                    noise_img_grid = torchvision.utils.make_grid(noise_inputs[:16], nrow=4)
+                    writer.add_image('noise_images_feed_to_model', noise_img_grid, epoch)
+    
             else:
                 outputs = model(inputs)
-
-            if 'hug' in args.outdir or 'diffusion' in args.outdir:
-                outputs = outputs.logits
-            if hasattr(args, 'mixup') and args.mixup:
-                loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
-            elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
-                clean_loss = criterion(outputs, targets)
-                print('targets cal loss ', targets)
-                if hasattr(args, 'no_kl_loss') and args.no_kl_loss:
-                    kl_div = torch.tensor(0.0).to(clean_loss.device)
-                    loss = clean_loss + args.kl_weight * kl_div
-                else:
-                # get the kl divergence between the noisy outputs and clean outputs with noise_idx
-                    kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(noise_outputs, dim=1), F.softmax(outputs[noise_idx], dim=1))
-                    loss = clean_loss + args.kl_weight * kl_div
-            else:
                 loss = criterion(outputs, targets)
+
+                if writer is not None and i == 0:
+                    img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+                    writer.add_image('input_images_feed_to_model', img_grid, epoch)               
 
         # measure accuracy and record loss
         acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
@@ -556,9 +511,7 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
             inputs = inputs.cuda()
             targets = targets.cuda()
 
-            if hasattr(args, 'diffusion') and args.diffusion:
-                inputs = diffusion_model(inputs, args.t)
-            elif hasattr(args, 'clean_class') and test_mode == 'mixcn':
+            if hasattr(args, 'clean_class') and test_mode == 'mixcn':
                 clean_classes = args.clean_class.split(',')
                 clean_classes = [int(x) if x else None for x in clean_classes]
                 targets_np = targets.cpu().numpy()
@@ -579,24 +532,14 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
                 inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
                 # if args.global_rank == 0 and i == 0:
                 #     print('after, inputs', inputs[:,0,16,16])
+            
             if hasattr(args, 'resize_after_noise'):
                 # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
                 inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
 
-            # expand (x + gnoise) with k fnoise, 
-            if hasattr(args, 'favg') and args.favg:
-                inputs = add_fnoise(inputs, args.fnoise_sd, args.avgn_num) # (b,c,h,w) -> (bn,c,h,w)
-            elif hasattr(args, 'nconv') and args.nconv:
-                inputs = add_fnoise_chn(inputs, args.fnoise_sd, args.avgn_num) # (b,3,h,w) -> (b,n3,h,w)
-
             # compute output
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
-                if hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
-                    outputs = model(inputs, noise_sd)
-                else:
-                    outputs = model(inputs)
-                if 'hug' in args.outdir or 'diffusion' in args.outdir:
-                    outputs = outputs.logits
+                outputs = model(inputs)
                 loss = criterion(outputs, targets)
 
             # measure accuracy and record loss            
@@ -610,14 +553,10 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
 
             if hasattr(args, 'acc_per_class') and args.acc_per_class:
                 acc_cls, num_cls, pred = accuracy_per_class(outputs, targets, num_classes=10)
-                # print('target ', targets)
-                # print('pred   ', pred)
-                # print(acc_cls, num_cls)
                 for cls_ in range(len(acc_cls)):
                     if num_cls[cls_] == 0:
                         continue
                     class_acc[cls_].update(acc_cls[cls_], num_cls[cls_])
-                    # print('class ', cls_, ' acc: ', class_acc[cls_].avg)
 
         if args.global_rank == 0:
             print('Test: [{epoch}]\t'
