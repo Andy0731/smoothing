@@ -355,6 +355,8 @@ def train(args: AttrDict,
                 noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
             elif hasattr(args, 'debug_sep') and args.debug_sep == 4: # sep4: clean 18, noise 18
                 noise_inputs = torch.randn_like(inputs, device='cuda') * noise_sd
+            elif hasattr(args, 'debug_sep') and args.debug_sep == 6: # sep6: clean , noise 
+                noise_inputs = torch.randn_like(inputs, device='cuda') * noise_sd
             else:
                 clean_classes = args.clean_class.split(',')
                 clean_classes = [int(x) if x else None for x in clean_classes]
@@ -403,11 +405,18 @@ def train(args: AttrDict,
         # compute output
         with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=args.use_amp):
             if hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
-                outputs = model(inputs)
-                if hasattr(args, 'debug_sep') and args.debug_sep == 5:
-                    pass
-                else:
+                if hasattr(args, 'debug_sep') and args.debug_sep == 6:
                     noise_outputs = model(noise_inputs)
+                    outputs = model(inputs)
+
+                else:
+                    noise_inputs = torch.randn_like(inputs, device='cuda') * noise_sd
+
+                    outputs = model(inputs)
+                    if hasattr(args, 'debug_sep') and args.debug_sep == 5:
+                        pass
+                    else:
+                        noise_outputs = model(noise_inputs)
                 clean_loss = criterion(outputs, targets)
 
                 # print('targets cal loss ', targets)

@@ -710,7 +710,11 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_sep4.json
-- name: cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_sep5
+# - name: cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_sep5
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_sep5.json
+- name: cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_sep6
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_sep5.json
+  - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_sep6.json
