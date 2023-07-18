@@ -682,3 +682,71 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl1_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl01_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl001_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0001_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl00001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl00001_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl10_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl10_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl100_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl100_e100.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_rerun1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_rerun1.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep_rn
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep_rn.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_rerun2
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_rerun2.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep_rerun1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep_rerun1.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_deln
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_deln.json
+# - name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep_c
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_sep_c.json
+- name: cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_grad_n
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/cr_cc56789_scr_r152_n025_lr01_kl0_e100_test_debug_nokl_grad_n.json

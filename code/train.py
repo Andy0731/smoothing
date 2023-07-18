@@ -259,7 +259,7 @@ def main(args):
                 print("OSError when saving checkpoint in epoch ", epoch)
     
     if has_testset:
-        test_loss, test_acc = test(args, test_loader, model, criterion, test_noise_sd, diffusion_model=diffusion_model)
+        test_loss, test_acc = test(args, test_loader, model, criterion, args.epochs, test_noise_sd, diffusion_model=diffusion_model)
         test_acc_local = torch.tensor([test_acc]).cuda()
         print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
         dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -369,7 +369,6 @@ def train(args: AttrDict,
         inputs = inputs.cuda()
         targets = targets.cuda()
         args.cur_noise = noise_sd
-        print('targets from data ', targets)
 
         # log the input images of the first batch using tensorboard writer
         if writer is not None and i == 0:
@@ -398,6 +397,7 @@ def train(args: AttrDict,
                 if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,):
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
                 elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+                    cur_batch_size = inputs.size(0)
                     clean_classes = args.clean_class.split(',')
                     clean_classes = [int(x) if x else None for x in clean_classes]
                     targets_np = targets.cpu().numpy()
@@ -411,14 +411,23 @@ def train(args: AttrDict,
                     #     print('noise_idx', noise_idx)
                     #     print('before, inputs', inputs[:,0,16,16])
                     #     print('before, noise_inputs', noise_inputs[:,0,16,16])
-                    noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
+                    if hasattr(args, 'debug_sep_random_noise') and args.debug_sep_random_noise:
+                        noise_inputs = torch.randn_like(noise_inputs, device='cuda') * noise_sd
+                    elif hasattr(args, 'debug_sep_clean') and args.debug_sep_clean:
+                        pass
+                    else:
+                        noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
                     # if args.global_rank == 0 and i == 0:
                     #     print('after, inputs', inputs[:,0,16,16])
                     #     print('after, noise_inputs', noise_inputs[:,0,16,16])
+                    if hasattr(args, 'debug_sep_cls_rbst') and args.debug_sep_cls_rbst:
+                        pass
+                    else:
+                        inputs = torch.cat([inputs, noise_inputs], dim=0)
 
                     # log the input images of the first batch using tensorboard writer
                     if writer is not None and i == 0:
-                        img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
+                        img_grid = torchvision.utils.make_grid(inputs, nrow=16)
                         writer.add_image('input_images_after_noise_mask', img_grid, epoch)
 
                 elif hasattr(args, 'clean_class'):
@@ -452,12 +461,24 @@ def train(args: AttrDict,
             if hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
                 outputs = model(inputs, noise_sd)
             if hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
-                outputs = model(inputs)
+                mix_outputs = model(inputs)
+                outputs = mix_outputs[:cur_batch_size]
+                if hasattr(args, 'debug_sep_cls_rbst') and args.debug_sep_cls_rbst:
+                    pass
+                else:
+                    noise_outputs = mix_outputs[cur_batch_size:]
+
+                if hasattr(args, 'debug_noise_grad') and args.debug_noise_grad:
+                # disable the gradient of noise_outputs
+                    noise_outputs = noise_outputs.detach()
+
+                if hasattr(args, 'debug_del_noise') and args.debug_del_noise:
+                    del mix_outputs
+
                 # log the input images of the first batch using tensorboard writer
                 if writer is not None and i == 0:
                     img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
                     writer.add_image('input_images_feed_to_model', img_grid, epoch)
-                noise_outputs = model(noise_inputs)
             else:
                 outputs = model(inputs)
 
@@ -467,7 +488,6 @@ def train(args: AttrDict,
                 loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
             elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
                 clean_loss = criterion(outputs, targets)
-                print('targets cal loss ', targets)
                 if hasattr(args, 'no_kl_loss') and args.no_kl_loss:
                     kl_div = torch.tensor(0.0).to(clean_loss.device)
                     loss = clean_loss + args.kl_weight * kl_div
