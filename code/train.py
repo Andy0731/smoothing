@@ -100,8 +100,14 @@ def main(args):
         emb_scl = args.emb_scl if hasattr(args, 'emb_scl') else 1000
         emb_dim = args.emb_dim if hasattr(args, 'emb_dim') else 32
         model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)
+    elif args.arch == 'normal_resnet152_gn':
+        assert hasattr(args, 'groups')
+        model = get_architecture(args.arch, args.dataset, groups=args.groups)
     else:
         model = get_architecture(args.arch, args.dataset)
+
+    print('model: ', model)
+
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
     if args.ddp:
@@ -259,7 +265,7 @@ def main(args):
                 print("OSError when saving checkpoint in epoch ", epoch)
     
     if has_testset:
-        test_loss, test_acc = test(args, test_loader, model, criterion, args.epochs, test_noise_sd, diffusion_model=diffusion_model)
+        test_loss, test_acc = test(args, test_loader, model, criterion, args.epochs, args.noise_sd, diffusion_model=diffusion_model)
         test_acc_local = torch.tensor([test_acc]).cuda()
         print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
         dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -540,8 +546,9 @@ def train(args: AttrDict,
             data_time=data_time, loss=losses, top1=top1, top5=top5, 
             gpu=args.global_rank, lr=optimizer.param_groups[0]['lr'], noise=args.cur_noise))
         if hasattr(args, 'acc_per_class') and args.acc_per_class:
+            print('Acc per class: ')
             for cls_ in range(len(class_acc)):
-                print('class ', cls_, ' acc: ', class_acc[cls_].avg)
+                print('{:.2f}'.format(class_acc[cls_].avg))
         if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
             print('kl_div: ', kl_div.item(), ' clean_loss: ', clean_loss.item(), ' loss: ', loss.item())
 
@@ -649,8 +656,9 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
                 epoch=epoch, loss=losses, top1=top1, top5=top5, gpu=args.global_rank, test_mode=test_mode))
             
             if hasattr(args, 'acc_per_class') and args.acc_per_class:
+                print('Acc per class')
                 for cls_ in range(len(class_acc)):
-                    print('class ', cls_, ' acc: ', class_acc[cls_].avg)
+                    print('{:.2f}'.format(class_acc[cls_].avg))
 
         return (losses.avg, top1.avg)
 

@@ -18,6 +18,8 @@ from archs.normal_resnet_avgn import resnet152avgn as normal_resnet152_avgn
 from archs.normal_resnet_nconv import resnet152nconv as normal_resnet152_nconv
 from archs.normal_resnet_nemb import resnet152nemb as normal_resnet152_nemb, TimestepEmbedSequential
 from archs.normal_resnet_nemb_blk import resnetblkemd152 as normal_resnet152_nembblk
+from archs.normal_resnet_in import resnet152in as normal_resnet152_in
+from archs.normal_resnet_gn import resnet152gn as normal_resnet152_gn
 from archs.vit import vit_b
 
 import torchvision.models as torchvision_models
@@ -32,7 +34,7 @@ ARCHITECTURES = ["resnet50", "cifar_resnet20", "cifar_resnet110",
                 "normal_resnet200", "normal_resnet300", "normal_resnet152wide2"]
 
 
-def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1, nemb_layer: str = None, emb_scl=None, emb_dim=None) -> torch.nn.Module:
+def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1, nemb_layer: str = None, emb_scl=None, emb_dim=None, groups=None) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
     :param arch: the architecture - should be in the ARCHITECTURES list above
@@ -52,6 +54,13 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
         model = resnet_cifar(depth=110, num_classes=10 if 'cifar' in dataset else 1000)
     elif arch == "cifar_resnet1199":
         model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
+    elif arch == "normal_resnet152_gn":
+        if dataset == 'cifar10':
+            model = normal_resnet152_gn(num_classes=10, groups=groups)
+        elif dataset == 'cifar100':
+            model = normal_resnet152_gn(num_classes=100, groups=groups)
+        elif dataset == 'imagenet32':
+            model = normal_resnet152_gn(num_classes=1000, groups=groups)
     elif "normal_" in arch: # conv1 3x3
         if ('cifar' in dataset) or ('ti500k' in dataset):
             if 'avgn' in arch:

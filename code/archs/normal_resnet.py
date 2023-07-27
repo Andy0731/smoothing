@@ -76,6 +76,7 @@ class ResNet(nn.Module):
         widths = [int(w * wm) for w in widths]
 
         self.in_planes = widths[0]
+        self.first_planes = widths[0]
         self.conv1 = nn.Conv2d(3, self.in_planes, kernel_size=3, stride=1,
                                padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(self.in_planes)
