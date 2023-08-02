@@ -85,6 +85,13 @@ def main(args):
             test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
 
+    if hasattr(args, 'extra_kl') and args.extra_kl:
+        assert hasattr(args, 'extra_dataset') and args.ddp and hasattr(args, 'extra_batch') and hasattr(args, 'extra_kl_weight') and hasattr(args, 'extra_noise_sd')
+        extra_data_path = args.data.replace('cifar10', args.extra_dataset) if args.local else args.data.replace('cifar', args.extra_dataset)
+        extra_dataset = get_dataset(args.extra_dataset, 'train', extra_data_path, dataaug, img_size)
+        extra_sampler = torch.utils.data.distributed.DistributedSampler(extra_dataset, shuffle=True)
+        extra_loader = DataLoader(extra_dataset, batch_size=args.extra_batch, num_workers=args.workers, pin_memory=pin_memory, sampler=extra_sampler)
+
     # build model
     if 'hug' in args.outdir:
         model = get_hug_model(args.arch)
@@ -106,7 +113,7 @@ def main(args):
     else:
         model = get_architecture(args.arch, args.dataset)
 
-    print('model: ', model)
+    # print('model: ', model)
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
@@ -218,23 +225,15 @@ def main(args):
     start_epoch = args.start_epoch if hasattr(args, 'start_epoch') else 0
     for epoch in range(start_epoch, args.epochs):
         train_loader.sampler.set_epoch(epoch)
-        if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+
+        if hasattr(args, 'extra_kl') and args.extra_kl:
+            extra_loader.sampler.set_epoch(epoch)
+            train_loss, train_acc, kl_div, clean_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model, writer=writer,
+                                                              extra_loader=extra_loader, extra_kl_weight=args.extra_kl_weight, extra_noise_sd=args.extra_noise_sd)
+        elif hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
             train_loss, train_acc, kl_div, clean_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model, writer=writer)
         else:
             train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model)
-        if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
-            test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
-            if hasattr(args, 'test_mode'):
-                for mode in args.test_mode:
-                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
-            else:
-                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
-    
-            # reduce over all gpus
-            test_acc_local = torch.tensor([test_acc]).cuda()
-            dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
-            test_acc_local /= args.world_size
-            test_acc = test_acc_local
 
         if args.global_rank == 0:
             lr = optimizer.param_groups[0]['lr']
@@ -242,13 +241,36 @@ def main(args):
             writer.add_scalar('train_acc', train_acc, epoch)
             writer.add_scalar('lr', lr, epoch)
             writer.add_scalar('noise', args.cur_noise, epoch)
-            if has_testset and (epoch % args.test_freq == 0):
-                writer.add_scalar('test_loss', test_loss, epoch)
-                writer.add_scalar('test_acc', test_acc, epoch)
-            if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+            if (hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst) or (hasattr(args, 'extra_kl') and args.extra_kl):
                 writer.add_scalar('kl_div', kl_div, epoch)
                 writer.add_scalar('clean_loss', clean_loss, epoch)
-       
+
+
+        if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
+            test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
+            if hasattr(args, 'test_mode'):
+                for mode in args.test_mode:
+                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
+                    # reduce over all gpus
+                    test_acc_local = torch.tensor([test_acc]).cuda()
+                    dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+                    test_acc_local /= args.world_size
+                    test_acc = test_acc_local
+                    # write to tensorboard
+                    if args.global_rank == 0:
+                        writer.add_scalar(mode + '_loss', test_loss, epoch)
+                        writer.add_scalar(mode + '_acc', test_acc, epoch)
+            else:
+                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
+                # reduce over all gpus
+                test_acc_local = torch.tensor([test_acc]).cuda()
+                dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+                test_acc_local /= args.world_size
+                test_acc = test_acc_local
+                # write to tensorboard
+                if args.global_rank == 0:
+                    writer.add_scalar('test_loss', test_loss, epoch)
+                    writer.add_scalar('test_acc', test_acc, epoch)      
 
             # ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
             ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
@@ -264,16 +286,17 @@ def main(args):
             except OSError:
                 print("OSError when saving checkpoint in epoch ", epoch)
     
-    if has_testset:
-        test_loss, test_acc = test(args, test_loader, model, criterion, args.epochs, args.noise_sd, diffusion_model=diffusion_model)
-        test_acc_local = torch.tensor([test_acc]).cuda()
-        print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
-        dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
-        test_acc_local /= args.world_size
-        print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
-        if args.global_rank == 0:        
-            writer.add_scalar('test_loss', test_loss, args.epochs)
-            writer.add_scalar('test_acc', test_acc_local, args.epochs)
+    # if has_testset:
+    #     test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
+    #     test_loss, test_acc = test(args, test_loader, model, criterion, args.epochs, test_noise_sd, diffusion_model=diffusion_model)
+    #     test_acc_local = torch.tensor([test_acc]).cuda()
+    #     print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
+    #     dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+    #     test_acc_local /= args.world_size
+    #     print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
+    #     if args.global_rank == 0:        
+    #         writer.add_scalar('test_loss', test_loss, args.epochs)
+    #         writer.add_scalar('test_acc', test_acc_local, args.epochs)
 
     time_train_end = time.time()
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
@@ -344,7 +367,11 @@ def train(args: AttrDict,
           noise_sd: float, 
           scaler=None, 
           diffusion_model=None,
-          writer=None):
+          writer=None,
+          extra_loader=None,
+          extra_kl_weight=None,
+          extra_noise_sd=None
+          ):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -360,10 +387,26 @@ def train(args: AttrDict,
         
     adjust_learning_rate(optimizer, epoch, args)
 
+    if hasattr(args, 'extra_kl') and args.extra_kl:
+        extra_iter = iter(extra_loader)
+
     for i, (inputs, targets) in enumerate(loader):
         # measure data loading time
         data_time.update(time.time() - end)
 
+        cur_batch_size = inputs.size(0)
+
+        if hasattr(args, 'extra_kl') and args.extra_kl:
+            try:
+                extra_inputs, extra_targets = next(extra_iter)
+            except StopIteration:
+                extra_iter = iter(extra_loader)
+                extra_inputs, extra_targets = next(extra_iter)
+            
+            extra_inputs = extra_inputs.cuda()
+            # extra_targets = extra_targets.cuda()
+            cur_extra_batch_size = extra_inputs.size(0)
+        
         optimizer.zero_grad()
 
         #print weights of the last layer
@@ -378,8 +421,8 @@ def train(args: AttrDict,
 
         # log the input images of the first batch using tensorboard writer
         if writer is not None and i == 0:
-            img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
-            writer.add_image('input_images', img_grid, epoch)
+            img_grid = torchvision.utils.make_grid(inputs, nrow=cur_batch_size//8)
+            writer.add_image('cifar input_images', img_grid, epoch)
 
         if not args.natural_train:
             if args.clean_image:
@@ -403,7 +446,6 @@ def train(args: AttrDict,
                 if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,):
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
                 elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
-                    cur_batch_size = inputs.size(0)
                     clean_classes = args.clean_class.split(',')
                     clean_classes = [int(x) if x else None for x in clean_classes]
                     targets_np = targets.cpu().numpy()
@@ -411,21 +453,12 @@ def train(args: AttrDict,
                     noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
                     noise_idx = torch.nonzero(noise_mask).squeeze()
                     noise_inputs = inputs[noise_idx].clone().detach()
-                    # print('noise_idx', noise_idx, ' noise_inputs', noise_inputs.shape)
-                    # if args.global_rank == 0 and i == 0:
-                    #     print('targets', targets)
-                    #     print('noise_idx', noise_idx)
-                    #     print('before, inputs', inputs[:,0,16,16])
-                    #     print('before, noise_inputs', noise_inputs[:,0,16,16])
                     if hasattr(args, 'debug_sep_random_noise') and args.debug_sep_random_noise:
                         noise_inputs = torch.randn_like(noise_inputs, device='cuda') * noise_sd
                     elif hasattr(args, 'debug_sep_clean') and args.debug_sep_clean:
                         pass
                     else:
                         noise_inputs = noise_inputs + torch.randn_like(noise_inputs, device='cuda') * noise_sd
-                    # if args.global_rank == 0 and i == 0:
-                    #     print('after, inputs', inputs[:,0,16,16])
-                    #     print('after, noise_inputs', noise_inputs[:,0,16,16])
                     if hasattr(args, 'debug_sep_cls_rbst') and args.debug_sep_cls_rbst:
                         pass
                     else:
@@ -443,8 +476,17 @@ def train(args: AttrDict,
                     noise_mask = [0 if x in clean_classes else noise_sd for x in targets_np]
                     noise_mask = torch.from_numpy(np.array(noise_mask)).to(inputs.dtype).to(inputs.device)
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_mask.reshape(-1,1,1,1)
+                
+                elif hasattr(args, 'extra_kl') and args.extra_kl:
+                    extra_noise_inputs = extra_inputs.clone().detach() + torch.randn_like(extra_inputs, device='cuda') * extra_noise_sd
+                    inputs = torch.cat([inputs, extra_inputs, extra_noise_inputs], dim=0)
+                    # log the input images of the first batch using tensorboard writer
+                    if writer is not None and i == 0:
+                        img_grid = torchvision.utils.make_grid(inputs)
+                        writer.add_image('cifar clean + imagenet clean + imagenet noise', img_grid, epoch)
                 else:
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+
             if hasattr(args, 'resize_after_noise'):
                 # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
                 inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
@@ -485,6 +527,12 @@ def train(args: AttrDict,
                 if writer is not None and i == 0:
                     img_grid = torchvision.utils.make_grid(inputs[:16], nrow=4)
                     writer.add_image('input_images_feed_to_model', img_grid, epoch)
+            elif hasattr(args, 'extra_kl') and args.extra_kl:
+                mix_outputs = model(inputs)
+                assert len(mix_outputs) == cur_batch_size + cur_extra_batch_size * 2
+                outputs = mix_outputs[:cur_batch_size]
+                extra_outputs = mix_outputs[cur_batch_size:cur_batch_size+cur_extra_batch_size]
+                extra_noise_outputs = mix_outputs[cur_batch_size+cur_extra_batch_size:]
             else:
                 outputs = model(inputs)
 
@@ -501,6 +549,10 @@ def train(args: AttrDict,
                 # get the kl divergence between the noisy outputs and clean outputs with noise_idx
                     kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(noise_outputs, dim=1), F.softmax(outputs[noise_idx], dim=1))
                     loss = clean_loss + args.kl_weight * kl_div
+            elif hasattr(args, 'extra_kl') and args.extra_kl:
+                clean_loss = criterion(outputs, targets)
+                kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(extra_noise_outputs, dim=1), F.softmax(extra_outputs, dim=1))
+                loss = clean_loss + args.extra_kl_weight * kl_div
             else:
                 loss = criterion(outputs, targets)
 
@@ -549,10 +601,10 @@ def train(args: AttrDict,
             print('Acc per class: ')
             for cls_ in range(len(class_acc)):
                 print('{:.2f}'.format(class_acc[cls_].avg))
-        if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+        if (hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst) or (hasattr(args, 'extra_kl') and args.extra_kl):
             print('kl_div: ', kl_div.item(), ' clean_loss: ', clean_loss.item(), ' loss: ', loss.item())
 
-    if hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
+    if (hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst) or (hasattr(args, 'extra_kl') and args.extra_kl):
         return (losses.avg, top1.avg, kl_div.item(), clean_loss.item())
     return (losses.avg, top1.avg)
 

@@ -858,19 +858,339 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/baseline_r152gn8_n025_lr01_e100.json
-- name: cr_cc56789_scr_r152gn1_n025_lr01_kl0_e100_nokl
+# - name: cr_cc56789_scr_r152gn1_n025_lr01_kl0_e100_nokl
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn1_n025_lr01_kl0_e100_nokl.json
+# - name: cr_cc56789_scr_r152gn2_n025_lr01_kl0_e100_nokl
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn2_n025_lr01_kl0_e100_nokl.json
+# - name: cr_cc56789_scr_r152gn4_n025_lr01_kl0_e100_nokl
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn4_n025_lr01_kl0_e100_nokl.json
+# - name: cr_cc56789_scr_r152gn8_n025_lr01_kl0_e100_nokl
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn8_n025_lr01_kl0_e100_nokl.json
+# - name: cr_cc9_scr_r152gn1_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc9_scr_r152gn1_n025_lr01_kl1_e100.json
+# - name: cr_cc89_scr_r152gn1_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc89_scr_r152gn1_n025_lr01_kl1_e100.json
+# - name: cr_cc789_scr_r152gn1_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc789_scr_r152gn1_n025_lr01_kl1_e100.json
+# - name: cr_cc3456789_scr_r152gn1_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc3456789_scr_r152gn1_n025_lr01_kl1_e100.json
+# - name: cr_cc23456789_scr_r152gn1_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc23456789_scr_r152gn1_n025_lr01_kl1_e100.json
+# - name: cr_cc123456789_scr_r152gn1_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc123456789_scr_r152gn1_n025_lr01_kl1_e100.json
+# - name: cr_cc56789_scr_r152gn1_n025_lr01_kl1_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn1_n025_lr01_kl1_e100.json
+# - name: cr_cc56789_scr_r152gn1_n025_lr01_kl01_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn1_n025_lr01_kl01_e100.json
+# - name: cr_cc56789_scr_r152gn1_n025_lr01_kl001_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn1_n025_lr01_kl001_e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs32kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs32kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs512kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs512kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs32kl01_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs32kl01_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs512kl01_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs512kl01_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs32kl001_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs32kl001_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl001_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl001_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs512kl001_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs512kl001_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs256kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs256kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs256kl01_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs256kl01_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs256kl001_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs256kl001_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs64kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs64kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs32_in32n025bs32kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs32_in32n025bs32kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs32_in32n025bs64kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs32_in32n025bs64kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs32_in32n025bs128kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs32_in32n025bs128kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs32_in32n025bs256kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs32_in32n025bs256kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs64_in32n025bs32kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs64_in32n025bs32kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs64_in32n025bs64kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs64_in32n025bs64kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs64_in32n025bs128kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs64_in32n025bs128kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs64_in32n025bs256kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs64_in32n025bs256kl1_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs32kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs32kl1_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs64kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs64kl1_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl1_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl03_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl03_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl05_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl05_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl07_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl07_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e200.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e400.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr1e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr1e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr001e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr00001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr00001e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr0001e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl003_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl003_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl005_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl005_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl01_lr001e200.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl005_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl005_lr01e200.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr001e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr0001e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr001e200.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr01e200.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl007_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl007_lr001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl005_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl005_lr001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl003_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl003_lr001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl001_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl001_lr001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl01_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl01_lr001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl007_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl007_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl005_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl005_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl003_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl003_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl001_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl001_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl01_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl01_lr01e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl007_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl007_lr0001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl005_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl005_lr0001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl003_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl003_lr0001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl001_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl001_lr0001e100.json
+# - name: exkl_r152_cf10n0bs128_in32n025bs128kl01_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl01_lr0001e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl006_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl006_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl008_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl008_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl009_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl009_lr01e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr0005e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr0005e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr005e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr005e100.json
+# - name: exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr05e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs128kl007_lr05e100.json
+- name: exkl_r152gn1_cf10n0bs8_in32n025bs8kl007_lr01e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn1_n025_lr01_kl0_e100_nokl.json
-- name: cr_cc56789_scr_r152gn2_n025_lr01_kl0_e100_nokl
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs8_in32n025bs8kl007_lr01e100.json
+- name: exkl_r152gn1_cf10n0bs8_in32n025bs32kl007_lr01e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn2_n025_lr01_kl0_e100_nokl.json
-- name: cr_cc56789_scr_r152gn4_n025_lr01_kl0_e100_nokl
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs8_in32n025bs32kl007_lr01e100.json
+- name: exkl_r152gn1_cf10n0bs8_in32n025bs128kl007_lr01e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn4_n025_lr01_kl0_e100_nokl.json
-- name: cr_cc56789_scr_r152gn8_n025_lr01_kl0_e100_nokl
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs8_in32n025bs128kl007_lr01e100.json
+- name: exkl_r152gn1_cf10n0bs32_in32n025bs8kl007_lr01e100
   sku: G8-V100
   command:
-  - python train.py --config configs/resnet152/cr_cc56789_scr_r152gn8_n025_lr01_kl0_e100_nokl.json
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs32_in32n025bs8kl007_lr01e100.json
+- name: exkl_r152gn1_cf10n0bs32_in32n025bs32kl007_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs32_in32n025bs32kl007_lr01e100.json
+- name: exkl_r152gn1_cf10n0bs32_in32n025bs128kl007_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs32_in32n025bs128kl007_lr01e100.json
+- name: exkl_r152gn1_cf10n0bs128_in32n025bs8kl007_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs8kl007_lr01e100.json
+- name: exkl_r152gn1_cf10n0bs128_in32n025bs32kl007_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/resnet152/exkl_r152gn1_cf10n0bs128_in32n025bs32kl007_lr01e100.json
