@@ -1254,3 +1254,51 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/resnet152/exkl_r152_cf10n0bs128_in32n025bs128kl05_lr0001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl01_lr01e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl01_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl01_lr001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl01_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl01_lr0001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl001_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl001_lr01e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl001_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl001_lr001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl001_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl001_lr0001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl0001_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl0001_lr01e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl0001_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl0001_lr001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl0001_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl0001_lr0001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl1_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl1_lr01e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl1_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl1_lr001e100.json
+# - name: exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl1_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/resnet152/exkl_bfc_r152gn1_cf10n0bs128_in32n025bs128kl1_lr0001e100.json

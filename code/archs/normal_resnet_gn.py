@@ -31,7 +31,6 @@ class ResNetGN(ResNet):
         super(ResNetGN, self).__init__(block, num_blocks, num_classes, feat_scale, wm)
         self.bn1 = nn.GroupNorm(groups, self.first_planes, affine=True)
         
-    
     def _make_layer(self, block, planes, num_blocks, stride):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
@@ -39,6 +38,10 @@ class ResNetGN(ResNet):
             layers.append(block(self.in_planes, planes, stride, groups=self.groups))
             self.in_planes = planes * block.expansion
         return SequentialWithArgs(*layers)
+    
+    # def forward(self, x, with_latent=False, fake_relu=False, no_relu=False):
+
+    #     return super(ResNetGN, self).forward(x, with_latent=with_latent, fake_relu=fake_relu, no_relu=no_relu)
     
 
 def ResNet152GN(**kwargs):

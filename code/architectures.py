@@ -21,6 +21,7 @@ from archs.normal_resnet_nemb_blk import resnetblkemd152 as normal_resnet152_nem
 from archs.normal_resnet_in import resnet152in as normal_resnet152_in
 from archs.normal_resnet_gn import resnet152gn as normal_resnet152_gn
 from archs.vit import vit_b
+from datasets import NormalizeLayer
 
 import torchvision.models as torchvision_models
 import torch.nn as nn
@@ -32,6 +33,19 @@ ARCHITECTURES = ["resnet50", "cifar_resnet20", "cifar_resnet110",
                 "normal_resnet18", "normal_resnet18wide", "normal_resnet34", 
                 "normal_resnet50", "normal_resnet101", "normal_resnet152",
                 "normal_resnet200", "normal_resnet300", "normal_resnet152wide2"]
+
+class ArgSequential(torch.nn.Sequential):
+    """
+    A sequential module that passes arg to the children that
+    support it as an extra input.
+    """
+    def forward(self, x, **kwargs):
+        for layer in self:
+            if isinstance(layer, NormalizeLayer):
+                x = layer(x)
+            else:
+                x = layer(x, **kwargs)
+        return x
 
 
 def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1, nemb_layer: str = None, emb_scl=None, emb_dim=None, groups=None) -> torch.nn.Module:
@@ -98,4 +112,5 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
 
     if nemb_layer is not None:
         return TimestepEmbedSequential(normalize_layer, model)
-    return torch.nn.Sequential(normalize_layer, model)
+
+    return ArgSequential(normalize_layer, model)
