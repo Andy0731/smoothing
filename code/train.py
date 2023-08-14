@@ -110,6 +110,9 @@ def main(args):
     elif args.arch == 'normal_resnet152_gn':
         assert hasattr(args, 'groups')
         model = get_architecture(args.arch, args.dataset, groups=args.groups)
+    elif args.arch == 'normal_resnet152_gn_efc':
+        assert hasattr(args, 'groups')
+        model = get_architecture(args.arch, args.dataset,  groups=args.groups, extra_fc_dim=args.extra_fc_dim)
     else:
         model = get_architecture(args.arch, args.dataset)
 
@@ -515,6 +518,12 @@ def train(args: AttrDict,
                     outputs = mix_outputs[:cur_batch_size]
                     extra_outputs = mix_features[cur_batch_size:cur_batch_size+cur_extra_batch_size]
                     extra_noise_outputs = mix_features[cur_batch_size+cur_extra_batch_size:]
+                elif args.arch == 'normal_resnet152_gn_efc':
+                    outputs, extra_mix_outputs = model(inputs, clean_bs=cur_batch_size)
+                    assert len(outputs) == cur_batch_size
+                    assert len(extra_mix_outputs) == cur_extra_batch_size * 2
+                    extra_outputs = extra_mix_outputs[:cur_extra_batch_size]
+                    extra_noise_outputs = extra_mix_outputs[cur_extra_batch_size:]
                 else:
                     mix_outputs = model(inputs)
                     assert len(mix_outputs) == cur_batch_size + cur_extra_batch_size * 2

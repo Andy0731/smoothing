@@ -20,6 +20,7 @@ from archs.normal_resnet_nemb import resnet152nemb as normal_resnet152_nemb, Tim
 from archs.normal_resnet_nemb_blk import resnetblkemd152 as normal_resnet152_nembblk
 from archs.normal_resnet_in import resnet152in as normal_resnet152_in
 from archs.normal_resnet_gn import resnet152gn as normal_resnet152_gn
+from archs.normal_resnet_gn_efc import resnet152gnefc as normal_resnet152_gn_efc
 from archs.vit import vit_b
 from datasets import NormalizeLayer
 
@@ -48,7 +49,15 @@ class ArgSequential(torch.nn.Sequential):
         return x
 
 
-def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: int = 1, nemb_layer: str = None, emb_scl=None, emb_dim=None, groups=None) -> torch.nn.Module:
+def get_architecture(arch: str, 
+                     dataset: str, 
+                     avgn_loc: str = None, 
+                     avgn_num: int = 1, 
+                     nemb_layer: str = None, 
+                     emb_scl=None, 
+                     emb_dim=None, 
+                     groups=None,
+                     extra_fc_dim=None) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
     :param arch: the architecture - should be in the ARCHITECTURES list above
@@ -75,6 +84,13 @@ def get_architecture(arch: str, dataset: str, avgn_loc: str = None, avgn_num: in
             model = normal_resnet152_gn(num_classes=100, groups=groups)
         elif dataset == 'imagenet32':
             model = normal_resnet152_gn(num_classes=1000, groups=groups)
+    elif arch == "normal_resnet152_gn_efc":
+        if dataset == 'cifar10':
+            model = normal_resnet152_gn_efc(num_classes=10, groups=groups, extra_fc_dim=extra_fc_dim)
+        elif dataset == 'cifar100':
+            model = normal_resnet152_gn_efc(num_classes=100, groups=groups, extra_fc_dim=extra_fc_dim)
+        elif dataset == 'imagenet32':
+            model = normal_resnet152_gn_efc(num_classes=1000, groups=groups, extra_fc_dim=extra_fc_dim)        
     elif "normal_" in arch: # conv1 3x3
         if ('cifar' in dataset) or ('ti500k' in dataset):
             if 'avgn' in arch:
