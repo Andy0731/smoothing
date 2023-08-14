@@ -87,7 +87,10 @@ def main(args):
 
     if hasattr(args, 'extra_kl') and args.extra_kl:
         assert hasattr(args, 'extra_dataset') and args.ddp and hasattr(args, 'extra_batch') and hasattr(args, 'extra_kl_weight') and hasattr(args, 'extra_noise_sd')
-        extra_data_path = args.data.replace('cifar10', args.extra_dataset) if args.local else args.data.replace('cifar', args.extra_dataset)
+        if args.extra_dataset == args.dataset:
+            extra_data_path = args.data
+        else:
+            extra_data_path = args.data.replace('cifar10', args.extra_dataset) if args.local else args.data.replace('cifar', args.extra_dataset)
         extra_dataset = get_dataset(args.extra_dataset, 'train', extra_data_path, dataaug, img_size)
         extra_sampler = torch.utils.data.distributed.DistributedSampler(extra_dataset, shuffle=True)
         extra_loader = DataLoader(extra_dataset, batch_size=args.extra_batch, num_workers=args.workers, pin_memory=pin_memory, sampler=extra_sampler)
