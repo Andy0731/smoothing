@@ -1,0 +1,45 @@
+{
+    "debug": 0,
+    "dataset": "cifar10",
+    "arch": "normal_resnet152_gn",
+    "groups": 1,
+    "noise_sd": 0.0,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 100,
+    "lr": 0.001,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "clean_image": 0,
+    "natural_train": 0,
+    "amp": 1,
+
+    "test_mode": [
+        "all_clean",
+        "all_noise"
+    ],
+    "test_noise_sd": 0.25,
+
+    "extra_kl": 1,
+    "extra_kl_weight": 100.0,
+    "extra_dataset": "imagenet32",
+    "extra_batch": 128,
+    "extra_noise_sd": 0.25,
+    "extra_loss": "cd",
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 1,
+    "cert_train": 1,
+    "sigma": 0.25,
+    "skip": 20,
+    "skip_train": 100,
+    "certify_bs": 1024,
+    "N0": 128,
+    "N": 100000,
+    "alpha": 0.001
+}
