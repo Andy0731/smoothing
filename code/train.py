@@ -387,7 +387,7 @@ def train(args: AttrDict,
 
     # switch to train mode
     model.train()
-        
+
     adjust_learning_rate(optimizer, epoch, args)
 
     if hasattr(args, 'extra_kl') and args.extra_kl:
@@ -551,7 +551,17 @@ def train(args: AttrDict,
                     # print('cosin distance: ', kl_div)
                 # kl divergence loss
                 else:
+                    if hasattr(args, 'extra_freeze') and args.extra_freeze == 'clean':
+                        # freeze gradient of extra_outputs
+                        extra_outputs = extra_outputs.detach()
+                        extra_outputs.requires_grad = False
+                    elif hasattr(args, 'extra_freeze') and args.extra_freeze == 'noise':
+                        # freeze gradient of extra_noise_outputs
+                        extra_noise_outputs = extra_noise_outputs.detach()
+                        extra_noise_outputs.requires_grad = False
+
                     kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(extra_noise_outputs, dim=1), F.softmax(extra_outputs, dim=1))
+                    
                 loss = clean_loss + args.extra_kl_weight * kl_div
             else:
                 loss = criterion(outputs, targets)
@@ -574,6 +584,7 @@ def train(args: AttrDict,
         scaler.scale(loss).backward()
         scaler.step(optimizer)
         scaler.update()
+        
         # optimizer.zero_grad() # set_to_none=True here can modestly improve performance
 
         # optimizer.zero_grad()

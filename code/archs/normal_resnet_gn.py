@@ -39,10 +39,6 @@ class ResNetGN(ResNet):
             self.in_planes = planes * block.expansion
         return SequentialWithArgs(*layers)
     
-    # def forward(self, x, with_latent=False, fake_relu=False, no_relu=False):
-
-    #     return super(ResNetGN, self).forward(x, with_latent=with_latent, fake_relu=fake_relu, no_relu=no_relu)
-    
 
 def ResNet152GN(**kwargs):
     return ResNetGN(BottleneckGN, [3,8,36,3], **kwargs)
