@@ -544,7 +544,14 @@ def train(args: AttrDict,
                 loss = clean_loss + args.kl_weight * kl_div
             elif hasattr(args, 'extra_kl') and args.extra_kl:
                 clean_loss = criterion(outputs, targets)
-                kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(extra_noise_outputs, dim=1), F.softmax(extra_outputs, dim=1))
+                # cosine distance loss
+                if hasattr(args, 'extra_loss') and args.extra_loss == 'cd':
+                    kl_div = 1 - F.cosine_similarity(extra_outputs, extra_noise_outputs, dim=1)
+                    kl_div = kl_div.mean()
+                    # print('cosin distance: ', kl_div)
+                # kl divergence loss
+                else:
+                    kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(extra_noise_outputs, dim=1), F.softmax(extra_outputs, dim=1))
                 loss = clean_loss + args.extra_kl_weight * kl_div
             else:
                 loss = criterion(outputs, targets)
