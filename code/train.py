@@ -406,6 +406,8 @@ def train(args: AttrDict,
             try:
                 extra_inputs, extra_targets = next(extra_iter)
             except StopIteration:
+                print('original epoch ', epoch, ' i ', i)
+                print('extra_iter is exhausted, reset it')
                 extra_iter = iter(extra_loader)
                 extra_inputs, extra_targets = next(extra_iter)
             
