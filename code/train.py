@@ -233,7 +233,6 @@ def main(args):
         train_loader.sampler.set_epoch(epoch)
 
         if hasattr(args, 'extra_kl') and args.extra_kl:
-            extra_loader.sampler.set_epoch(epoch)
             train_loss, train_acc, kl_div, clean_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model, writer=writer,
                                                               extra_loader=extra_loader, extra_kl_weight=args.extra_kl_weight, extra_noise_sd=args.extra_noise_sd)
         elif hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
@@ -376,7 +375,7 @@ def train(args: AttrDict,
           writer=None,
           extra_loader=None,
           extra_kl_weight=None,
-          extra_noise_sd=None
+          extra_noise_sd=None,
           ):
     batch_time = AverageMeter()
     data_time = AverageMeter()
@@ -406,10 +405,12 @@ def train(args: AttrDict,
             try:
                 extra_inputs, extra_targets = next(extra_iter)
             except StopIteration:
-                print('original epoch ', epoch, ' i ', i)
-                print('extra_iter is exhausted, reset it')
+                extra_loader_epoch = extra_loader.sampler.epoch
+                extra_loader.sampler.set_epoch(extra_loader_epoch + 1)
                 extra_iter = iter(extra_loader)
                 extra_inputs, extra_targets = next(extra_iter)
+                print('extra_loader epoch ', extra_loader.sampler.epoch)
+                print('original loader epoch ', loader.sampler.epoch)
             
             extra_inputs = extra_inputs.cuda()
             # extra_targets = extra_targets.cuda()
