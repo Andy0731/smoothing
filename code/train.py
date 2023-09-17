@@ -29,7 +29,6 @@ import numpy as np
 import torchvision
 
 
-
 def main_spawn(args):
     args.ngpus_per_node = torch.cuda.device_count()
     args.world_size = args.ngpus_per_node * args.node_num
@@ -124,7 +123,7 @@ def main(args):
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
     if args.ddp:
-        if 'atp' in args.outdir or hasattr(args, 'train_layer'):
+        if 'atp' in args.outdir or hasattr(args, 'train_layer') or hasattr(args, 'kl_loss'):
             model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank, find_unused_parameters=True)
         else:
             model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank, )
@@ -536,6 +535,17 @@ def train(args: AttrDict,
                     outputs = mix_outputs[:cur_batch_size]
                     extra_outputs = mix_outputs[cur_batch_size:cur_batch_size+cur_extra_batch_size]
                     extra_noise_outputs = mix_outputs[cur_batch_size+cur_extra_batch_size:]
+            elif args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss:
+                if hasattr(args, 'kl_feature') and args.kl_feature == 'bfc':
+                    mix_outputs, mix_features = model(inputs, with_latent=True)
+                    assert len(mix_features) == cur_batch_size * 2
+                    outputs = mix_features[:cur_batch_size]
+                    noise_outputs = mix_features[cur_batch_size:]
+                else:
+                    mix_outputs = model(inputs)
+                    assert len(mix_outputs) == cur_batch_size * 2
+                    outputs = mix_outputs[:cur_batch_size]
+                    noise_outputs = mix_outputs[cur_batch_size:]                
             else:
                 outputs = model(inputs)
 
@@ -569,11 +579,20 @@ def train(args: AttrDict,
                     kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(extra_noise_outputs, dim=1), F.softmax(extra_outputs, dim=1))
                     
                 loss = clean_loss + args.extra_kl_weight * kl_div
+            elif args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss:
+                if hasattr(args, 'kl_freeze') and args.kl_freeze == 'clean':
+                    # freeze gradient of outputs
+                    outputs = outputs.detach()
+                    outputs.requires_grad = False
+                loss = KLDivLoss(reduction='batchmean')(F.log_softmax(noise_outputs, dim=1), F.softmax(outputs, dim=1))
             else:
                 loss = criterion(outputs, targets)
 
         # measure accuracy and record loss
-        acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
+        if args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss:
+            acc1, acc5 = torch.zeros(1).cuda(), torch.zeros(1).cuda()
+        else:
+            acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))
         losses.update(loss.item(), inputs.size(0))
         top1.update(acc1.item(), inputs.size(0))
         top5.update(acc5.item(), inputs.size(0))
