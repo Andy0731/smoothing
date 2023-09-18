@@ -2235,75 +2235,111 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/imagenet32/kl_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
-- name: kl_r152_imgn32n025lr01e10_n0lr1e1
+# - name: kl_r152_imgn32n025lr01e10_n0lr1e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr1e1.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr1e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr1e10.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr1e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr1e100.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr01e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr01e1.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr01e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr01e10.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr01e100.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr001e1.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr001e10.json
+# - name: kl_r152_imgn32n025lr01e10_n0lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr001e100.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr1e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr1e1.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr1e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr1e10.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr1e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr1e100.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr01e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr01e1.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr01e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr01e10.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr01e100.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr001e1.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr001e10.json
+# - name: kl_r152_imgn32n025lr01e20_n0lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr001e100.json
+# - name: moco_nmrr1522noise025e200_coslr001bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_coslr001bs128n0e100.json
+# - name: moco_nmrr1522noise025e200_lr1bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_lr1bs128n0e10.json
+# - name: moco_nmrr1522noise025e200_lr01bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_lr01bs128n0e10.json
+# - name: moco_nmrr1522noise025e200_lr001bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_lr001bs128n0e10.json
+# - name: moco_nmrr1522noise025e200_lr1bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_lr1bs128n0e100.json
+# - name: moco_nmrr1522noise025e200_lr01bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_lr01bs128n0e100.json
+- name: moco_nmrr1522crope100_lr001bs128n0e100
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr1e1.json
-- name: kl_r152_imgn32n025lr01e10_n0lr1e10
+  - python train.py --config configs/finetune/moco_nmrr1522crope100_lr001bs128n0e100.json
+- name: moco_nmrr1522cropn025e100_lr001bs128n0e100
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr1e10.json
-- name: kl_r152_imgn32n025lr01e10_n0lr1e100
+  - python train.py --config configs/finetune/moco_nmrr1522cropn025e100_lr001bs128n0e100.json
+- name: moco_nmrr1522onlynoise025e100_lr001bs128n0e100
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr1e100.json
-- name: kl_r152_imgn32n025lr01e10_n0lr01e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr01e1.json
-- name: kl_r152_imgn32n025lr01e10_n0lr01e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr01e10.json
-- name: kl_r152_imgn32n025lr01e10_n0lr01e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr01e100.json
-- name: kl_r152_imgn32n025lr01e10_n0lr001e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr001e1.json
-- name: kl_r152_imgn32n025lr01e10_n0lr001e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr001e10.json
-- name: kl_r152_imgn32n025lr01e10_n0lr001e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e10_n0lr001e100.json
-- name: kl_r152_imgn32n025lr01e20_n0lr1e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr1e1.json
-- name: kl_r152_imgn32n025lr01e20_n0lr1e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr1e10.json
-- name: kl_r152_imgn32n025lr01e20_n0lr1e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr1e100.json
-- name: kl_r152_imgn32n025lr01e20_n0lr01e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr01e1.json
-- name: kl_r152_imgn32n025lr01e20_n0lr01e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr01e10.json
-- name: kl_r152_imgn32n025lr01e20_n0lr01e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr01e100.json
-- name: kl_r152_imgn32n025lr01e20_n0lr001e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr001e1.json
-- name: kl_r152_imgn32n025lr01e20_n0lr001e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr001e10.json
-- name: kl_r152_imgn32n025lr01e20_n0lr001e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/kl_r152_imgn32n025lr01e20_n0lr001e100.json
+  - python train.py --config configs/finetune/moco_nmrr1522onlynoise025e100_lr001bs128n0e100.json
