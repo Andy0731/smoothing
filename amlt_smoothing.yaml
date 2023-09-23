@@ -12,8 +12,8 @@ target:
   # name: msrresrchvc
 
   service: aml
-  # name: V100-32G
-  name: V100-32G-sc
+  name: V100-32G
+  # name: V100-32G-sc
 
 environment:
   # image: amlt-sing/pytorch-1.7.0-cuda11.0-cudnn8-devel
@@ -248,8 +248,24 @@ jobs:
 #   command:
 #   - python train.py --config configs/moco/nmr152_2noise025_e400_v10032g.json
 #   process_count_per_node: 8
-- name: pt_moco_nmr152_2noise025_e800_v10032g
-  sku: 2xG8-V100
+# - name: pt_moco_nmr152_2noise025_e800_v10032g
+#   sku: 2xG8-V100
+#   command:
+#   - python train.py --config configs/moco/nmr152_2noise025_e800_v10032g.json
+#   process_count_per_node: 8
+# - name: moco_nmr152_can_lr06_e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/moco/moco_nmr152_can_lr06_e20.json
+# - name: moco_nmr152_can_lr006_e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/moco/moco_nmr152_can_lr006_e20.json
+- name: moco_nmr152_can_lr06_e100
+  sku: G8-V100
   command:
-  - python train.py --config configs/moco/nmr152_2noise025_e800_v10032g.json
-  process_count_per_node: 8
+  - python train.py --config configs/moco/moco_nmr152_can_lr06_e100.json
+# - name: moco_nmr152_can_lr006_e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/moco/moco_nmr152_can_lr006_e100.json

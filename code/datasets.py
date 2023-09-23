@@ -235,6 +235,21 @@ def get_img_transform(dataaug: str = None, noise_sd: float = 0.0):
             twonoise,
         ])
 
+    elif dataaug == 'moco_clean_and_noise':
+        normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
+        noise1 = transforms.Compose([
+            moco.loader.GaussianNoise(noise_sd),
+            normalize
+        ])
+        twonoise = moco.loader.TwoCropsTransform(normalize, noise1)
+
+        img_transforms = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            twonoise,
+        ])
+
     else:
         img_transforms = transforms.Compose([
             transforms.RandomCrop(32, padding=4), 
