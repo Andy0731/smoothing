@@ -2331,15 +2331,63 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/finetune/moco_nmrr1522noise025e200_lr01bs128n0e100.json
-- name: moco_nmrr1522crope100_lr001bs128n0e100
+# - name: moco_nmrr1522crope100_lr001bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522crope100_lr001bs128n0e100.json
+# - name: moco_nmrr1522cropn025e100_lr001bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522cropn025e100_lr001bs128n0e100.json
+# - name: moco_nmrr1522onlynoise025e100_lr001bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr1522onlynoise025e100_lr001bs128n0e100.json
+# - name: moco_nmrr152can025lr06e20_lr1bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr06e20_lr1bs128n0e10.json
+# - name: moco_nmrr152can025lr06e20_lr01bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr06e20_lr01bs128n0e10.json
+# - name: moco_nmrr152can025lr06e20_lr001bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr06e20_lr001bs128n0e10.json
+# - name: moco_nmrr152can025lr06e20_lr1bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr06e20_lr1bs128n0e100.json
+# - name: moco_nmrr152can025lr06e20_lr01bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr06e20_lr01bs128n0e100.json
+# - name: moco_nmrr152can025lr06e20_lr001bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr06e20_lr001bs128n0e100.json
+- name: moco_nmrr152can025lr006e100_lr1bs128n0e10
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/moco_nmrr1522crope100_lr001bs128n0e100.json
-- name: moco_nmrr1522cropn025e100_lr001bs128n0e100
+  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e10.json
+- name: moco_nmrr152can025lr006e100_lr01bs128n0e10
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/moco_nmrr1522cropn025e100_lr001bs128n0e100.json
-- name: moco_nmrr1522onlynoise025e100_lr001bs128n0e100
+  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e10.json
+- name: moco_nmrr152can025lr006e100_lr001bs128n0e10
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/moco_nmrr1522onlynoise025e100_lr001bs128n0e100.json
+  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e10.json
+- name: moco_nmrr152can025lr006e100_lr1bs128n0e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e100.json
+- name: moco_nmrr152can025lr006e100_lr01bs128n0e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e100.json
+- name: moco_nmrr152can025lr006e100_lr001bs128n0e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e100.json
