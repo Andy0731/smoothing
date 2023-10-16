@@ -535,6 +535,18 @@ def train(args: AttrDict,
                     outputs = mix_outputs[:cur_batch_size]
                     extra_outputs = mix_outputs[cur_batch_size:cur_batch_size+cur_extra_batch_size]
                     extra_noise_outputs = mix_outputs[cur_batch_size+cur_extra_batch_size:]
+
+            elif args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss and hasattr(args, 'cln_cls') and args.cln_cls:
+                if hasattr(args, 'kl_feature') and args.kl_feature == 'bfc':
+                    mix_outputs, mix_features = model(inputs, with_latent=True)
+                    assert len(mix_features) == cur_batch_size * 2
+                    assert len(mix_outputs) == cur_batch_size * 2
+                    outputs = mix_outputs[:cur_batch_size]
+                    noise_outputs = mix_outputs[cur_batch_size:]                       
+                    features = mix_features[:cur_batch_size]
+                    noise_features = mix_features[cur_batch_size:]
+                    targets = targets[:cur_batch_size]
+                    
             elif args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss:
                 if hasattr(args, 'kl_feature') and args.kl_feature == 'bfc':
                     mix_outputs, mix_features = model(inputs, with_latent=True)
@@ -579,6 +591,15 @@ def train(args: AttrDict,
                     kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(extra_noise_outputs, dim=1), F.softmax(extra_outputs, dim=1))
                     
                 loss = clean_loss + args.extra_kl_weight * kl_div
+
+            elif args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss and hasattr(args, 'cln_cls') and args.cln_cls:
+                clean_loss = criterion(outputs, targets)
+                if hasattr(args, 'kl_freeze') and args.kl_freeze == 'clean':
+                    features = features.detach()
+                    features.requires_grad = False
+                kl_div = KLDivLoss(reduction='batchmean')(F.log_softmax(noise_features, dim=1), F.softmax(features, dim=1))
+                loss = clean_loss + args.kl_weight * kl_div
+
             elif args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss:
                 if hasattr(args, 'kl_freeze') and args.kl_freeze == 'clean':
                     # freeze gradient of outputs
@@ -589,7 +610,7 @@ def train(args: AttrDict,
                 loss = criterion(outputs, targets)
 
         # measure accuracy and record loss
-        if args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss:
+        if args.clean_image and hasattr(args, 'kl_loss') and args.kl_loss and not hasattr(args, 'cln_cls'):
             acc1, acc5 = torch.zeros(1).cuda(), torch.zeros(1).cuda()
         else:
             acc1, acc5 = accuracy(outputs, targets, topk=(1, 5))

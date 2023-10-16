@@ -1,0 +1,46 @@
+{
+    "debug": 0,
+    "dataset": "imagenet32",
+    "arch": "normal_resnet152_gn",
+    "groups": 1,
+    "noise_sd": 0.25,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 400,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "clean_image": 1,
+    "natural_train": 0,
+    "amp": 1,
+
+    "cln_cls": 1,
+    "kl_weight": 0.1,
+    "lr": 0.1,
+    
+    "kl_loss": 1,
+    "kl_freeze": "clean",
+    "kl_feature": "bfc",
+    "acc_per_class": 0,
+
+    "test_mode": [
+        "all_clean",
+        "all_noise"
+    ],
+    "test_noise_sd": 0.25,
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 0,
+    "cert_train": 0,
+    "sigma": 0.25,
+    "skip": 10,
+    "skip_train": 200,
+    "certify_bs": 1024,
+    "N0": 128,
+    "N": 10000,
+    "alpha": 0.001
+}

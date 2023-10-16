@@ -2367,27 +2367,305 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/finetune/moco_nmrr152can025lr06e20_lr001bs128n0e100.json
-- name: moco_nmrr152can025lr006e100_lr1bs128n0e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e10.json
-- name: moco_nmrr152can025lr006e100_lr01bs128n0e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e10.json
-- name: moco_nmrr152can025lr006e100_lr001bs128n0e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e10.json
-- name: moco_nmrr152can025lr006e100_lr1bs128n0e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e100.json
-- name: moco_nmrr152can025lr006e100_lr01bs128n0e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e100.json
-- name: moco_nmrr152can025lr006e100_lr001bs128n0e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e100.json
+# - name: moco_nmrr152can025lr006e100_lr1bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e10.json
+# - name: moco_nmrr152can025lr006e100_lr01bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e10.json
+# - name: moco_nmrr152can025lr006e100_lr001bs128n0e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e10.json
+# - name: moco_nmrr152can025lr006e100_lr1bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e100.json
+# - name: moco_nmrr152can025lr006e100_lr01bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e100.json
+# - name: moco_nmrr152can025lr006e100_lr001bs128n0e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e100.json
+# - name: moco_nmrr152can025lr006e100_lr1bs128n0e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e10_tfc.json
+# - name: moco_nmrr152can025lr006e100_lr01bs128n0e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e10_tfc.json
+# - name: moco_nmrr152can025lr006e100_lr001bs128n0e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e10_tfc.json
+# - name: moco_nmrr152can025lr006e100_lr1bs128n0e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr1bs128n0e100_tfc.json
+# - name: moco_nmrr152can025lr006e100_lr01bs128n0e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr01bs128n0e100_tfc.json
+# - name: moco_nmrr152can025lr006e100_lr001bs128n0e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/moco_nmrr152can025lr006e100_lr001bs128n0e100_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr1e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr1e20.json
+# - name: cln_cls_kl10_bfc_fzc_r152gn1_in32n025bs128_lr1e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl10_bfc_fzc_r152gn1_in32n025bs128_lr1e20.json
+# - name: cln_cls_kl100_bfc_fzc_r152gn1_in32n025bs128_lr1e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl100_bfc_fzc_r152gn1_in32n025bs128_lr1e20.json
+# - name: cln_cls_kl1000_bfc_fzc_r152gn1_in32n025bs128_lr1e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1000_bfc_fzc_r152gn1_in32n025bs128_lr1e20.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr1e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr1e20.json
+# - name: cln_cls_kl001_bfc_fzc_r152gn1_in32n025bs128_lr1e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl001_bfc_fzc_r152gn1_in32n025bs128_lr1e20.json
+# - name: cln_cls_kl0001_bfc_fzc_r152gn1_in32n025bs128_lr1e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl0001_bfc_fzc_r152gn1_in32n025bs128_lr1e20.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e20.json
+# - name: cln_cls_kl10_bfc_fzc_r152gn1_in32n025bs128_lr01e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl10_bfc_fzc_r152gn1_in32n025bs128_lr01e20.json
+# - name: cln_cls_kl100_bfc_fzc_r152gn1_in32n025bs128_lr01e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl100_bfc_fzc_r152gn1_in32n025bs128_lr01e20.json
+# - name: cln_cls_kl1000_bfc_fzc_r152gn1_in32n025bs128_lr01e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1000_bfc_fzc_r152gn1_in32n025bs128_lr01e20.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e20.json
+# - name: cln_cls_kl001_bfc_fzc_r152gn1_in32n025bs128_lr01e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl001_bfc_fzc_r152gn1_in32n025bs128_lr01e20.json
+# - name: cln_cls_kl0001_bfc_fzc_r152gn1_in32n025bs128_lr01e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl0001_bfc_fzc_r152gn1_in32n025bs128_lr01e20.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
+# - name: cln_cls_kl10_bfc_fzc_r152gn1_in32n025bs128_lr001e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl10_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
+# - name: cln_cls_kl100_bfc_fzc_r152gn1_in32n025bs128_lr001e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl100_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
+# - name: cln_cls_kl1000_bfc_fzc_r152gn1_in32n025bs128_lr001e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1000_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
+# - name: cln_cls_kl001_bfc_fzc_r152gn1_in32n025bs128_lr001e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl001_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
+# - name: cln_cls_kl0001_bfc_fzc_r152gn1_in32n025bs128_lr001e20
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl0001_bfc_fzc_r152gn1_in32n025bs128_lr001e20.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e100.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e100.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e100.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e100.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e200.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e200.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e200.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e200.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e400.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e400.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e400.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e400.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e800.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr001e800.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr01e800.json
+# - name: cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e800
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/cln_cls_kl01_bfc_fzc_r152gn1_in32n025bs128_lr001e800.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e1.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e10.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e100.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e1.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e10.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e100.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e1_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e10_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr01e100_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e1_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e10_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr001e100_tfc.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e1.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e10.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e100.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e1.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e10.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e100.json
+
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e1_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e10_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr0001e100_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e1_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e10_tfc.json
+# - name: cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e20_ft_lr00001e100_tfc.json

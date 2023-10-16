@@ -1,0 +1,40 @@
+{
+    "debug": 0,
+    "pretrain_data": "imagenet32",
+    "dataset": "cifar10",
+    "arch": "normal_resnet152_gn",
+    "groups": 1,
+    "noise_sd": 0.0,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 1,
+    "lr": 0.0001,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "clean_image": 0,
+    "natural_train": 0,
+    "resume": "smoothing/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e20/imagenet32/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128_lr01e20/checkpoint.pth.tar",
+    "amp": 1,
+
+    "test_mode": [
+        "all_clean",
+        "all_noise"
+    ],
+    "test_noise_sd": 0.25,
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 1,
+    "cert_train": 1,
+    "sigma": 0.25,
+    "skip": 20,
+    "skip_train": 100,
+    "certify_bs": 1024,
+    "N0": 128,
+    "N": 100000,
+    "alpha": 0.001
+}
