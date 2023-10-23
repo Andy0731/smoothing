@@ -1,0 +1,41 @@
+{
+    "debug": 0,
+    "pretrain_data": "imagenet32",
+    "dataset": "cifar10",
+    "arch": "normal_resnet152_gn",
+    "groups": 1,
+    "noise_sd": 0.0,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 10,
+    "lr": 0.01,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "clean_image": 0,
+    "natural_train": 0,
+    "resume": "smoothing/np05_r152gn1_in32n025bs128_lr01e100/imagenet32/np05_r152gn1_in32n025bs128_lr01e100/checkpoint.pth.tar",
+    "amp": 1,
+    "train_layer": "linear",
+
+    "test_mode": [
+        "all_clean",
+        "all_noise"
+    ],
+    "test_noise_sd": 0.25,
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 1,
+    "cert_train": 1,
+    "sigma": 0.25,
+    "skip": 20,
+    "skip_train": 100,
+    "certify_bs": 1024,
+    "N0": 128,
+    "N": 100000,
+    "alpha": 0.001
+}

@@ -237,7 +237,7 @@ def main(args):
         elif hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
             train_loss, train_acc, kl_div, clean_loss = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model, writer=writer)
         else:
-            train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model)
+            train_loss, train_acc = train(args, train_loader, model, criterion, optimizer, epoch, args.noise_sd, scaler, diffusion_model=diffusion_model, writer=writer)
 
         if args.global_rank == 0:
             lr = optimizer.param_groups[0]['lr']
@@ -442,8 +442,12 @@ def train(args: AttrDict,
 
             # augment inputs with noise
             noise_sd = get_noise(epoch, args, inputs.size(0))
+            if args.debug:
+                print('noise_sd ', noise_sd)
             if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,)
                 args.cur_noise = noise_sd[0]
+            elif hasattr(args, 'noise_mode') and args.noise_mode == 'noisy_prob_batch':
+                args.cur_noise = noise_sd[0]# (N,)
             else: 
                 args.cur_noise = noise_sd
 
@@ -451,8 +455,11 @@ def train(args: AttrDict,
                 acc_noise = args.accurate_noise if hasattr(args, 'accurate_noise') else 0
                 inputs = diffusion_model(inputs, args.t, acc_noise, noise_sd)
             else:
-                if hasattr(args, 'noise_mode') and args.noise_mode == 'batch_random': # (N,):
+                if hasattr(args, 'noise_mode') and args.noise_mode in ['batch_random', 'noisy_prob_batch']: # (N,):
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
+                    if args.debug and writer is not None:
+                        img_grid = torchvision.utils.make_grid(inputs)
+                        writer.add_image('input_images after noise', img_grid, epoch)
                 elif hasattr(args, 'clean_class') and hasattr(args, 'sep_cls_rbst') and args.sep_cls_rbst:
                     clean_classes = args.clean_class.split(',')
                     clean_classes = [int(x) if x else None for x in clean_classes]
@@ -803,7 +810,7 @@ if __name__ == "__main__":
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(16, args.batch)
-        args.epochs = 2
+        args.epochs = 10
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128

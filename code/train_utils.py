@@ -101,6 +101,11 @@ def get_noise(epoch, args, cur_bs=None):
         return np.random.uniform(0, args.noise_sd * random_scale, size=(cur_bs))        
     elif hasattr(args, 'noise_mode') and args.noise_mode == 'random_range':
         return np.random.uniform(args.noise_sd * args.r_range_min, args.noise_sd * args.r_range_max)
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'noisy_prob_batch':
+        assert hasattr(args, 'noisy_prob')
+        random_prob = np.random.uniform(0, 1, size=(cur_bs))
+        random_prob = np.where(random_prob <= args.noisy_prob, 1, 0)
+        return random_prob * args.noise_sd
     else:
         return args.noise_sd
 

@@ -2207,13 +2207,17 @@ if __name__ == "__main__":
         # "amlt/smoothing/cc56789_scr_r152_n025_lr001_kl100_e100_test_mixcn/resnet152/cc56789_scr_r152_n025_lr001_kl100_e100_test_mixcn/certify_sigma0.25_test",    
 
         # extra kl on IN32 dataset
-        "amlt/smoothing/exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400/resnet152/exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400/certify_sigma0.25_train"
+        # "amlt/smoothing/exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400/resnet152/exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400/certify_sigma0.25_train"
         # "amlt/smoothing/exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400/resnet152/exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400/certify_sigma0.25_test"
+
+        # KL between clean and noisy 0.25 pretrain on ImageNet32, label classification on clean ImageNet32 images, before fc feature, freeze gradient on clean data, r152gn1, finetune on clean CIFAR10
+        # "amlt/smoothing/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100/certify_sigma0.25_train"
+        # "amlt/smoothing/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100/finetune/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100/certify_sigma0.25_test"
 
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400_train", "exkl_fzc_r152gn1_cf10n0bs8_in32n025bs128kl10_lr01e400_train", 1.0, [
+        "../amlt/smoothing/analysis/plots/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100_train", "cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100_train", 1.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     
