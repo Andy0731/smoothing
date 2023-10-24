@@ -39,10 +39,10 @@ code:
 data:
   # local_dir: /D_data/kaqiu/imagenet/
   # remote_dir: imagenet/
-  local_dir: /D_data/kaqiu/cifar10/
-  remote_dir: cifar/
-  # local_dir: /D_data/kaqiu/imagenet32/
-  # remote_dir: imagenet32/
+  # local_dir: /D_data/kaqiu/cifar10/
+  # remote_dir: cifar/
+  local_dir: /D_data/kaqiu/imagenet32/
+  remote_dir: imagenet32/
   # local_dir: /D_data/kaqiu/ti500k
   # remote_dir: ti500k/
   # local_dir: /D_data/kaqiu/imagenet22k/
@@ -486,52 +486,141 @@ jobs:
 #   command:
 #   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_lr0001e100.json
 
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1_tfc
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1_tfc.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10_tfc
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10_tfc.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100_tfc
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100_tfc.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1_tfc
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1_tfc.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10_tfc
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10_tfc.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100_tfc
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100_tfc.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1_tfc.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10_tfc.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100_tfc.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1_tfc.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10_tfc.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100_tfc.json
 
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10.json
+# - name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100.json
+
+# - name: np1_r152_in32n025bs128_lr1e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np1_r152_in32n025bs128_lr1e100.json
+# - name: np1_r152_in32n025bs128_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np1_r152_in32n025bs128_lr01e100.json
+# - name: np1_r152_in32n025bs128_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np1_r152_in32n025bs128_lr001e100.json
+
+- name: np05_r152_in32n025bs128_lr1e100
   sku: G8-V100
   command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e1.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e10.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr001e100.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e1.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e10.json
-- name: np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/finetune/np1_r152gn1_in32n025bs128_lr01e100_ft_n025lr0001e100.json
+  - python train.py --config configs/imagenet32/np05_r152_in32n025bs128_lr1e100.json
+# - name: np05_r152_in32n025bs128_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np05_r152_in32n025bs128_lr01e100.json
+# - name: np05_r152_in32n025bs128_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np05_r152_in32n025bs128_lr001e100.json
+
+# - name: np025_r152_in32n025bs128_lr1e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np025_r152_in32n025bs128_lr1e100.json
+# - name: np025_r152_in32n025bs128_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np025_r152_in32n025bs128_lr01e100.json
+# - name: np025_r152_in32n025bs128_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/np025_r152_in32n025bs128_lr001e100.json
+
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e1_tfc.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e10_tfc.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e100_tfc.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e1_tfc.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e10_tfc.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e100_tfc.json
+
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e1.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e10.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr001e100.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e1.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e10.json
+# - name: np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/np1_crt_r152gn1_in32n025bs128_lr01e100_ft_lr0001e100.json
