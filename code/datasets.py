@@ -14,7 +14,36 @@ from tsv import TSVInstance
 IMAGENET_LOC_ENV = "IMAGENET_DIR"
 
 # list of all datasets
-DATASETS = ["imagenet", "cifar10"]
+DATASETS = ["imagenet", "cifar10", "CIFAR100", "Caltech101", "Caltech256", "StanfordCars", "DTD", "Flowers102", "Food101", "OxfordIIITPet", "SUN397", "imagenet32", "ti500k", "imagenet22k"]
+
+DATASETS_CLS_NUM = {
+    "imagenet": 1000,
+    "cifar10": 10,
+    "CIFAR100": 100,
+    "Caltech101": 101,
+    "Caltech256": 257,
+    "StanfordCars": 196,
+    "DTD": 47,
+    "Flowers102": 102,
+    "Food101": 101,
+    "OxfordIIITPet": 37,
+    "SUN397": 397,
+    "imagenet32": 1000,
+    "ti500k": 10,
+    "imagenet22k": 21841
+}
+
+general_train_transform = transforms.Compose([
+    transforms.Resize(size=32),
+    transforms.RandomCrop(32, padding=4),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor()
+])
+
+general_test_transform = transforms.Compose([
+    transforms.Resize(size=32),
+    transforms.ToTensor()
+])
 
 
 def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = None, img_size: int = None) -> Dataset:
@@ -36,18 +65,13 @@ def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = N
             transforms.ToTensor()
         ])
         return TSVInstance(tsv_file=tsv_file, transform=transform)
+    elif dataset == 'CIFAR100':
+        return datasets.CIFAR100(datapath, train=split=='train', download=True, transform=general_train_transform if split=='train' else general_test_transform)
 
 
 def get_num_classes(dataset: str):
     """Return the number of classes in the dataset. """
-    if dataset == 'imagenet22k':
-        return 21841
-    if "imagenet" in dataset:
-        return 1000
-    if dataset == "cifar10":
-        return 10
-    if dataset == "ti500k":
-        return 10
+    return DATASETS_CLS_NUM[dataset]
 
 
 def get_normalize_layer(dataset: str) -> torch.nn.Module:
@@ -64,6 +88,8 @@ def get_normalize_layer(dataset: str) -> torch.nn.Module:
         return NormalizeLayer(_CIFAR10_MEAN, _CIFAR10_STDDEV)
     elif dataset == "vitcf10":
         return NormalizeLayer(_VITCF10_MEAN, _VITCF10_STDDEV)
+    # use the same normalization as imagenet for all other datasets
+    return NormalizeLayer(_IMAGENET_MEAN, _IMAGENET_STDDEV)
 
 
 _IMAGENET_MEAN = [0.485, 0.456, 0.406]

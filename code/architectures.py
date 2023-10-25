@@ -50,7 +50,8 @@ class ArgSequential(torch.nn.Sequential):
 
 
 def get_architecture(arch: str, 
-                     dataset: str, 
+                     dataset: str,
+                     class_num: int = None, 
                      avgn_loc: str = None, 
                      avgn_num: int = 1, 
                      nemb_layer: str = None, 
@@ -78,33 +79,21 @@ def get_architecture(arch: str,
     elif arch == "cifar_resnet1199":
         model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
     elif arch == "normal_resnet152_gn":
-        if dataset == 'cifar10':
-            model = normal_resnet152_gn(num_classes=10, groups=groups)
-        elif dataset == 'cifar100':
-            model = normal_resnet152_gn(num_classes=100, groups=groups)
-        elif dataset == 'imagenet32':
-            model = normal_resnet152_gn(num_classes=1000, groups=groups)
+        model = normal_resnet152_gn(num_classes=class_num, groups=groups)
     elif arch == "normal_resnet152_gn_efc":
-        if dataset == 'cifar10':
-            model = normal_resnet152_gn_efc(num_classes=10, groups=groups, extra_fc_dim=extra_fc_dim)
-        elif dataset == 'cifar100':
-            model = normal_resnet152_gn_efc(num_classes=100, groups=groups, extra_fc_dim=extra_fc_dim)
-        elif dataset == 'imagenet32':
-            model = normal_resnet152_gn_efc(num_classes=1000, groups=groups, extra_fc_dim=extra_fc_dim)        
+        model = normal_resnet152_gn_efc(num_classes=class_num, groups=groups, extra_fc_dim=extra_fc_dim)    
     elif "normal_" in arch: # conv1 3x3
         if ('cifar' in dataset) or ('ti500k' in dataset):
             if 'avgn' in arch:
-                model = arch + '(avgn_loc=avgn_loc, avgn_num=avgn_num)'
+                model = arch + '(avgn_loc=avgn_loc, avgn_num=avgn_num, num_classes=class_num)'
             elif 'nconv' in arch:
-                model = arch + '(avgn_num=avgn_num)'
+                model = arch + '(avgn_num=avgn_num, num_classes=class_num)'
             elif 'nemb' in arch:
-                model = arch + '(nemb_layer=nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)'
+                model = arch + '(nemb_layer=nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim, num_classes=class_num)'
             else:
-                model = arch + '()'
-        elif dataset == 'imagenet22k':
-            model = arch + '(num_classes=21841)'
-        elif 'imagenet' in dataset:
-            model = arch + '(num_classes=1000)'
+                model = arch + '(num_classes=class_num)'
+        else:
+            model = arch + '(num_classes=class_num)'
         print('model: ', model)
         model = eval(model)
         # print(model)

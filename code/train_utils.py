@@ -106,6 +106,12 @@ def get_noise(epoch, args, cur_bs=None):
         random_prob = np.random.uniform(0, 1, size=(cur_bs))
         random_prob = np.where(random_prob <= args.noisy_prob, 1, 0)
         return random_prob * args.noise_sd
+    elif hasattr(args, 'noise_mode') and args.noise_mode == 'noisy_equal_prob':
+        assert hasattr(args, 'noise_sd_list')
+        # create a list of noise sd, each element is randomly chosen from noise_sd_list
+        noise_sd_list = np.array(args.noise_sd_list)
+        noise_sd = np.random.choice(noise_sd_list, size=(cur_bs))
+        return noise_sd
     else:
         return args.noise_sd
 

@@ -1,0 +1,35 @@
+{
+    "debug": 0,
+    "dataset": "CIFAR100",
+    "arch": "normal_resnet152_gn",
+    "groups": 1,
+    "noise_sd": 0.0,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 10,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "clean_image": 0,
+    "natural_train": 0,
+    "amp": 1,
+    "acc_per_class": 0,
+    "lr": 0.1,
+
+    "test_noise_sd": [0.0, 0.25, 0.5, 1.0],
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 0,
+    "cert_train": 0,
+    "sigma": 0.25,
+    "skip": 10,
+    "skip_train": 200,
+    "certify_bs": 1024,
+    "N0": 128,
+    "N": 10000,
+    "alpha": 0.001
+}

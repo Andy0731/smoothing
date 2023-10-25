@@ -9,7 +9,7 @@ import torch
 from torch.nn import CrossEntropyLoss, KLDivLoss
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from datasets import get_dataset
+from datasets import get_dataset, DATASETS, get_num_classes
 from architectures import get_architecture
 from torch.optim import SGD, Optimizer, AdamW, Adam
 import time
@@ -94,6 +94,7 @@ def main(args):
         extra_sampler = torch.utils.data.distributed.DistributedSampler(extra_dataset, shuffle=True)
         extra_loader = DataLoader(extra_dataset, batch_size=args.extra_batch, num_workers=args.workers, pin_memory=pin_memory, sampler=extra_sampler)
 
+    class_num = get_num_classes(args.dataset)
     # build model
     if 'hug' in args.outdir:
         model = get_hug_model(args.arch)
@@ -111,12 +112,12 @@ def main(args):
         model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)
     elif args.arch == 'normal_resnet152_gn':
         assert hasattr(args, 'groups')
-        model = get_architecture(args.arch, args.dataset, groups=args.groups)
+        model = get_architecture(args.arch, args.dataset, groups=args.groups, class_num=class_num)
     elif args.arch == 'normal_resnet152_gn_efc':
         assert hasattr(args, 'groups')
-        model = get_architecture(args.arch, args.dataset,  groups=args.groups, extra_fc_dim=args.extra_fc_dim)
+        model = get_architecture(args.arch, args.dataset,  groups=args.groups, extra_fc_dim=args.extra_fc_dim, class_num=class_num)
     else:
-        model = get_architecture(args.arch, args.dataset)
+        model = get_architecture(args.arch, args.dataset, class_num=class_num)
 
     # print('model: ', model)
 
@@ -158,14 +159,10 @@ def main(args):
 
     # if finetune from checkpoint
     if hasattr(args, 'resume') and args.resume:
-
-        if args.local == 1:
-            args.resume = os.path.join(args.smoothing_path, args.resume)
-        else:
-            resume_list = args.resume.split('/')
-            resume_list.pop(1)
-            args.resume = '/'.join(resume_list)
-            args.resume = os.path.join(args.smoothing_path, args.resume)
+        resume_list = args.resume.split('/')
+        resume_list.pop(1)
+        args.resume = '/'.join(resume_list)
+        args.resume = os.path.join(args.smoothing_path, args.resume)
 
     # if retry
     retry = 0
@@ -252,9 +249,22 @@ def main(args):
 
         if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
             test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
-            if hasattr(args, 'test_mode'):
-                for mode in args.test_mode:
-                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
+            test_noise_sd_list = [test_noise_sd] if isinstance(test_noise_sd, float) else test_noise_sd
+            for test_noise_sd in test_noise_sd_list:
+                if hasattr(args, 'test_mode'):
+                    for mode in args.test_mode:
+                        test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
+                        # reduce over all gpus
+                        test_acc_local = torch.tensor([test_acc]).cuda()
+                        dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+                        test_acc_local /= args.world_size
+                        test_acc = test_acc_local
+                        # write to tensorboard
+                        if args.global_rank == 0:
+                            writer.add_scalar(mode + '_loss', test_loss, epoch)
+                            writer.add_scalar(mode + '_acc', test_acc, epoch)
+                else:
+                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
                     # reduce over all gpus
                     test_acc_local = torch.tensor([test_acc]).cuda()
                     dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
@@ -262,19 +272,8 @@ def main(args):
                     test_acc = test_acc_local
                     # write to tensorboard
                     if args.global_rank == 0:
-                        writer.add_scalar(mode + '_loss', test_loss, epoch)
-                        writer.add_scalar(mode + '_acc', test_acc, epoch)
-            else:
-                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
-                # reduce over all gpus
-                test_acc_local = torch.tensor([test_acc]).cuda()
-                dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
-                test_acc_local /= args.world_size
-                test_acc = test_acc_local
-                # write to tensorboard
-                if args.global_rank == 0:
-                    writer.add_scalar('test_loss', test_loss, epoch)
-                    writer.add_scalar('test_acc', test_acc, epoch)      
+                        writer.add_scalar('test_loss_n' + str(test_noise_sd), test_loss, epoch)
+                        writer.add_scalar('test_acc_n' + str(test_noise_sd), test_acc, epoch)      
 
             # ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
             ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
@@ -289,18 +288,6 @@ def main(args):
                 # shutil.copyfile(ckpt_file, ckpt_file_cp)
             except OSError:
                 print("OSError when saving checkpoint in epoch ", epoch)
-    
-    # if has_testset:
-    #     test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
-    #     test_loss, test_acc = test(args, test_loader, model, criterion, args.epochs, test_noise_sd, diffusion_model=diffusion_model)
-    #     test_acc_local = torch.tensor([test_acc]).cuda()
-    #     print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
-    #     dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
-    #     test_acc_local /= args.world_size
-    #     print('rank ', args.global_rank, ', test_acc_local ', test_acc_local)
-    #     if args.global_rank == 0:        
-    #         writer.add_scalar('test_loss', test_loss, args.epochs)
-    #         writer.add_scalar('test_acc', test_acc_local, args.epochs)
 
     time_train_end = time.time()
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
@@ -448,6 +435,8 @@ def train(args: AttrDict,
                 args.cur_noise = noise_sd[0]
             elif hasattr(args, 'noise_mode') and args.noise_mode == 'noisy_prob_batch':
                 args.cur_noise = noise_sd[0]# (N,)
+            elif hasattr(args, 'noise_mode') and args.noise_mode == 'noisy_equal_prob': # (N,)
+                args.cur_noise = noise_sd[0]
             else: 
                 args.cur_noise = noise_sd
 
@@ -455,7 +444,7 @@ def train(args: AttrDict,
                 acc_noise = args.accurate_noise if hasattr(args, 'accurate_noise') else 0
                 inputs = diffusion_model(inputs, args.t, acc_noise, noise_sd)
             else:
-                if hasattr(args, 'noise_mode') and args.noise_mode in ['batch_random', 'noisy_prob_batch']: # (N,):
+                if hasattr(args, 'noise_mode') and args.noise_mode in ['batch_random', 'noisy_prob_batch', 'noisy_equal_prob']: # (N,):
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
                     if args.debug and writer is not None:
                         img_grid = torchvision.utils.make_grid(inputs)
@@ -764,12 +753,12 @@ def test(args: AttrDict, loader: DataLoader, model: torch.nn.Module, criterion, 
 
         if args.global_rank == 0:
             print('Test: [{epoch}]\t'
-                    '{test_mode}\t'
+                    '{test_mode} {noise_sd}\t'
                     'GPU {gpu}\t'
                     'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                     'Acc@1 {top1.val:.3f} ({top1.avg:.3f})\t'
                     'Acc@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                epoch=epoch, loss=losses, top1=top1, top5=top5, gpu=args.global_rank, test_mode=test_mode))
+                epoch=epoch, loss=losses, top1=top1, top5=top5, gpu=args.global_rank, test_mode=test_mode, noise_sd=noise_sd))
             
             if hasattr(args, 'acc_per_class') and args.acc_per_class:
                 print('Acc per class')
@@ -793,30 +782,35 @@ if __name__ == "__main__":
     cfg = json.load(open(os.path.join("configs", cfg_file)))
     args = AttrDict(cfg)
     args.output = os.environ.get('AMLT_OUTPUT_DIR', os.path.join('/D_data/kaqiu/randomized_smoothing/', args.dataset))
-    assert args.dataset in ['cifar10', 'imagenet', 'imagenet32', 'ti500k', 'imagenet22k'], 'dataset must be cifar10 or imagenet or ti500k, but got {}'.format(args.dataset)
-    args.data = os.environ.get('AMLT_DATA_DIR', os.path.join('/D_data/kaqiu', args.dataset))
+    assert args.dataset in DATASETS, 'dataset {} not supported'.format(args.dataset)
+    args.data = os.environ.get('AMLT_DATA_DIR', '/D_data/kaqiu/datasets')
+    if args.dataset in ['imagenet', 'imagenet32', 'imagenet22k', 'ti500k']:
+        args.data = os.path.join(args.data, '../', args.dataset)
+    else:
+        args.data = os.path.join(args.data, args.dataset)
+    if not os.path.exists(args.data):
+        os.makedirs(args.data)
 
     if '/D_data/kaqiu' in args.data: # local
         args.local = 1
-        args.smoothing_path = '../amlt'
     else: # itp
         args.local = 0
-        args.smoothing_path = args.data
+    args.smoothing_path = args.data
 
-    if args.dataset == 'cifar10' and args.local == 0 and hasattr(args, 'pretrain_data'):
-        args.smoothing_path = args.data.replace('cifar', args.pretrain_data)
+    if hasattr(args, 'pretrain_data') and args.pretrain_data == 'imagenet32':
+        args.smoothing_path = os.path.join(os.path.dirname(os.path.dirname(args.data)), args.pretrain_data)
         print('args.smoothing_path: ', args.smoothing_path)
 
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(16, args.batch)
-        args.epochs = 10
+        args.epochs = 2
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128
         args.certify_bs = 128
 
-    args.acc_per_class = 1 if not hasattr(args, 'acc_per_class') else args.acc_per_class
+    args.acc_per_class = 0 if not hasattr(args, 'acc_per_class') else args.acc_per_class
     
     args.retry_path = os.path.join(args.data, 'smoothing', cfg_file.replace('.json',''))
     args.outdir = os.path.join(args.output, cfg_file.replace('.json', ''))
