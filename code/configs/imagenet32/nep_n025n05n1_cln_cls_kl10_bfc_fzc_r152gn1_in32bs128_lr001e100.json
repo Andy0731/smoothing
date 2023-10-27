@@ -15,7 +15,7 @@
     "amp": 1,
 
     "cln_cls": 1,
-    "kl_weight": 0.1,
+    "kl_weight": 10.0,
     "lr": 0.01,
     "noise_mode": "noisy_equal_prob",
     "noise_sd_list": [0.25, 0.5, 1.0],    

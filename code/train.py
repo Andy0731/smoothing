@@ -204,7 +204,7 @@ def main(args):
             # assert set(msg.missing_keys) == {"%s.weight" % linear_keyword, "%s.bias" % linear_keyword}
 
         # finetune on CIFAR10, pretrain on ImageNet32/Ti500k with adding noise
-        elif 'finetune' in args.outdir:
+        elif 'finetune' in args.outdir or (hasattr(args, 'finetune') and args.finetune):
             state_dict = ckpt['state_dict']
             for k in list(state_dict.keys()):
                 if ('fc' in k) or ('linear' in k):
@@ -223,6 +223,34 @@ def main(args):
 
     if args.ddp and args.global_rank == 0:
         print(args)
+
+    def test_loop(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=None):
+        test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
+        test_noise_sd_list = [test_noise_sd] if isinstance(test_noise_sd, float) else test_noise_sd
+        for test_noise_sd in test_noise_sd_list:
+            if hasattr(args, 'test_mode'):
+                for mode in args.test_mode:
+                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
+                    # reduce over all gpus
+                    test_acc_local = torch.tensor([test_acc]).cuda()
+                    dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+                    test_acc_local /= args.world_size
+                    test_acc = test_acc_local
+                    # write to tensorboard
+                    if args.global_rank == 0:
+                        writer.add_scalar(mode + '_loss', test_loss, epoch)
+                        writer.add_scalar(mode + '_acc', test_acc, epoch)
+            else:
+                test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
+                # reduce over all gpus
+                test_acc_local = torch.tensor([test_acc]).cuda()
+                dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
+                test_acc_local /= args.world_size
+                test_acc = test_acc_local
+                # write to tensorboard
+                if args.global_rank == 0:
+                    writer.add_scalar('test_loss_n' + str(test_noise_sd), test_loss, epoch)
+                    writer.add_scalar('test_acc_n' + str(test_noise_sd), test_acc, epoch)          
 
     start_epoch = args.start_epoch if hasattr(args, 'start_epoch') else 0
     for epoch in range(start_epoch, args.epochs):
@@ -247,34 +275,10 @@ def main(args):
                 writer.add_scalar('clean_loss', clean_loss, epoch)
 
 
-        if has_testset and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
-            test_noise_sd = args.test_noise_sd if hasattr(args, 'test_noise_sd') else args.noise_sd
-            test_noise_sd_list = [test_noise_sd] if isinstance(test_noise_sd, float) else test_noise_sd
-            for test_noise_sd in test_noise_sd_list:
-                if hasattr(args, 'test_mode'):
-                    for mode in args.test_mode:
-                        test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model, test_mode=mode)
-                        # reduce over all gpus
-                        test_acc_local = torch.tensor([test_acc]).cuda()
-                        dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
-                        test_acc_local /= args.world_size
-                        test_acc = test_acc_local
-                        # write to tensorboard
-                        if args.global_rank == 0:
-                            writer.add_scalar(mode + '_loss', test_loss, epoch)
-                            writer.add_scalar(mode + '_acc', test_acc, epoch)
-                else:
-                    test_loss, test_acc = test(args, test_loader, model, criterion, epoch, test_noise_sd, diffusion_model=diffusion_model)
-                    # reduce over all gpus
-                    test_acc_local = torch.tensor([test_acc]).cuda()
-                    dist.all_reduce(test_acc_local, op=dist.ReduceOp.SUM)
-                    test_acc_local /= args.world_size
-                    test_acc = test_acc_local
-                    # write to tensorboard
-                    if args.global_rank == 0:
-                        writer.add_scalar('test_loss_n' + str(test_noise_sd), test_loss, epoch)
-                        writer.add_scalar('test_acc_n' + str(test_noise_sd), test_acc, epoch)      
+        if has_testset and (epoch % args.test_freq == 0):
+            test_loop(args, test_loader, model, criterion, epoch, args.test_noise_sd, diffusion_model=diffusion_model)
 
+        if args.ddp and args.global_rank == 0 and (epoch % args.test_freq == 0 or epoch == args.epochs - 1):
             # ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
             ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
             try:
@@ -293,6 +297,8 @@ def main(args):
     time_train = datetime.timedelta(seconds=time_train_end - time_start)
     print('training time: ', time_train)
 
+    epoch = args.epochs if start_epoch < args.epochs else start_epoch
+    test_loop(args, test_loader, model, criterion, epoch, args.test_noise_sd, diffusion_model=diffusion_model)
 
     simgas = [args.sigma]
     if hasattr(args, 'multiple_sigma'):
@@ -804,7 +810,7 @@ if __name__ == "__main__":
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(16, args.batch)
-        args.epochs = 2
+        args.epochs = 10
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128
