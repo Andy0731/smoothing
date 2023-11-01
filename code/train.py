@@ -110,6 +110,9 @@ def main(args):
         emb_scl = args.emb_scl if hasattr(args, 'emb_scl') else 1000
         emb_dim = args.emb_dim if hasattr(args, 'emb_dim') else 32
         model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)
+    elif args.arch == 'normal_resnet152_nt':
+        assert hasattr(args, 'track_running_stats')
+        model = get_architecture(args.arch, args.dataset, class_num=class_num, track_running_stats=args.track_running_stats)
     elif args.arch == 'normal_resnet152_gn':
         assert hasattr(args, 'groups')
         model = get_architecture(args.arch, args.dataset, groups=args.groups, class_num=class_num)
@@ -121,7 +124,8 @@ def main(args):
 
     # print('model: ', model)
 
-    model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+    # error when using track_running_stats=False
+    # model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
     if args.ddp:
         if 'atp' in args.outdir or hasattr(args, 'train_layer') or hasattr(args, 'kl_loss'):
@@ -809,8 +813,8 @@ if __name__ == "__main__":
 
     if args.debug == 1:
         args.node_num = 1
-        args.batch = min(16, args.batch)
-        args.epochs = 10
+        args.batch = min(2, args.batch)
+        args.epochs = 2
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128

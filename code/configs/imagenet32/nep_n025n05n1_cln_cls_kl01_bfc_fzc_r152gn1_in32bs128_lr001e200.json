@@ -6,7 +6,7 @@
     "noise_sd": 0.25,
     "batch": 128,
     "workers": 2,
-    "epochs": 100,
+    "epochs": 200,
     "momentum": 0.9,
     "weight_decay": 1e-4,
     "print_freq": 100,

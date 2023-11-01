@@ -1,16 +1,13 @@
-# for i in range(0,100):
-#     pass
+import torch
 
-# print(i)
+from torchvision import transforms, datasets
 
-# for i in range(100,100):
-#     pass
+dataset = datasets.SUN397(root='/D_data/kaqiu/datasets/SUN397', download=True, transform=transforms.ToTensor())
 
-# print(i)
+dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True, num_workers=1)
 
-for i in range(10,10):
-    pass
+print(len(dataset))
 
-i = i if i else 0
-
-print(i)
+for i, data in enumerate(dataloader):
+    print(i, data[0].shape, data[1])
+    # break

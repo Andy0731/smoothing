@@ -33,21 +33,34 @@ DATASETS_CLS_NUM = {
     "imagenet22k": 21841
 }
 
-general_train_transform = transforms.Compose([
-    transforms.Resize(size=32),
-    transforms.RandomCrop(32, padding=4),
-    transforms.RandomHorizontalFlip(),
-    transforms.ToTensor()
-])
-
-general_test_transform = transforms.Compose([
-    transforms.Resize(size=32),
-    transforms.ToTensor()
-])
-
 
 def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = None, img_size: int = None) -> Dataset:
     """Return the dataset as a PyTorch Dataset object"""
+    if dataaug == 'imagenet_dataaug' and img_size == 224:
+        general_train_transform = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+        general_test_transform = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor()
+        ])
+    else:
+        general_train_transform = transforms.Compose([
+            transforms.Resize(size=32),
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor()
+        ])
+        general_test_transform = transforms.Compose([
+            transforms.Resize(size=32),
+            transforms.CenterCrop(32),
+            transforms.ToTensor()
+        ])
+
+
     if dataset == "imagenet":
         return _imagenet(split, datapath, dataaug, img_size)
     elif dataset == "cifar10":
@@ -67,6 +80,18 @@ def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = N
         return TSVInstance(tsv_file=tsv_file, transform=transform)
     elif dataset == 'CIFAR100':
         return datasets.CIFAR100(datapath, train=split=='train', download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'StanfordCars':
+        return datasets.StanfordCars(datapath, split=split, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'DTD':
+        return datasets.DTD(datapath, split=split, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'Food101':
+        return datasets.Food101(datapath, split=split, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'SUN397':
+        return datasets.SUN397(datapath, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'Caltech101':
+        return datasets.Caltech101(datapath, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    else:
+        raise ValueError("Unknown dataset: " + dataset) 
 
 
 def get_num_classes(dataset: str):

@@ -21,6 +21,7 @@ from archs.normal_resnet_nemb_blk import resnetblkemd152 as normal_resnet152_nem
 from archs.normal_resnet_in import resnet152in as normal_resnet152_in
 from archs.normal_resnet_gn import resnet152gn as normal_resnet152_gn
 from archs.normal_resnet_gn_efc import resnet152gnefc as normal_resnet152_gn_efc
+from archs.normal_resnet_nt import resnet152nt as normal_resnet152_nt
 from archs.vit import vit_b
 from datasets import NormalizeLayer
 
@@ -58,6 +59,7 @@ def get_architecture(arch: str,
                      emb_scl=None, 
                      emb_dim=None, 
                      groups=None,
+                     track_running_stats=True,
                      extra_fc_dim=None) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
@@ -78,6 +80,10 @@ def get_architecture(arch: str,
         model = resnet_cifar(depth=110, num_classes=10 if 'cifar' in dataset else 1000)
     elif arch == "cifar_resnet1199":
         model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
+    elif arch == "normal_resnet152_in":
+        model = normal_resnet152_in(num_classes=class_num)
+    elif arch == "normal_resnet152_nt":
+        model = normal_resnet152_nt(num_classes=class_num, track_running_stats=track_running_stats)
     elif arch == "normal_resnet152_gn":
         model = normal_resnet152_gn(num_classes=class_num, groups=groups)
     elif arch == "normal_resnet152_gn_efc":
@@ -91,7 +97,7 @@ def get_architecture(arch: str,
             elif 'nemb' in arch:
                 model = arch + '(nemb_layer=nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim, num_classes=class_num)'
             else:
-                model = arch + '(num_classes=class_num)'
+                model = arch + '(num_classes=class_num, track_running_stats=track_running_stats)'
         else:
             model = arch + '(num_classes=class_num)'
         print('model: ', model)
