@@ -1,9 +1,9 @@
 {
     "debug": 0,
-    "dataset": "CIFAR100",
+    "dataset": "cifar10",
     "arch": "normal_resnet152_gn",
     "groups": 1,
-    "noise_sd": 0.0,
+    "noise_sd": 0.25,
     "batch": 128,
     "workers": 2,
     "epochs": 100,
@@ -14,7 +14,7 @@
     "natural_train": 0,
     "amp": 1,
     "acc_per_class": 0,
-    "lr": 0.1,
+    "lr": 1.0,
 
     "test_noise_sd": [0.0, 0.25, 0.5, 1.0],
 
@@ -27,10 +27,10 @@
     "cert_train": 1,
     "sigma": 0.25,
     "multiple_sigma": "0.25,0.5,1.0",
-    "skip": 10,
-    "skip_train": 200,
+    "skip": 20,
+    "skip_train": 100,
     "certify_bs": 1024,
     "N0": 128,
-    "N": 10000,
+    "N": 100000,
     "alpha": 0.001
 }

@@ -25,7 +25,25 @@
     "dist_url": "tcp://127.0.0.1:23456",
     "dist_backend": "nccl",
     "node_num": 1,
-    
+    #!/bin/bash
+
+    # 使用你想要的目录替换 'your_directory'
+    for dir in 'your_directory'/*/
+    do
+        du -sh "$dir"
+    done | sort -hr#!/bin/bash
+
+# 使用你想要的目录替换 'your_directory'
+for dir in 'your_directory'/*/
+do
+    du -sh "$dir"
+done | sort -hr#!/bin/bash
+
+# 使用你想要的目录替换 'your_directory'
+for dir in 'your_directory'/*/
+do
+    du -sh "$dir"
+done | sort -hr
     "certify": 1,
     "cert_train": 1,
     "sigma": 0.25,

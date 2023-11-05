@@ -110,6 +110,9 @@ def main(args):
         emb_scl = args.emb_scl if hasattr(args, 'emb_scl') else 1000
         emb_dim = args.emb_dim if hasattr(args, 'emb_dim') else 32
         model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)
+    elif args.arch == 'normal_resnet152_in':
+        track_running_stats = args.track_running_stats if hasattr(args, 'track_running_stats') else False
+        model = get_architecture(args.arch, args.dataset, class_num=class_num, track_running_stats=track_running_stats)
     elif args.arch == 'normal_resnet152_nt':
         assert hasattr(args, 'track_running_stats')
         model = get_architecture(args.arch, args.dataset, class_num=class_num, track_running_stats=args.track_running_stats)

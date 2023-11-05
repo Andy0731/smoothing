@@ -1,20 +1,22 @@
 {
     "debug": 0,
-    "dataset": "CIFAR100",
+    "pretrain_data": "imagenet32",
+    "dataset": "cifar10",
     "arch": "normal_resnet152_gn",
     "groups": 1,
     "noise_sd": 0.0,
     "batch": 128,
     "workers": 2,
     "epochs": 100,
+    "lr": 0.001,
     "momentum": 0.9,
     "weight_decay": 1e-4,
     "print_freq": 100,
     "clean_image": 0,
     "natural_train": 0,
+    "resume": "smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e100/imagenet32/nep_r152gn1_in32n0n025n05n1bs128_lr01e100/checkpoint.pth.tar",
     "amp": 1,
-    "acc_per_class": 0,
-    "lr": 0.1,
+    "train_layer": "linear",
 
     "test_noise_sd": [0.0, 0.25, 0.5, 1.0],
 
@@ -27,10 +29,10 @@
     "cert_train": 1,
     "sigma": 0.25,
     "multiple_sigma": "0.25,0.5,1.0",
-    "skip": 10,
+    "skip": 20,
     "skip_train": 200,
     "certify_bs": 1024,
     "N0": 128,
-    "N": 10000,
+    "N": 100000,
     "alpha": 0.001
 }

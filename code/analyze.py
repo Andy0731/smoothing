@@ -2217,7 +2217,7 @@ if __name__ == "__main__":
     ]
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100_train", "cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100_train", 1.0, [
+        "../amlt/smoothing/analysis/plots/cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100_train", "cln_cls_kl1_bfc_fzc_r152gn1_in32n025bs128lr01e100_ft_lr001e100_train", 3.0, [
             Line(ApproximateAccuracy(os.path.join('../', ctf_file)), ctf_file.split('/')[2]) for ctf_file in ctf_files
         ])
     

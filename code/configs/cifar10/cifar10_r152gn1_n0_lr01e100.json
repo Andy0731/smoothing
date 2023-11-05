@@ -1,6 +1,6 @@
 {
     "debug": 0,
-    "dataset": "CIFAR100",
+    "dataset": "cifar10",
     "arch": "normal_resnet152_gn",
     "groups": 1,
     "noise_sd": 0.0,
@@ -27,10 +27,10 @@
     "cert_train": 1,
     "sigma": 0.25,
     "multiple_sigma": "0.25,0.5,1.0",
-    "skip": 10,
-    "skip_train": 200,
+    "skip": 20,
+    "skip_train": 100,
     "certify_bs": 1024,
     "N0": 128,
-    "N": 10000,
+    "N": 100000,
     "alpha": 0.001
 }

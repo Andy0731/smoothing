@@ -81,7 +81,7 @@ def get_architecture(arch: str,
     elif arch == "cifar_resnet1199":
         model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
     elif arch == "normal_resnet152_in":
-        model = normal_resnet152_in(num_classes=class_num)
+        model = normal_resnet152_in(num_classes=class_num, track_running_stats=track_running_stats)
     elif arch == "normal_resnet152_nt":
         model = normal_resnet152_nt(num_classes=class_num, track_running_stats=track_running_stats)
     elif arch == "normal_resnet152_gn":
