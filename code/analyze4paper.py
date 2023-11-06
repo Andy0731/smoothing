@@ -9,6 +9,15 @@ import pandas as pd
 import seaborn as sns
 import math
 
+# get params from cli
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--path', '-p', type=str, default=None, help='path to ctf file')
+
+args = parser.parse_args()
+    
+
+
 sns.set()
 
 
@@ -257,15 +266,20 @@ if __name__ == "__main__":
         # "amlt/smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep100/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep100/certify_sigma1.0_test",
 
          # IN32 pretrain with equal probability (0,0.25,0.5,1.0), CF10 Finetune on clean images lr001e100
-        "amlt/smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/certify_sigma0.25_test",
-        "amlt/smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/certify_sigma0.5_test",
-        "amlt/smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/certify_sigma1.0_test",
+        # "amlt/smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/certify_sigma0.25_test",
+        # "amlt/smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/certify_sigma0.5_test",
+        # "amlt/smoothing/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1/certify_sigma1.0_test",
+
+        "certify_sigma0.25_test",
+        "certify_sigma0.5_test",
+        "certify_sigma1.0_test",
        
     ]
+    
 
     plot_certified_accuracy(
         "../amlt/smoothing/analysis/plots/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1", "CIFAR10", 3.0, [
-            Line(ApproximateAccuracy(os.path.join('../', ctf_file)), "$\sigma = $ "+ctf_file.split('/')[-1].split('_')[-2].replace('sigma', '')) for ctf_file in ctf_files
+            Line(ApproximateAccuracy(os.path.join(args.path, ctf_file)), "$\sigma = $ "+ctf_file.split('/')[-1].split('_')[-2].replace('sigma', '')) for ctf_file in ctf_files
         ])
     
     # plot_certified_accuracy(

@@ -24,6 +24,7 @@ from archs.normal_resnet_gn_efc import resnet152gnefc as normal_resnet152_gn_efc
 from archs.normal_resnet_nt import resnet152nt as normal_resnet152_nt
 from archs.vit import vit_b
 from datasets import NormalizeLayer
+from archs.torchvision_resnet_gn import resnet152tvgn as torchvision_resnet152gn
 
 import torchvision.models as torchvision_models
 import torch.nn as nn
@@ -73,6 +74,9 @@ def get_architecture(arch: str,
         cudnn.benchmark = True
     elif arch == 'torchvision_resnet152' and dataset == 'imagenet':
         model = torchvision_models.resnet152(num_classes=1000)
+        cudnn.benchmark = True
+    elif arch == 'torchvision_resnet152gn':
+        model = torchvision_resnet152gn(num_classes=1000, gn_groups=groups)
         cudnn.benchmark = True
     elif arch == "cifar_resnet20":
         model = resnet_cifar(depth=20, num_classes=10 if 'cifar' in dataset else 1000)

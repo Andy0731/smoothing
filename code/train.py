@@ -122,10 +122,14 @@ def main(args):
     elif args.arch == 'normal_resnet152_gn_efc':
         assert hasattr(args, 'groups')
         model = get_architecture(args.arch, args.dataset,  groups=args.groups, extra_fc_dim=args.extra_fc_dim, class_num=class_num)
+    elif args.arch == 'torchvision_resnet152gn':
+        assert hasattr(args, 'groups')
+        model = get_architecture(args.arch, args.dataset, groups=args.groups, class_num=class_num)
     else:
         model = get_architecture(args.arch, args.dataset, class_num=class_num)
 
-    # print('model: ', model)
+    if args.debug:
+        print('model: ', model)
 
     # error when using track_running_stats=False
     # model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
