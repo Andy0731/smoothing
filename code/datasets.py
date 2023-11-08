@@ -33,28 +33,34 @@ DATASETS_CLS_NUM = {
     "imagenet22k": 21841
 }
 
+def convert_to_rgb(image):  
+    return image.convert('RGB')  
 
 def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = None, img_size: int = None) -> Dataset:
     """Return the dataset as a PyTorch Dataset object"""
     if dataaug == 'imagenet_dataaug' and img_size == 224:
         general_train_transform = transforms.Compose([
+            transforms.Lambda(convert_to_rgb), 
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
         ])
         general_test_transform = transforms.Compose([
+            transforms.Lambda(convert_to_rgb), 
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor()
         ])
     else:
         general_train_transform = transforms.Compose([
+            transforms.Lambda(convert_to_rgb), 
             transforms.Resize(size=32),
             transforms.RandomCrop(32, padding=4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor()
         ])
         general_test_transform = transforms.Compose([
+            transforms.Lambda(convert_to_rgb), 
             transforms.Resize(size=32),
             transforms.CenterCrop(32),
             transforms.ToTensor()
@@ -90,6 +96,8 @@ def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = N
         return datasets.SUN397(datapath, download=True, transform=general_train_transform if split=='train' else general_test_transform)
     elif dataset == 'Caltech101':
         return datasets.Caltech101(datapath, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'Caltech256':
+        return datasets.Caltech256(datapath, download=True, transform=general_train_transform if split=='train' else general_test_transform)
     else:
         raise ValueError("Unknown dataset: " + dataset) 
 

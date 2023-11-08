@@ -820,7 +820,7 @@ if __name__ == "__main__":
 
     if args.debug == 1:
         args.node_num = 1
-        args.batch = min(2, args.batch)
+        args.batch = min(4, args.batch)
         args.epochs = 2
         args.skip = 10000
         args.skip_train = 200000

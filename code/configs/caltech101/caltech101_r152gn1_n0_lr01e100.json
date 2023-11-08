@@ -1,10 +1,12 @@
 {
-    "debug": 1,
+    "debug": 0,
     "dataset": "Caltech101",
-    "arch": "normal_resnet152_gn",
+    "dataaug": "imagenet_dataaug",
+    "img_size": 224,
+    "arch": "torchvision_resnet152gn",
     "groups": 1,
     "noise_sd": 0.0,
-    "batch": 128,
+    "batch": 64,
     "workers": 2,
     "epochs": 100,
     "momentum": 0.9,
@@ -14,7 +16,7 @@
     "natural_train": 0,
     "amp": 1,
     "acc_per_class": 0,
-    "lr": 1.0,
+    "lr": 0.1,
 
     "test_noise_sd": [0.0, 0.25, 0.5, 1.0],
 
@@ -24,13 +26,13 @@
     "node_num": 1,
     
     "certify": 1,
-    "cert_train": 1,
+    "cert_train": 0,
     "sigma": 0.25,
     "multiple_sigma": "0.25,0.5,1.0",
-    "skip": 10,
+    "skip": 1,
     "skip_train": 200,
     "certify_bs": 1024,
     "N0": 128,
-    "N": 10000,
+    "N": 100000,
     "alpha": 0.001
 }

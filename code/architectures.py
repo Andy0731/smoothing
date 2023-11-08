@@ -76,7 +76,7 @@ def get_architecture(arch: str,
         model = torchvision_models.resnet152(num_classes=1000)
         cudnn.benchmark = True
     elif arch == 'torchvision_resnet152gn':
-        model = torchvision_resnet152gn(num_classes=1000, gn_groups=groups)
+        model = torchvision_resnet152gn(num_classes=class_num, gn_groups=groups)
         cudnn.benchmark = True
     elif arch == "cifar_resnet20":
         model = resnet_cifar(depth=20, num_classes=10 if 'cifar' in dataset else 1000)
