@@ -22,7 +22,8 @@ def get_dataset(dataset: str,
     split: str, 
     datapath: str = None, 
     dataaug: str = None, 
-    noise_sd: float = 0.0) -> Dataset:
+    noise_sd: float = 0.0,
+    noise_sd_list: list = None) -> Dataset:
 
     """Return the dataset as a PyTorch Dataset object"""
     if dataset == "imagenet":
@@ -30,7 +31,7 @@ def get_dataset(dataset: str,
     elif dataset == "cifar10":
         return _cifar10(split, datapath, dataaug)
     elif dataset == 'imagenet32':
-        return _imagenet32(split, datapath, dataaug, noise_sd)
+        return _imagenet32(split, datapath, dataaug, noise_sd, noise_sd_list=noise_sd_list)
     elif dataset == 'ti500k':
         return TiTop50KDataset(datapath, dataaug, noise_sd)
 
@@ -118,7 +119,7 @@ def _imagenet(split: str, datapath: str = None, dataaug: str = None) -> Dataset:
         ])
     return datasets.ImageFolder(subdir, transform)
 
-def get_img_transform(dataaug: str = None, noise_sd: float = 0.0):
+def get_img_transform(dataaug: str = None, noise_sd: float = 0.0, noise_sd_list: list = None):
     if dataaug == 'moco_v3_aug':
         img_transforms = transforms.Compose([
             transforms.RandomResizedCrop(32),
@@ -137,6 +138,38 @@ def get_img_transform(dataaug: str = None, noise_sd: float = 0.0):
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
         ])
+    elif dataaug == 'moco_two_crops_nep':
+        normalize = transforms.Normalize(mean=_IMAGENET_MEAN, std=_IMAGENET_STDDEV)
+        # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
+        augmentation1 = [
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomApply([
+                transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
+            ], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=1.0),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            moco.loader.GaussianNoiseNEP(noise_sd_list),
+            normalize
+        ]
+
+        augmentation2 = [
+            transforms.RandomCrop(32, padding=4), 
+            transforms.RandomApply([
+                transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)  # not strengthened
+            ], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([moco.loader.GaussianBlur([.1, 2.])], p=0.1),
+            transforms.RandomApply([moco.loader.Solarize()], p=0.2),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize
+        ]            
+
+        img_transforms = moco.loader.TwoCropsTransform(transforms.Compose(augmentation1), 
+            transforms.Compose(augmentation2))
+
     elif dataaug == 'moco_two_crops':
         normalize = transforms.Normalize(mean=_CIFAR10_MEAN, std=_CIFAR10_STDDEV)
         # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
@@ -259,9 +292,9 @@ def get_img_transform(dataaug: str = None, noise_sd: float = 0.0):
     
     return img_transforms
 
-def _imagenet32(split: str, datapath: str = None, dataaug: str = None, noise_sd: float = 0.0) -> Dataset:
+def _imagenet32(split: str, datapath: str = None, dataaug: str = None, noise_sd: float = 0.0, noise_sd_list: list = None) -> Dataset:
     if split == "train":
-        img_transforms = get_img_transform(dataaug, noise_sd)
+        img_transforms = get_img_transform(dataaug, noise_sd, noise_sd_list)
         return ImageNetDS(datapath, 32, train=True, transform=img_transforms)
     elif split == "test":
         return ImageNetDS(datapath, 32, train=False, transform=transforms.ToTensor())

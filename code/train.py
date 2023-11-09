@@ -21,6 +21,7 @@ import torch.multiprocessing as mp
 from torch.utils.tensorboard import SummaryWriter
 from common import get_args
 from archs.normal_resnet import resnet152 as normal_resnet152
+from archs.normal_resnet_gn import resnet152gn as normal_resnet152_gn
 
 # add for moco
 import moco.optimizer
@@ -28,6 +29,7 @@ import moco.builder
 import torch.backends.cudnn as cudnn
 from functools import partial
 import shutil
+import torchvision
 
 
 def main_spawn(args):
@@ -69,13 +71,13 @@ def main(args):
     # create model
     print("=> creating model '{}'".format(args.arch))
     model = moco.builder.MoCo_ResNet(
-        eval(args.arch), args.moco_dim, args.moco_mlp_dim, args.moco_t)
-    
+        eval(args.arch), args.moco_dim, args.moco_mlp_dim, args.moco_t, args.arch)
+
     # infer learning rate before changing batch size
-    args.lr = args.lr * args.batch * args.world_size / 256    
+    # args.lr = args.lr * args.batch * args.world_size / 256    
 
     # apply SyncBN
-    model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+    # model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(args.local_rank)
     if args.ddp:
         model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank)
@@ -124,7 +126,8 @@ def main(args):
 
     # Data loading code
     dataaug = args.dataaug if hasattr(args, 'dataaug') else None
-    train_dataset = get_dataset(args.dataset, 'train', args.data, dataaug, args.noise_sd)
+    noise_sd_list = args.noise_sd_list if hasattr(args, 'noise_sd_list') else None
+    train_dataset = get_dataset(args.dataset, 'train', datapath=args.data, dataaug=dataaug, noise_sd=args.noise_sd, noise_sd_list=noise_sd_list)
     has_testset = False if (args.dataset == 'ti500k' or args.moco) else True
     if has_testset:
         test_dataset = get_dataset(args.dataset, 'test', args.data)
@@ -172,8 +175,8 @@ def main(args):
         train(train_loader, model, optimizer, scaler, writer, epoch, args)
 
         if args.global_rank == 0:
-            ckpt_file = os.path.join(args.outdir, 'checkpoint.pth.tar')
-            ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
+            ckpt_file = os.path.join(args.retry_path, 'checkpoint.pth.tar')
+            # ckpt_file_cp = os.path.join(args.retry_path, 'checkpoint.pth.tar')
             try:
                 torch.save({
                     'epoch': epoch + 1,
@@ -182,7 +185,7 @@ def main(args):
                     'optimizer': optimizer.state_dict(),
                     'scaler': scaler.state_dict(),
                 }, ckpt_file)
-                shutil.copyfile(ckpt_file, ckpt_file_cp)
+                # shutil.copyfile(ckpt_file, ckpt_file_cp)
             except OSError:
                 print("OSError when saving checkpoint in epoch ", epoch)
     
@@ -217,7 +220,15 @@ def train(train_loader, model, optimizer, scaler, summary_writer, epoch, args):
     moco_m = args.moco_m
     for i, (images, _) in enumerate(train_loader):
 
-        if args.debug and i > 1:
+        # print('images[0].shape ', images[0].shape, ' images[1].shape ', images[1].shape)
+
+        if args.debug and summary_writer is not None:
+            img_grid0 = torchvision.utils.make_grid(images[0], normalize=True)
+            summary_writer.add_image('image0', img_grid0, epoch)
+            img_grid1 = torchvision.utils.make_grid(images[1], normalize=True)
+            summary_writer.add_image('image1', img_grid1, epoch)
+
+        if args.debug and i > 0:
             break
 
         # measure data loading time
@@ -241,6 +252,7 @@ def train(train_loader, model, optimizer, scaler, summary_writer, epoch, args):
         if summary_writer:
             summary_writer.add_scalar("loss", loss.item(), epoch * iters_per_epoch + i)
             summary_writer.add_scalar("lr", lr, epoch * iters_per_epoch + i)
+            summary_writer.add_scalar("moco_m", moco_m, epoch * iters_per_epoch + i)
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
@@ -294,7 +306,7 @@ if __name__ == "__main__":
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(8, args.batch)
-        args.epochs = 100
+        args.epochs = 10
         args.skip = 5000
         args.skip_train = 100000
 

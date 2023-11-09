@@ -13,7 +13,7 @@ class MoCo(nn.Module):
     Build a MoCo model with a base encoder, a momentum encoder, and two MLPs
     https://arxiv.org/abs/1911.05722
     """
-    def __init__(self, base_encoder, dim=256, mlp_dim=4096, T=1.0):
+    def __init__(self, base_encoder, dim=256, mlp_dim=4096, T=1.0, encoder_name=None):
         """
         dim: feature dimension (default: 256)
         mlp_dim: hidden dimension in MLPs (default: 4096)
@@ -22,6 +22,8 @@ class MoCo(nn.Module):
         super(MoCo, self).__init__()
 
         self.T = T
+
+        self.encoder_name = encoder_name
 
         # build encoders
         self.base_encoder = base_encoder(num_classes=mlp_dim)
@@ -42,12 +44,19 @@ class MoCo(nn.Module):
             mlp.append(nn.Linear(dim1, dim2, bias=False))
 
             if l < num_layers - 1:
-                mlp.append(nn.BatchNorm1d(dim2))
+                # print('self.encoder_name: ', self.encoder_name)
+                if self.encoder_name == 'normal_resnet152_gn':
+                    mlp.append(nn.GroupNorm(1, dim2, affine=True))
+                else:
+                    mlp.append(nn.BatchNorm1d(dim2))
                 mlp.append(nn.ReLU(inplace=True))
             elif last_bn:
                 # follow SimCLR's design: https://github.com/google-research/simclr/blob/master/model_util.py#L157
                 # for simplicity, we further removed gamma in BN
-                mlp.append(nn.BatchNorm1d(dim2, affine=False))
+                if self.encoder_name == 'normal_resnet152_gn':
+                    mlp.append(nn.GroupNorm(1, dim2, affine=True))
+                else:
+                    mlp.append(nn.BatchNorm1d(dim2, affine=False))
 
         return nn.Sequential(*mlp)
 

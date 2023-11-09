@@ -9,6 +9,7 @@ import math
 import random
 import torchvision.transforms.functional as tf
 import torch
+import numpy as np
 
 
 class TwoCropsTransform:
@@ -59,3 +60,23 @@ class GaussianNoise(torch.nn.Module):
 
     def forward(self, x):
         return x + torch.randn_like(x) * self.noise_sd
+    
+    
+class GaussianNoiseNEP(torch.nn.Module):
+    """Adding random Gaussian noise to image.
+   
+    Args:
+        noise_sd (float): standard deviation of Gaussian noise
+
+    Returns:
+        x + noise
+    """
+
+    def __init__(self, noise_sd_list=[0.0, 0.25, 0.5, 1.0]):
+        super().__init__()
+        self.noise_sd_list = np.array(noise_sd_list)
+
+    def forward(self, x):
+        noise_sd = np.random.choice(self.noise_sd_list, size=(1))
+        x = x + torch.randn_like(x) * noise_sd[0]
+        return x
