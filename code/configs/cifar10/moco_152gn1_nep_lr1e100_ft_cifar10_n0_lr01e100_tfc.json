@@ -1,0 +1,38 @@
+{
+    "debug": 0,
+    "pretrain_data": "imagenet32",
+    "dataset": "cifar10",
+    "arch": "normal_resnet152_gn",
+    "groups": 1,
+    "noise_sd": 0.0,
+    "batch": 128,
+    "workers": 2,
+    "epochs": 100,
+    "lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 1e-4,
+    "print_freq": 100,
+    "clean_image": 0,
+    "natural_train": 0,
+    "resume": "smoothing/moco_r152gn1_nep_lr1_e100/moco/moco_r152gn1_nep_lr1_e100/checkpoint.pth.tar",
+    "amp": 1,
+    "finetune": 1,
+    "train_layer": "linear",
+    
+    "test_noise_sd": [0.0, 0.25, 0.5, 1.0],
+
+    "ddp": 1,
+    "dist_url": "tcp://127.0.0.1:23456",
+    "dist_backend": "nccl",
+    "node_num": 1,
+    
+    "certify": 1,
+    "cert_train": 0,
+    "sigma": 0.25,
+    "skip": 20,
+    "skip_train": 100,
+    "certify_bs": 1024,
+    "N0": 128,
+    "N": 100000,
+    "alpha": 0.001
+}
