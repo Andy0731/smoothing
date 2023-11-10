@@ -308,22 +308,22 @@ jobs:
   - python train.py --config configs/moco/moco_r152gn1_nep_lr1_e200.json
   process_count_per_node: 8
   mpi: true
-- name: moco_r152gn1_nep_lr10_e200
-  sku: 4xG8-V100
-  command:
-  - python train.py --config configs/moco/moco_r152gn1_nep_lr10_e200.json
-  process_count_per_node: 8
-  mpi: true
+# - name: moco_r152gn1_nep_lr10_e200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/moco/moco_r152gn1_nep_lr10_e200.json
+#   process_count_per_node: 8
+#   mpi: true
 
-- name: moco_r152gn1_nep_lr1_e400
-  sku: 4xG8-V100
-  command:
-  - python train.py --config configs/moco/moco_r152gn1_nep_lr1_e400.json
-  process_count_per_node: 8
-  mpi: true
-- name: moco_r152gn1_nep_lr10_e400
-  sku: 4xG8-V100
-  command:
-  - python train.py --config configs/moco/moco_r152gn1_nep_lr10_e400.json
-  process_count_per_node: 8
-  mpi: true
+# - name: moco_r152gn1_nep_lr1_e400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/moco/moco_r152gn1_nep_lr1_e400.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: moco_r152gn1_nep_lr10_e400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/moco/moco_r152gn1_nep_lr10_e400.json
+#   process_count_per_node: 8
+#   mpi: true
