@@ -159,9 +159,12 @@ def main(args):
     # freeze all layers except the train_layer
     elif hasattr(args, 'train_layer') and args.train_layer == 'linear':
         for name, param in model.named_parameters():
-            if not 'linear' in name:
+            if (not 'linear' in name) and (not 'fc' in name):
                 param.requires_grad = False
-        optimizer = SGD(model.module[1].linear.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
+        try:
+            optimizer = SGD(model.module[1].linear.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
+        except:
+            optimizer = SGD(model.module[1].fc.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     else:
         optimizer = SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
@@ -638,7 +641,8 @@ def train(args: AttrDict,
                     continue
                 class_acc[cls_].update(acc_cls[cls_], num_cls[cls_])
 
-
+        if args.debug:
+            print('loss ', loss.item(), ' acc1 ', acc1.item(), ' acc5 ', acc5.item())
         # compute gradient and do SGD step
         scaler.scale(loss).backward()
         scaler.step(optimizer)
@@ -814,7 +818,7 @@ if __name__ == "__main__":
         args.local = 0
     args.smoothing_path = args.data
 
-    if hasattr(args, 'pretrain_data') and args.pretrain_data == 'imagenet32':
+    if hasattr(args, 'pretrain_data'):
         args.smoothing_path = os.path.join(os.path.dirname(os.path.dirname(args.data)), args.pretrain_data)
         print('args.smoothing_path: ', args.smoothing_path)
 

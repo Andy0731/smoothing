@@ -2,7 +2,7 @@
     "debug": 0,
     "pretrain_data": "imagenet32",
     "dataset": "cifar10",
-    "arch": "normal_resnet152_gn",
+    "arch": "torchvision_resnet152gn",
     "groups": 1,
     "noise_sd": 0.0,
     "batch": 128,
