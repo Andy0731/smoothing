@@ -356,3 +356,568 @@ jobs:
 #   sku: G8-V100
 #   command:
 #   - python train.py --config configs/cifar10/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cifar10_n0_lr0001e100.json
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr1e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr1e100.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr01e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr01e100.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr001e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr001e100.json
+#   process_count_per_node: 8
+#   mpi: true
+
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr01e200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr01e200.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr01e400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_tvr152gn1_nep_n0n025n05n1bs128_ns32to224_lr01e400.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep1.json
+
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr1e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_nep_r152gn1_n0n025n04n05n06_lr1e100.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr1e200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_nep_r152gn1_n0n025n04n05n06_lr1e200.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_nep_r152gn1_n0n025n04n05n06_lr01e100.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_nep_r152gn1_n0n025n04n05n06_lr01e200.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr001e100
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_nep_r152gn1_n0n025n04n05n06_lr001e100.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr001e200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/imagenet32/in32_nep_r152gn1_n0n025n04n05n06_lr001e200.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep1_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep10_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep100_tfc.json
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep1_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep10_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep100_tfc.json
+
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep1.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep10.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr001ep100.json
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep1.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep10.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e100_ft_cifar10_n0_lr0001ep100.json
+
+
+
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr01e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr01e1.json
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr01e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr01e10.json
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr01e100.json
+
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr001e1.json
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr001e10.json
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr001e100.json
+
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr0001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr0001e1.json
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr0001e10.json
+# - name: moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e200_ft_cifar10_n0_lr0001e100.json
+
+
+
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr01e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr01e1.json
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr01e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr01e10.json
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr01e100.json
+
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr001e1.json
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr001e10.json
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr001e100.json
+
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr0001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr0001e1.json
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr0001e10.json
+# - name: moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/moco_152gn1_nep_lr1e400_ft_cifar10_n0_lr0001e100.json
+
+
+
+# - name: nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr001e1.json
+# - name: nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr001e10.json
+# - name: nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr001e100.json
+
+
+# - name: nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr0001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr0001e1.json
+# - name: nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr0001e10.json
+# - name: nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_n025n05n1_cln_cls_kl1_bfc_fzc_r152gn1_in32bs128_lr01e800_ft_lr0001e100.json
+
+
+
+# - name: nep_r152gn1_in32n0n025n05n1bs128_lr01e800_ft_lr001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e800_ft_lr001ep100.json
+# - name: nep_r152gn1_in32n0n025n05n1bs128_lr01e800_ft_lr0001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/finetune/nep_r152gn1_in32n0n025n05n1bs128_lr01e800_ft_lr0001ep100.json
+
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep1_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep10_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep100_tfc.json
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep1_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep10_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep100_tfc.json
+
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep1.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep10.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr001ep100.json
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep1.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep10.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e200_ft_cifar10_n0_lr0001ep100.json
+
+
+
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr001e1.json
+
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr001e10.json
+
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr001e100.json
+
+
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr0001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr0001e1.json
+
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr0001e10.json
+
+# - name: in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr0001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_nep_r152gn1_n0n025n04n05n06_lr01e200_ft_cifar10_n0_lr0001e100.json
+
+
+
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep1_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep10_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep100_tfc.json
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep1_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep10_tfc.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep100_tfc.json
+
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep1.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep10.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr001ep100.json
+
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep1.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep10.json
+# - name: in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_tvr152gn1_nep_n0n025n05n1_ns32to224_lr01e400_ft_cifar10_n0_lr0001ep100.json
+
+
+# - name: cifar10_r152gn1_n025_lr1e800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/cifar10_r152gn1_n025_lr1e800.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: cifar10_r152gn1_n025_lr01e800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/cifar10_r152gn1_n025_lr01e800.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: cifar10_r152gn1_n025_lr001e800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/cifar10_r152gn1_n025_lr001e800.json
+#   process_count_per_node: 8
+#   mpi: true
+
+
+# - name: cifar10_r152gn1_n05_lr1e800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/cifar10_r152gn1_n05_lr1e800.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: cifar10_r152gn1_n05_lr01e800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/cifar10_r152gn1_n05_lr01e800.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: cifar10_r152gn1_n05_lr001e800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/cifar10_r152gn1_n05_lr001e800.json
+#   process_count_per_node: 8
+#   mpi: true
+
+
+
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep200.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep200.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep200.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep400.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep400.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep400.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep800.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep800.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep800.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep1600
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr01ep1600.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep1600
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr001ep1600.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep1600
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr0001ep1600.json
+#   process_count_per_node: 8
+#   mpi: true
+
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep200.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep200
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep200.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep400.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep400
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep400.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep800.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep800
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep800.json
+#   process_count_per_node: 8
+#   mpi: true
+
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep1600
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr00001ep1600.json
+#   process_count_per_node: 8
+#   mpi: true
+# - name: in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep1600
+#   sku: 4xG8-V100
+#   command:
+#   - python train.py --config configs/cifar10/in32_r152gn1_nep_n0n025n05n1_lr01e400_ft_cifar10_nep_n0n025n05n1_lr000001ep1600.json
+#   process_count_per_node: 8
+#   mpi: true

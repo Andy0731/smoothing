@@ -435,7 +435,7 @@ def train(args: AttrDict,
         args.cur_noise = noise_sd
 
         # log the input images of the first batch using tensorboard writer
-        if writer is not None and i == 0:
+        if args.debug and writer is not None:
             img_grid = torchvision.utils.make_grid(inputs)
             writer.add_image('cifar input_images', img_grid, epoch)
 
@@ -506,6 +506,9 @@ def train(args: AttrDict,
             if hasattr(args, 'resize_after_noise'):
                 # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
                 inputs = torch.nn.functional.interpolate(inputs, args.resize_after_noise, mode='bicubic')
+                if args.debug and writer is not None:
+                    img_grid = torchvision.utils.make_grid(inputs)
+                    writer.add_image('input_images after resize', img_grid, epoch)          
 
             # expand (x + gnoise) with k fnoise, 
             if hasattr(args, 'favg') and args.favg:
@@ -825,7 +828,7 @@ if __name__ == "__main__":
     if args.debug == 1:
         args.node_num = 1
         args.batch = min(4, args.batch)
-        args.epochs = 2
+        args.epochs = 10
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128
