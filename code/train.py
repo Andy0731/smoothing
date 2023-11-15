@@ -457,6 +457,8 @@ def train(args: AttrDict,
                 args.cur_noise = noise_sd[0]# (N,)
             elif hasattr(args, 'noise_mode') and args.noise_mode == 'noisy_equal_prob': # (N,)
                 args.cur_noise = noise_sd[0]
+            elif hasattr(args, 'noise_mode') and args.noise_mode == 'noisy_custom_prob':
+                args.cur_noise = noise_sd[0]
             else: 
                 args.cur_noise = noise_sd
 
@@ -464,7 +466,7 @@ def train(args: AttrDict,
                 acc_noise = args.accurate_noise if hasattr(args, 'accurate_noise') else 0
                 inputs = diffusion_model(inputs, args.t, acc_noise, noise_sd)
             else:
-                if hasattr(args, 'noise_mode') and args.noise_mode in ['batch_random', 'noisy_prob_batch', 'noisy_equal_prob']: # (N,):
+                if hasattr(args, 'noise_mode') and args.noise_mode in ['batch_random', 'noisy_prob_batch', 'noisy_equal_prob', 'noisy_custom_prob']: # (N,):
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * torch.from_numpy(noise_sd.reshape(-1,1,1,1)).to(inputs.dtype).to(inputs.device)
                     if args.debug and writer is not None:
                         img_grid = torchvision.utils.make_grid(inputs)
@@ -827,7 +829,7 @@ if __name__ == "__main__":
 
     if args.debug == 1:
         args.node_num = 1
-        args.batch = min(4, args.batch)
+        args.batch = min(100, args.batch)
         args.epochs = 10
         args.skip = 10000
         args.skip_train = 200000

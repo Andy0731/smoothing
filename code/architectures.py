@@ -101,7 +101,8 @@ def get_architecture(arch: str,
             elif 'nemb' in arch:
                 model = arch + '(nemb_layer=nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim, num_classes=class_num)'
             else:
-                model = arch + '(num_classes=class_num, track_running_stats=track_running_stats)'
+                # model = arch + '(num_classes=class_num, track_running_stats=track_running_stats)'
+                model = arch + '(num_classes=class_num)'
         else:
             model = arch + '(num_classes=class_num)'
         print('model: ', model)
