@@ -115,9 +115,9 @@ def plot_certified_accuracy(outfile: str, title: str, max_radius: float,
     plt.xlim((0, max_radius))
     # plt.tick_params(labelsize=14)
     # write a italic in latex
-    plt.xlabel("Radius", fontsize=16)
-    plt.ylabel("Certified accuracy", fontsize=16)
-    plt.xlabel("Radius (L2)", fontsize=16)
+    plt.xlabel("Radius", fontsize=14)
+    plt.ylabel("Certified accuracy", fontsize=14)
+    plt.xlabel("Radius ($\ell_2$)", fontsize=14)
     plt.ylabel("Certified accuracy")
     # plt.xlabel("Radius (l2)", fontsize=16)
     # plt.ylabel("Certified accuracy", fontsize=16)
@@ -276,9 +276,12 @@ if __name__ == "__main__":
        
     ]
     
+    # print(args.path)
+    name = os.path.basename(os.path.normpath(args.path))
+    # print(name)
 
     plot_certified_accuracy(
-        "../amlt/smoothing/analysis/plots/nep_r152gn1_in32n0n025n05n1bs128_lr01e200_ft_lr001ep1", "CIFAR10", 3.0, [
+        "../amlt/smoothing/analysis/plots/" + name, "CIFAR10", 3.0, [
             Line(ApproximateAccuracy(os.path.join(args.path, ctf_file)), "$\sigma = $ "+ctf_file.split('/')[-1].split('_')[-2].replace('sigma', '')) for ctf_file in ctf_files
         ])
     

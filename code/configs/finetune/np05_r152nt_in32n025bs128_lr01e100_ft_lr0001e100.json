@@ -26,7 +26,8 @@
     "node_num": 1,
     
     "certify": 1,
-    "cert_train": 1,
+    "cert_train": 0,
+    "multiple_sigma": "0.25,0.5,1.0",
     "sigma": 0.25,
     "skip": 20,
     "skip_train": 100,
