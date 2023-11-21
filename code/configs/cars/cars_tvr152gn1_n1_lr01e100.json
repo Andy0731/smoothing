@@ -1,10 +1,10 @@
 {
-    "debug": 1,
-    "dataset": "Food101",
-    "arch": "normal_resnet152_gn",
+    "debug": 0,
+    "dataset": "StanfordCars",
+    "arch": "torchvision_resnet152gn",
     "groups": 1,
-    "noise_sd": 0.0,
-    "batch": 128,
+    "noise_sd": 1.0,
+    "batch": 64,
     "workers": 2,
     "epochs": 100,
     "momentum": 0.9,
@@ -14,7 +14,10 @@
     "natural_train": 0,
     "amp": 1,
     "acc_per_class": 0,
-    "lr": 1.0,
+
+    "lr": 0.1,
+    "dataaug": "imagenet_dataaug",
+    "img_size": 224,
 
     "test_noise_sd": [0.0, 0.25, 0.5, 1.0],
 
@@ -24,9 +27,9 @@
     "node_num": 1,
     
     "certify": 1,
-    "cert_train": 1,
-    "sigma": 0.25,
+    "cert_train": 0,
     "multiple_sigma": "0.25,0.5,1.0",
+    "sigma": 0.25,
     "skip": 10,
     "skip_train": 200,
     "certify_bs": 1024,

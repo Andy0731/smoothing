@@ -14,7 +14,9 @@ from tsv import TSVInstance
 IMAGENET_LOC_ENV = "IMAGENET_DIR"
 
 # list of all datasets
-DATASETS = ["imagenet", "cifar10", "CIFAR100", "Caltech101", "Caltech256", "StanfordCars", "DTD", "Flowers102", "Food101", "OxfordIIITPet", "SUN397", "imagenet32", "ti500k", "imagenet22k"]
+DATASETS = ["imagenet", "cifar10", "CIFAR100", "Caltech101", "Caltech256", "StanfordCars", "DTD", 
+            "Flowers102", "Food101", "OxfordIIITPet", "SUN397", "imagenet32", "ti500k", "imagenet22k",
+            "Aircraft", "Pets"]
 
 DATASETS_CLS_NUM = {
     "imagenet": 1000,
@@ -30,7 +32,9 @@ DATASETS_CLS_NUM = {
     "SUN397": 397,
     "imagenet32": 1000,
     "ti500k": 10,
-    "imagenet22k": 21841
+    "imagenet22k": 21841,
+    "Aircraft": 100,
+    "Pets": 37,
 }
 
 def convert_to_rgb(image):  
@@ -98,6 +102,14 @@ def get_dataset(dataset: str, split: str, datapath: str = None, dataaug: str = N
         return datasets.Caltech101(datapath, download=True, transform=general_train_transform if split=='train' else general_test_transform)
     elif dataset == 'Caltech256':
         return datasets.Caltech256(datapath, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'Aircraft':
+        # split = 'trainval' if split == 'train' else 'test'
+        return datasets.FGVCAircraft(datapath, split=split, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'Flowers102':
+        return datasets.Flowers102(datapath, split=split, download=True, transform=general_train_transform if split=='train' else general_test_transform)
+    elif dataset == 'Pets':
+        split = 'trainval' if split == 'train' else 'test'
+        return datasets.OxfordIIITPet(datapath, split=split, download=True, transform=general_train_transform if split=='train' else general_test_transform)
     else:
         raise ValueError("Unknown dataset: " + dataset) 
 

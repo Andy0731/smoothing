@@ -437,7 +437,7 @@ def train(args: AttrDict,
         # log the input images of the first batch using tensorboard writer
         if args.debug and writer is not None:
             img_grid = torchvision.utils.make_grid(inputs)
-            writer.add_image('cifar input_images', img_grid, epoch)
+            writer.add_image('input images', img_grid, epoch)
 
         if not args.natural_train:
             if args.clean_image:
@@ -504,6 +504,9 @@ def train(args: AttrDict,
                         writer.add_image('cifar clean + imagenet clean + imagenet noise', img_grid, epoch)
                 else:
                     inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+                    if args.debug and writer is not None:
+                        img_grid = torchvision.utils.make_grid(inputs)
+                        writer.add_image('inputs+noise', img_grid, epoch)
 
             if hasattr(args, 'resize_after_noise'):
                 # inputs = torchvision.transforms.functional.resize(inputs, args.resize_after_noise)
@@ -829,8 +832,8 @@ if __name__ == "__main__":
 
     if args.debug == 1:
         args.node_num = 1
-        args.batch = min(100, args.batch)
-        args.epochs = 10
+        args.batch = min(8, args.batch)
+        args.epochs = 2
         args.skip = 10000
         args.skip_train = 200000
         args.N = 128
