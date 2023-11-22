@@ -61,7 +61,8 @@ def get_architecture(arch: str,
                      emb_dim=None, 
                      groups=None,
                      track_running_stats=True,
-                     extra_fc_dim=None) -> torch.nn.Module:
+                     extra_fc_dim=None,
+                     weights=None) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
     :param arch: the architecture - should be in the ARCHITECTURES list above
@@ -72,8 +73,19 @@ def get_architecture(arch: str,
     if arch == "resnet50" and dataset == "imagenet":
         model = resnet50()
         cudnn.benchmark = True
-    elif arch == 'torchvision_resnet152' and dataset == 'imagenet':
-        model = torchvision_models.resnet152(num_classes=1000)
+    elif arch == 'torchvision_resnet152':
+        if weights == 'DEFAULT':
+            model = torchvision_models.resnet152(weights=weights)
+            model.fc = nn.Linear(2048, class_num)
+        else:
+            model = torchvision_models.resnet152(num_classes=class_num)
+        cudnn.benchmark = True
+    elif arch == 'torchvision_resnet50':
+        if weights == 'DEFAULT':
+            model = torchvision_models.resnet50(weights=weights)
+            model.fc = nn.Linear(2048, class_num)
+        else:
+            model = torchvision_models.resnet50(num_classes=class_num)
         cudnn.benchmark = True
     elif arch == 'torchvision_resnet152gn':
         model = torchvision_resnet152gn(num_classes=class_num, gn_groups=groups)

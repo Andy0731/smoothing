@@ -1,11 +1,11 @@
 {
     "debug": 0,
     "pretrain_data": "imagenet",
-    "dataset": "StanfordCars",
+    "dataset": "Flowers102",
     "arch": "torchvision_resnet152gn",
     "groups": 1,
     "noise_sd": 0.0,
-    "batch": 128,
+    "batch": 64,
     "workers": 2,
     "epochs": 100,
     "momentum": 0.9,

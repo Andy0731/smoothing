@@ -18,7 +18,7 @@
     "resume": "smoothing/in_tvr152gn1_nep_n0n025n05n1_lr01e100/imagenet/in_tvr152gn1_nep_n0n025n05n1_lr01e100/checkpoint.pth.tar",
     "finetune": 1,
 
-    "lr": 0.01,
+    "lr": 0.1,
     "dataaug": "imagenet_dataaug",
     "img_size": 224,
 

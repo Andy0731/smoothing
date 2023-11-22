@@ -1,11 +1,9 @@
 {
     "debug": 0,
-    "pretrain_data": "imagenet",
     "dataset": "StanfordCars",
-    "arch": "torchvision_resnet152gn",
-    "groups": 1,
-    "noise_sd": 0.0,
-    "batch": 128,
+    "arch": "torchvision_resnet152",
+    "noise_sd": 0.25,
+    "batch": 64,
     "workers": 2,
     "epochs": 100,
     "momentum": 0.9,
@@ -15,10 +13,8 @@
     "natural_train": 0,
     "amp": 1,
     "acc_per_class": 0,
-    "resume": "smoothing/in_tvr152gn1_nep_n0n025n05n1_lr01e100/imagenet/in_tvr152gn1_nep_n0n025n05n1_lr01e100/checkpoint.pth.tar",
-    "finetune": 1,
+    "lr": 0.001,
 
-    "lr": 0.0001,
     "dataaug": "imagenet_dataaug",
     "img_size": 224,
 

@@ -1,7 +1,7 @@
 {
     "debug": 0,
     "pretrain_data": "imagenet",
-    "dataset": "StanfordCars",
+    "dataset": "DTD",
     "arch": "torchvision_resnet152gn",
     "groups": 1,
     "noise_sd": 0.0,

@@ -84,51 +84,12 @@ def main(args):
             test_loader = DataLoader(test_dataset, shuffle=False, batch_size=args.batch,
                                 num_workers=args.workers, pin_memory=pin_memory)
 
-    if hasattr(args, 'extra_kl') and args.extra_kl:
-        assert hasattr(args, 'extra_dataset') and args.ddp and hasattr(args, 'extra_batch') and hasattr(args, 'extra_kl_weight') and hasattr(args, 'extra_noise_sd')
-        if args.extra_dataset == args.dataset:
-            extra_data_path = args.data
-        else:
-            extra_data_path = args.data.replace('cifar10', args.extra_dataset) if args.local else args.data.replace('cifar', args.extra_dataset)
-        extra_dataset = get_dataset(args.extra_dataset, 'train', extra_data_path, dataaug, img_size)
-        extra_sampler = torch.utils.data.distributed.DistributedSampler(extra_dataset, shuffle=True)
-        extra_loader = DataLoader(extra_dataset, batch_size=args.extra_batch, num_workers=args.workers, pin_memory=pin_memory, sampler=extra_sampler)
 
     class_num = get_num_classes(args.dataset)
-    # build model
-    if 'hug' in args.outdir:
-        model = get_hug_model(args.arch)
-    elif 'diffusion' in args.outdir:
-        model = get_hug_vit(args.arch)
-    elif hasattr(args, 'favg') and args.favg:
-        assert hasattr(args, 'avgn_loc') and hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
-        model = get_architecture(args.arch, args.dataset, avgn_loc=args.avgn_loc, avgn_num=args.avgn_num)
-    elif hasattr(args, 'nconv') and args.nconv:
-        assert hasattr(args, 'avgn_num') and hasattr(args, 'fnoise_sd')
-        model = get_architecture(args.arch, args.dataset, avgn_num=args.avgn_num)
-    elif hasattr(args, 'noise_sd_embed') and args.noise_sd_embed:
-        emb_scl = args.emb_scl if hasattr(args, 'emb_scl') else 1000
-        emb_dim = args.emb_dim if hasattr(args, 'emb_dim') else 32
-        model = get_architecture(args.arch, args.dataset, nemb_layer=args.nemb_layer, emb_scl=emb_scl, emb_dim=emb_dim)
-    elif args.arch == 'normal_resnet152_in':
-        track_running_stats = args.track_running_stats if hasattr(args, 'track_running_stats') else False
-        model = get_architecture(args.arch, args.dataset, class_num=class_num, track_running_stats=track_running_stats)
-    elif args.arch == 'normal_resnet152_nt':
-        assert hasattr(args, 'track_running_stats')
-        model = get_architecture(args.arch, args.dataset, class_num=class_num, track_running_stats=args.track_running_stats)
-    elif args.arch == 'normal_resnet152_gn':
-        assert hasattr(args, 'groups')
-        model = get_architecture(args.arch, args.dataset, groups=args.groups, class_num=class_num)
-    elif args.arch == 'normal_resnet152_gn_efc':
-        assert hasattr(args, 'groups')
-        model = get_architecture(args.arch, args.dataset,  groups=args.groups, extra_fc_dim=args.extra_fc_dim, class_num=class_num)
-    elif args.arch == 'torchvision_resnet152gn':
-        assert hasattr(args, 'groups')
-        model = get_architecture(args.arch, args.dataset, groups=args.groups, class_num=class_num)
-    elif hasattr(args, 'weights'):
-        model = get_architecture(args.arch, args.dataset, class_num=class_num, weights=args.weights)
-    else:
-        model = get_architecture(args.arch, args.dataset, class_num=class_num)
+
+    model = torchvision.models.resnet152(pretrained=True)
+    model.fc = torch.nn.Linear(2048, class_num)
+
 
     if args.debug:
         print('model: ', model)
@@ -142,33 +103,13 @@ def main(args):
         else:
             model = DDP(model, device_ids=[args.local_rank], output_device=args.local_rank, )
 
-    # build diffusion model
-    diffusion_model = None
-    if hasattr(args, 'diffusion') and args.diffusion:
-        diffusion_model_path = os.path.join(args.data, 'diffusion', args.diffusion_model)
-        diffusion_model = DiffusionModel(diffusion_model_path)
-        args.t = get_timestep(sigma=args.sigma, model=diffusion_model)
-
     # loss function
     criterion = CrossEntropyLoss().cuda()
 
-    # optimizer
-    if 'vit' in args.arch:
-        if hasattr(args, 'optim') and args.optim == 'adam':
-            optimizer = Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08)
-        else:
-            optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay if hasattr(args, 'weight_decay') else 0.01)
-    # freeze all layers except the train_layer
-    elif hasattr(args, 'train_layer') and args.train_layer == 'linear':
-        for name, param in model.named_parameters():
-            if (not 'linear' in name) and (not 'fc' in name):
-                param.requires_grad = False
-        try:
-            optimizer = SGD(model.module[1].linear.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
-        except:
-            optimizer = SGD(model.module[1].fc.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
-    else:
-        optimizer = SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
+    optimizer = torch.optim.SGD(model.parameters(), args.lr,
+                            momentum=args.momentum,
+                            weight_decay=args.weight_decay)
+
 
     args.use_amp = True if (hasattr(args, 'amp') and args.amp) else False
     scaler = torch.cuda.amp.GradScaler(enabled=args.use_amp)
