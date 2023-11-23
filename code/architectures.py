@@ -87,6 +87,13 @@ def get_architecture(arch: str,
         else:
             model = torchvision_models.resnet50(num_classes=class_num)
         cudnn.benchmark = True
+    elif arch == 'torchvision_resnet18':
+        if weights == 'DEFAULT':
+            model = torchvision_models.resnet18(weights=weights)
+            model.fc = nn.Linear(2048, class_num)
+        else:
+            model = torchvision_models.resnet18(num_classes=class_num)
+        cudnn.benchmark = True
     elif arch == 'torchvision_resnet152gn':
         model = torchvision_resnet152gn(num_classes=class_num, gn_groups=groups)
         cudnn.benchmark = True

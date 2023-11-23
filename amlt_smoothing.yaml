@@ -2767,22 +2767,605 @@ jobs:
 #   - python train.py --config configs/cars/cars_tvr152_ptck_n025_lr000001e100.json
 
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e100.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e100.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e100.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e100.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e100.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e100.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e100
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e100.json
+
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e200.json
+
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0005e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e400.json
+
+
+
+# - name: aircraft_tvr50_n0_lr05e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr05e100.json
+
+# - name: aircraft_tvr50_n0_lr025e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr025e100.json
+
+# - name: aircraft_tvr50_n0_lr005e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr005e100.json
+
+# - name: aircraft_tvr50_n0_lr0075e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr0075e100.json
+
+
+
+# - name: aircraft_tvr50_n0_lr1e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr1e200.json
+
+# - name: aircraft_tvr50_n0_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr01e200.json
+
+# - name: aircraft_tvr50_n0_lr001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr001e200.json
+
+# - name: aircraft_tvr50_n0_lr05e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr05e200.json
+
+# - name: aircraft_tvr50_n0_lr025e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr025e200.json
+
+# - name: aircraft_tvr50_n0_lr005e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr005e200.json
+
+# - name: aircraft_tvr50_n0_lr0075e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr0075e200.json
+
+
+
+
+# - name: aircraft_tvr50_n0_lr1e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr1e400.json
+
+# - name: aircraft_tvr50_n0_lr01e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr01e400.json
+
+# - name: aircraft_tvr50_n0_lr001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr001e400.json
+
+# - name: aircraft_tvr50_n0_lr05e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr05e400.json
+
+# - name: aircraft_tvr50_n0_lr025e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr025e400.json
+
+# - name: aircraft_tvr50_n0_lr005e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr005e400.json
+
+# - name: aircraft_tvr50_n0_lr0075e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr50_n0_lr0075e400.json
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e1.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e1.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e1
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e1.json
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e100.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e100.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e100.json
+
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e10.json
+
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e10_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e10_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e10_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e10_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e10_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e10_tfc.json
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e1_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e1_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e1_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e1_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e1_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e1_tfc.json
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr1e100_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr01e100_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr001e100_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr0001e100_tfc.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e100_tfc
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/food101/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_food101_tvr152gn1_n0_lr00001e100_tfc.json
+
+
+
+# - name: aircraft_tvr18_n0_lr1e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr1e100.json
+
+# - name: aircraft_tvr18_n0_lr01e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr01e100.json
+
+# - name: aircraft_tvr18_n0_lr001e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr001e100.json
+
+# - name: aircraft_tvr18_n0_lr10e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr10e100.json
+
+
+# - name: aircraft_tvr18_n0_lr1e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr1e200.json
+
+# - name: aircraft_tvr18_n0_lr01e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr01e200.json
+
+# - name: aircraft_tvr18_n0_lr001e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr001e200.json
+
+# - name: aircraft_tvr18_n0_lr10e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr10e200.json
+
+
+
+# - name: aircraft_tvr18_n0_lr1e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr1e400.json
+
+# - name: aircraft_tvr18_n0_lr01e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr01e400.json
+
+# - name: aircraft_tvr18_n0_lr001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr001e400.json
+
+# - name: aircraft_tvr18_n0_lr10e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/aircraft_tvr18_n0_lr10e400.json
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e10.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e10
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e10.json
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e25
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e25.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e25
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e25.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e25
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e25.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e25
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e25.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e25
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e25.json
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr01e50.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr001e50.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0001e50.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr0025e50.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e50
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr005e50.json
+
+
+
+- name: aircraft_tvr18_ptck_n0_lr1e100
   sku: G8-V100
   command:
-  - python train.py --config configs/aircraft/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_aircraft_tvr152gn1_n0_lr00075e100.json
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n0_lr1e100.json
+
+- name: aircraft_tvr18_ptck_n0_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n0_lr01e100.json
+
+- name: aircraft_tvr18_ptck_n0_lr001e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n0_lr001e100.json
+
+
+
+
+
+- name: aircraft_tvr18_ptck_n025_lr1e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n025_lr1e100.json
+
+- name: aircraft_tvr18_ptck_n025_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n025_lr01e100.json
+
+- name: aircraft_tvr18_ptck_n025_lr001e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n025_lr001e100.json
+
+
+- name: aircraft_tvr18_n025_lr1e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n025_lr1e100.json
+
+- name: aircraft_tvr18_n025_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n025_lr01e100.json
+
+- name: aircraft_tvr18_n025_lr001e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n025_lr001e100.json
+
+
+
+
+
+- name: aircraft_tvr18_ptck_n05_lr1e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n05_lr1e100.json
+
+- name: aircraft_tvr18_ptck_n05_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n05_lr01e100.json
+
+- name: aircraft_tvr18_ptck_n05_lr001e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n05_lr001e100.json
+
+
+- name: aircraft_tvr18_n05_lr1e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n05_lr1e100.json
+
+- name: aircraft_tvr18_n05_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n05_lr01e100.json
+
+- name: aircraft_tvr18_n05_lr001e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n05_lr001e100.json
+
+
+
+
+
+- name: aircraft_tvr18_ptck_n1_lr1e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n1_lr1e100.json
+
+- name: aircraft_tvr18_ptck_n1_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n1_lr01e100.json
+
+- name: aircraft_tvr18_ptck_n1_lr001e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_ptck_n1_lr001e100.json
+
+
+- name: aircraft_tvr18_n1_lr1e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n1_lr1e100.json
+
+- name: aircraft_tvr18_n1_lr01e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n1_lr01e100.json
+
+- name: aircraft_tvr18_n1_lr001e100
+  sku: G8-V100
+  command:
+  - python train.py --config configs/aircraft/aircraft_tvr18_n1_lr001e100.json
