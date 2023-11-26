@@ -1,5 +1,5 @@
 {
-    "debug": 0,
+    "debug": 1,
     "dataset": "Aircraft",
     "arch": "torchvision_resnet18",
     "noise_sd": 0.0,
