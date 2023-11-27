@@ -1,5 +1,5 @@
 {
-    "debug": 1,
+    "debug": 0,
     "dataset": "Aircraft",
     "arch": "torchvision_resnet18",
     "weights": "DEFAULT",

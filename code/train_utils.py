@@ -36,6 +36,7 @@ def accuracy(output, target, topk=(1,)):
             res.append(correct_k.mul_(100.0 / batch_size))
         return res
     
+    
 # compute the accuracy for each class
 def accuracy_per_class(output, target, num_classes=10):
     with torch.no_grad():
