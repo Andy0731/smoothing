@@ -4239,6 +4239,25 @@ jobs:
 #   - python train.py --config configs/cars/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr00001e200.json
 
 
+- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr005e200
+  sku: G8-V100
+  command:
+  - python train.py --config configs/cars/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr005e200.json
+
+- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr0025e200
+  sku: G8-V100
+  command:
+  - python train.py --config configs/cars/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr0025e200.json
+
+- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr0005e200
+  sku: G8-V100
+  command:
+  - python train.py --config configs/cars/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr0005e200.json
+
+- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr00075e200
+  sku: G8-V100
+  command:
+  - python train.py --config configs/cars/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_cars_tvr152gn1_n0_lr00075e200.json
 
 
 
@@ -4554,44 +4573,104 @@ jobs:
 
 
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e100.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e100.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e100.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e100.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e100.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e100.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e100
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e100.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e100
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e100.json
 
 
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e200
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e200.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr005e200.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e200
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e200.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0025e200.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e200
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e200.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr0005e200.json
 
-- name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e200
-  sku: G8-V100
-  command:
-  - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e200.json
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/flowers102/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_flowers102_tvr152gn1_n0_lr00075e200.json
+
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr001e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr0001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr0001e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00001e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00001e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr0005e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr0005e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00025e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00025e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00005e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00005e400.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr000075e400
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr000075e400.json
+
+
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr0005e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr0005e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00025e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00025e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00005e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr00005e200.json
+
+# - name: in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr000075e200
+#   sku: G8-V100
+#   command:
+#   - python train.py --config configs/dtd/in_tvr152gn1_nep_n0n025n05n1_lr01e100_ft_dtd_tvr152gn1_n0_lr000075e200.json

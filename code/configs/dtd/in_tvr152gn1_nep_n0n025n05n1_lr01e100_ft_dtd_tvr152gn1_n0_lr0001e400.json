@@ -7,7 +7,7 @@
     "noise_sd": 0.0,
     "batch": 128,
     "workers": 2,
-    "epochs": 200,
+    "epochs": 400,
     "momentum": 0.9,
     "weight_decay": 1e-4,
     "print_freq": 100,
@@ -18,7 +18,7 @@
     "resume": "smoothing/in_tvr152gn1_nep_n0n025n05n1_lr01e100/imagenet/in_tvr152gn1_nep_n0n025n05n1_lr01e100/checkpoint.pth.tar",
     "finetune": 1,
 
-    "lr": 0.00075,
+    "lr": 0.001,
     "dataaug": "imagenet_dataaug",
     "img_size": 224,
 

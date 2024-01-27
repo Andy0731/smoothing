@@ -1,0 +1,48 @@
+description: Test
+
+# config for subscription, resource group, workspace, cluster
+target:
+  service: aml
+  subscription_id: 67aa06b0-2686-40dc-92b0-1316ea0304d9
+  resource_group: OXO-ML-Sunnyvale
+  workspace_name: OXO-ML-Sunnyvale-General
+  cluster: jili5-A100
+
+
+environment:
+  image: wuzhiron/pytorch:pytorch1.10.0-cuda11.3-cudnn8-singularity
+  setup:
+  - pip install torchvision==0.13.1
+  - pip install scipy
+  - pip install pandas
+  - pip install statsmodels
+  - pip install matplotlib
+  - pip install seaborn
+  - pip install setGPU
+  - pip install attrdict
+  - pip install einops
+  - pip install transformers
+  - pip install timm
+
+code:
+  local_dir: $CONFIG_DIR/code
+
+data:
+  local_dir: /D_data/kaqiu/
+  remote_dir: datasets/
+
+jobs:
+
+# 1 node, 4 GPUs
+- name: test_G4A100
+  sku: G4-A100
+  command:
+  - python train.py --config configs/cars/test_g4a100.json
+
+# 2 nodes, 4 GPUs per node
+- name: test_2xG4A100
+  sku: 2xG4-A100
+  command:
+  - python train.py --config configs/cars/test_2xg4a100.json
+  process_count_per_node: 4
+  mpi: true
