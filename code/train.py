@@ -98,6 +98,13 @@ def main(args):
     # build model
     if 'hug' in args.outdir:
         model = get_hug_model(args.arch)
+    elif args.arch == 'vit_b':
+        assert hasattr(args, 'patch_size')
+        model = get_architecture(args.arch, args.dataset, class_num=class_num, patch_size=args.patch_size)
+    elif args.arch == 'cifar_resnet110_gn':
+        assert hasattr(args, 'groups')
+        assert hasattr(args, 'block_name')
+        model = get_architecture(args.arch, args.dataset, groups=args.groups, block_name=args.block_name)
     elif 'diffusion' in args.outdir:
         model = get_hug_vit(args.arch)
     elif hasattr(args, 'favg') and args.favg:
@@ -223,7 +230,7 @@ def main(args):
         elif 'finetune' in args.outdir or (hasattr(args, 'finetune') and args.finetune):
             state_dict = ckpt['state_dict']
             for k in list(state_dict.keys()):
-                if ('fc' in k) or ('linear' in k):
+                if ('fc' in k) or ('linear' in k) or ('mlp_head' in k):
                     del state_dict[k]
             model.load_state_dict(state_dict, strict=False)
 
@@ -834,7 +841,7 @@ if __name__ == "__main__":
 
     if args.debug == 1:
         args.node_num = 1
-        args.batch = min(8, args.batch)
+        args.batch = min(256, args.batch)
         args.epochs = 2
         args.skip = 10000
         args.skip_train = 200000

@@ -43,6 +43,15 @@ class ResNetGN(ResNet):
 def ResNet152GN(**kwargs):
     return ResNetGN(BottleneckGN, [3,8,36,3], **kwargs)
 
+def ResNet101GN(**kwargs):
+    return ResNetGN(BottleneckGN, [3,4,23,3], **kwargs)
+
+def ResNet110GN(**kwargs):
+    return ResNetGN(BottleneckGN, [3,4,26,3], **kwargs)
+
+
+
+
 resnet152gn = ResNet152GN
 
 

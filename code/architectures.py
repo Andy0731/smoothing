@@ -2,6 +2,7 @@ import torch
 from torchvision.models.resnet import resnet50
 import torch.backends.cudnn as cudnn
 from archs.cifar_resnet import resnet as resnet_cifar
+from archs.cifar_resnet_gn import resnet as resnet_cifar_gn
 from datasets import get_normalize_layer
 from archs.normal_resnet import resnet18 as normal_resnet18
 from archs.normal_resnet import resnet18wide as normal_resnet18wide
@@ -62,7 +63,9 @@ def get_architecture(arch: str,
                      groups=None,
                      track_running_stats=True,
                      extra_fc_dim=None,
-                     weights=None) -> torch.nn.Module:
+                     weights=None,
+                     block_name='basicblock',
+                     patch_size=16) -> torch.nn.Module:
     """ Return a neural network (with random weights)
 
     :param arch: the architecture - should be in the ARCHITECTURES list above
@@ -103,6 +106,10 @@ def get_architecture(arch: str,
         model = resnet_cifar(depth=110, num_classes=10 if 'cifar' in dataset else 1000)
     elif arch == "cifar_resnet1199":
         model = resnet_cifar(depth=1199, num_classes=10 if 'cifar' in dataset else 1000, block_name='bottleneck')
+        
+    elif arch == "cifar_resnet110_gn":
+        model = resnet_cifar_gn(depth=110, num_classes=10 if 'cifar' in dataset else 1000, block_name=block_name, groups=groups)
+        
     elif arch == "normal_resnet152_in":
         model = normal_resnet152_in(num_classes=class_num, track_running_stats=track_running_stats)
     elif arch == "normal_resnet152_nt":
@@ -131,11 +138,11 @@ def get_architecture(arch: str,
         model = torchvision_models.resnet152(num_classes=10)
     elif 'vit' in arch:
         if 'cifar' in dataset:
-            model = arch + '(num_classes=10)'
+            model = arch + '(num_classes=10, patch_size=patch_size)'
         elif dataset == 'imagenet32':
-            model = arch + '(num_classes=1000)'
+            model = arch + '(num_classes=1000, patch_size=patch_size)'
         elif dataset == 'imagenet22k':
-            model = arch + '(num_classes=21841)'
+            model = arch + '(num_classes=21841, patch_size=patch_size)'
         else:
             raise ValueError
         print('model: ', model)

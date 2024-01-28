@@ -131,7 +131,6 @@ class ViT(nn.Module):
 
 def ViT_B(**kwargs):
     return ViT(image_size=32, 
-               patch_size=4, 
                dim=768, 
                depth=12, 
                heads=12, 
